@@ -248,7 +248,7 @@
                     <label for="inputClientCompany" style="margin-bottom: 0px;">Environmental Impact Statement
                         System</label>
                     <!-- <input type="text" class="form-control form-control-border border-width-2" id="environmental-impact-statement-system" placeholder="" readonly> -->
-                    <textarea style="background-color: white" class="form-control"
+                    <textarea style="background-color: white" class="form-control rounded-0"
                         id="environmental-impact-statement-system" readonly></textarea>
                 </div>
                 <div class="col-md-1">
@@ -264,7 +264,7 @@
                     <label for="inputClientCompany" style="margin-bottom: 0px;">Chemicals Management</label>
                     <!-- <input type="text" class="form-control form-control-border border-width-2" id="chemicals-management"
                         placeholder="" readonly> -->
-                    <textarea style="background-color: white" class="form-control" id="chemicals-management"
+                    <textarea style="background-color: white" class="form-control rounded-0" id="chemicals-management"
                         readonly></textarea>
                 </div>
                 <div class="col-md-1">
@@ -280,7 +280,7 @@
                     <label for="inputClientCompany" style="margin-bottom: 0px;">Hazardous Waste Management</label>
                     <!-- <input type="text" class="form-control form-control-border border-width-2"
                         id="hazard-waste-management" placeholder="" readonly> -->
-                    <textarea style="background-color: white" class="form-control" id="hazard-waste-management"
+                    <textarea style="background-color: white" class="form-control rounded-0" id="hazard-waste-management"
                         readonly></textarea>
                 </div>
                 <div class="col-md-1">
@@ -295,7 +295,7 @@
                 <div class="col-md-11">
                     <label for="inputClientCompany" style="margin-bottom: 0px;">Air Quality Management</label>
                     <!-- <input type="text" class="form-control form-control-border border-width-2" id="air-quality-management" placeholder="" readonly> -->
-                    <textarea style="background-color: white" class="form-control" id="air-quality-management"
+                    <textarea style="background-color: white" class="form-control rounded-0" id="air-quality-management"
                         readonly></textarea>
                 </div>
                 <div class="col-md-1">
@@ -400,7 +400,7 @@
             <div class="row">
                 <div class="col-md-11">
                     <label style="margin-bottom: 0px;">Solid Waste Management</label>
-                    <textarea style="background-color: white" class="form-control" id="solid-waste-management"
+                    <textarea style="background-color: white" class="form-control rounded-0" id="solid-waste-management"
                         readonly></textarea>
 
                 </div>
@@ -416,7 +416,7 @@
             <div class="row">
                 <div class="col-md-11">
                     <label style="margin-bottom: 0px;">Water Quality Management</label>
-                    <textarea style="background-color: white" class="form-control" id="water-quality-management"
+                    <textarea style="background-color: white" class="form-control rounded-0" id="water-quality-management"
                         readonly></textarea>
                 </div>
                 <div class="col-md-1">
@@ -432,7 +432,7 @@
                 <div class="col-md-11">
                     <label style="margin-bottom: 0px;">Commitment to (Insert voluntary commitment/consent
                         agreement)</label>
-                    <textarea style="background-color: white" class="form-control" id="commitment-to"
+                    <textarea style="background-color: white" class="form-control rounded-0" id="commitment-to"
                         readonly></textarea>
                 </div>
                 <div class="col-md-1">
@@ -447,7 +447,7 @@
             <div class="row">
                 <div class="col-md-11">
                     <label style="margin-bottom: 0px;">Pictures</label>
-                    <textarea style="background-color: white" class="form-control" id="pictures" readonly></textarea>
+                    <textarea style="background-color: white" class="form-control rounded-0" id="pictures" readonly></textarea>
                 </div>
                 <div class="col-md-1">
                     <button class="btn btn-primary" onclick="SummaryFindingsAndObservation('Pictures', 'pictures')"><i
@@ -488,7 +488,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <label>Environmental Law</label>
-                                    <select class="form-control" id="environmental-law-add">
+                                    <select class="form-control rounded-0" id="environmental-law-add">
                                         <option value="">---</option>
                                         <option value="PD 1586">PD 1586</option>
                                         <option value="RA 6969">RA 6969</option>
@@ -499,7 +499,7 @@
                                 </div>
                                 <div class="col-md-2">
                                     <label>Entity</label>
-                                    <select class="form-control" id="entity-add">
+                                    <select class="form-control rounded-0" id="entity-add">
                                         <option>---</option>
                                     </select>
                                 </div>
@@ -514,7 +514,7 @@
                                 <div class="col-md-3">
                                     <label>Date of Issue</label>
                                     <div class="input-group date" id="setdateofissue" data-target-input="nearest">
-                                        <input type="text" class="form-control datetimepicker-input"
+                                        <input type="text" class="form-control rounded-0 datetimepicker-input"
                                             data-target="#setdateofissue" id="date-of-issue-add"
                                             placeholder="Enter Date" disabled />
                                         <div class="input-group-append" data-target="#setdateofissue"
@@ -526,7 +526,7 @@
                                 <div class="col-md-3">
                                     <label>Expiry Date</label>
                                     <div class="input-group date" id="expirydate" data-target-input="nearest">
-                                        <input type="text" class="form-control datetimepicker-input"
+                                        <input type="text" class="form-control rounded-0 datetimepicker-input"
                                             data-target="#expirydate" id="expiry-date-add" placeholder="Enter Date"
                                             disabled />
                                         <div class="input-group-append" data-target="#expirydate"
@@ -585,7 +585,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Complied</label>
-                                    <select class="form-control" id="complied-add">
+                                    <select class="form-control rounded-0" id="complied-add">
                                         <option value="">---</option>
                                         <option value="Yes">Yes</option>
                                         <option value="No">No</option>
@@ -597,7 +597,7 @@
                             <div class="col-md-8">
                                 <div class="form-group">
                                     <label>Remarks</label>
-                                    <input class="form-control" placeholder="Remarks" id="remarks-add" />
+                                    <input class="form-control rounded-0" placeholder="Remarks" id="remarks-add" />
                                 </div>
                             </div>
                         </div>
@@ -634,7 +634,7 @@
                     </div>
                     <div class="card-body">
                         <input id="input-id" hidden>
-                        <textarea class="form-control" id="findings-observation-input"></textarea>
+                        <textarea class="form-control rounded-0" id="findings-observation-input"></textarea>
                     </div>
                 </div>
 
@@ -676,7 +676,7 @@
                             <div class="col-md-6">
                                 <label>Date of Issue:</label>
                                 <div class="input-group date" id="setdate" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input" data-target="#setdate"
+                                    <input type="text" class="form-control rounded-0 datetimepicker-input" data-target="#setdate"
                                         id="diesel-fueled-date-of-issue-add" placeholder="Enter Date" />
                                     <div class="input-group-append" data-target="#setdate" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
@@ -690,7 +690,7 @@
                         <div class="row">
                             <div class="col-3">
                                 <label>Polutant Degree:</label>
-                                <select class="form-control" id="polutan-degree-add">
+                                <select class="form-control rounded-0" id="polutan-degree-add">
                                     <option value="">---</option>
                                     <option value="row2">Nitrogen Dioxide Emissions
                                         (mg/Ncm)</option>
@@ -701,7 +701,7 @@
                             </div>
                             <div class="col-md-3">
                                 <label>Average</label>
-                                <input class="form-control" type="number" id="average-add" />
+                                <input class="form-control rounded-0" type="number" id="average-add" />
                             </div>
                         </div>
 

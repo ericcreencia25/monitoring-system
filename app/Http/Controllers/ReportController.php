@@ -40,12 +40,29 @@ class ReportController extends Controller
 
     public function getReportList(Request $request)
     {
+        
+        if (empty($request->emb_id)) {
 
-        $inspection_report = DB::table('inspection_report')->get();
+            $inspection_report = DB::table('inspection_report')
+                ->orderByRaw('id DESC')
+                ->get();
 
+        } else {
+
+            $inspection_report = DB::table('inspection_report')
+                ->where('emb_id', $request->emb_id)
+                ->orderByRaw('id DESC')
+                ->get();
+
+        }
+        
         return DataTables::of($inspection_report)
             ->addColumn('report_type', function ($inspection_report) {
                 $details = 'Inspection Report';
+                return $details;
+            })
+            ->addColumn('emb_id', function ($inspection_report) {
+                $details = $inspection_report->emb_id;
                 return $details;
             })
             ->addColumn('company_name', function ($inspection_report) {
@@ -56,16 +73,53 @@ class ReportController extends Controller
                 $details = $inspection_report->nature_of_business;
                 return $details;
             })
-            ->addColumn('action', function ($inspection_report) {
-                $details = '<button class="btn btn-info" onclick="viewReport(' . $inspection_report->id . ', \'' . $inspection_report->emb_id . '\')">View</button><button class="btn btn-danger" onclick="deleteReport(' . $inspection_report->id . ')">Delete';
-
-                if ($inspection_report->recommending_approval != '') {
-                    $details .= '</button><button class="btn btn-default" onclick="viewPDF(' . $inspection_report->id . ')">PDF</button>';
-                }
-
+            ->addColumn('report_for', function ($inspection_report) {
+                $details = json_decode($inspection_report->report_for);
                 return $details;
             })
-            ->rawColumns(['report_type', 'company_name', 'nature_of_business', 'action'])
+            ->addColumn('created_date', function ($inspection_report) {
+
+                $details = date('m/d/Y', strtotime($inspection_report->created_date));
+                ;
+                return $details;
+            })
+            ->addColumn('action', function ($inspection_report) {
+                $button = '<div class="btn-group">';
+                $button .= '<button type="button" class="btn btn-default btn-flat" title="view" onclick="viewReport(' . $inspection_report->id . ', \'' . $inspection_report->emb_id . '\')"><i class="fa-solid fa-eye"></i></button>';
+                $button .= '<button type="button" class="btn btn-default btn-flat" title="delete" onclick="deleteReport(' . $inspection_report->id . ')"><i class="fa-solid fa-trash"></i></button>';
+
+                if ($inspection_report->recommending_approval != '') {
+                    $button .= '<button type="button" class="btn btn-default btn-flat" title="pdf" onclick="viewPDF(' . $inspection_report->id . ')"><i class="fa-solid fa-file-pdf"></i></button>';
+                }
+                
+                $button .= '</div>';
+
+                return $button;
+            })
+            ->addColumn('with_NOV', function ($inspection_report) {
+
+                $button = '';
+
+                if ($inspection_report->with_NOV == 'yes') {
+
+                    $data = DB::table('nov')
+                        ->where('report_id', $inspection_report->id)
+                        ->first();
+
+                    
+                    if (empty($data)) {
+                        $id = 0;
+                    } else {
+                        $id = $data->id;
+                    }
+
+                    $button .= '<button type="button" class="btn btn-default btn-flat" onclick="linkToNOV(' . $id . ', ' . $inspection_report->id . ')"><ion-icon name="checkmark-outline"></ion-icon></button>';
+
+                }
+
+                return $button;
+            })
+            ->rawColumns(['report_type', 'report_for', 'emb_id', 'company_name', 'nature_of_business', 'created_date', 'action', 'with_NOV'])
             ->make(true);
     }
 
@@ -89,10 +143,7 @@ class ReportController extends Controller
             if (in_array(2, $req->page)) {
                 $purpose_of_inspection = DB::table('purpose_of_inspection')->where('report_id', $checkifexist->id)->first();
                 $data['purpose_of_inspection'] = $purpose_of_inspection;
-
-                // $establishment_permits = DB::table('establishment_permits')->where('poi_id', $purpose_of_inspection->id)->first();
-                // $data['establishment_permits'] = $establishment_permits;
-
+                
                 if ($purpose_of_inspection) {
                     $establishment_permits = DB::table('establishment_permits')->where('poi_id', $purpose_of_inspection->id)->first();
                     $data['establishment_permits'] = $establishment_permits;
@@ -143,38 +194,19 @@ class ReportController extends Controller
             }
 
         }
-
-
-
-
-
-        // $data = array(
-        //     "inspection_report" => $inspection_report,
-        //     "denr_permits" => $denr_permits,
-        //     "product_lines" => $product_lines,
-        //     "purpose_of_inspection" => $purpose_of_inspection,
-        //     "establishment_permits" => $establishment_permits,
-        //     "law_citation_ecc_conditionalities" => $law_citation_ecc_conditionalities,
-        //     "law_citation_ra_6969" => $law_citation_ra_6969,
-        //     "law_citation_ra_8749" => $law_citation_ra_8749,
-        //     "law_citation_ra_9003" => $law_citation_ra_9003,
-        //     "law_citation_ra_9275" => $law_citation_ra_9275,
-        //     "law_citation_pcoa" => $law_citation_pcoa,
-        //     "law_citation_smr" => $law_citation_smr,
-        //     "findings_and_observation" => $findings_and_observation,
-        //     "diesel_fueled_generator_stack_a" => $diesel_fueled_generator_stack_a,
-        //     "diesel_fueled_generator_stack_b" => $diesel_fueled_generator_stack_b
-        // );
+        
 
         return $data;
     }
 
     public function saveRaw(Request $req)
-    {
+    {  
+
+        dd($req);
         $now = new \DateTime();
         $checkifexist = DB::table('inspection_report')->where('id', $req['id'])->select('id')->first();
 
-        if (!$checkifexist) {
+        if (empty($checkifexist)) {
             /// not existing, add report
             $inspection_report = $this->insertUpdateInspectionReport('new', $req);
 
@@ -205,8 +237,8 @@ class ReportController extends Controller
 
             if ($purpose_of_inspection) {
                 /// on saved purpose_of_inspection
-                $id = $purpose_of_inspection;
-                $this->insertUpdateEstablishmentPermit('new', $id, $req);
+                // $id = $purpose_of_inspection;
+                $this->insertUpdateEstablishmentPermit('new', $purpose_of_inspection, $req);
             }
             $insertUpdateDENRPermits = $this->insertUpdateDENRPermits('new', $inspection_report, $req);
             $insertUpdateECCConditionalities = $this->insertUpdateECCConditionalities('new', $inspection_report, $req['law-and-citation']['ecc']);
@@ -364,7 +396,7 @@ class ReportController extends Controller
     public function insertUpdateRecommendation($id, $data)
     {
         $now = new \DateTime();
-
+        // dd($id);
         foreach ($data as $key => $value) {
             $check = DB::table('recommendation')
                 ->where([
@@ -374,7 +406,7 @@ class ReportController extends Controller
                 ->select('id')
                 ->first();
 
-            if (!$check) {
+            if (empty($check)) {
                 $dateAdd = DB::table('recommendation')->insert([
                     'report_id' => $id,
                     'element_id' => $value['id'],
@@ -383,6 +415,13 @@ class ReportController extends Controller
                     'created_by' => auth()->user()->name,
                 ]);
 
+            } else {
+                DB::table('recommendation')->where([
+                    ['report_id', $id],
+                    ['element_id', $value['id']]
+                ])->update([
+                            'value' => $value['value']
+                        ]);
             }
         }
 
@@ -1321,7 +1360,7 @@ class ReportController extends Controller
     public function insertUpdateInspectionReport($type, $req)
     {
         $now = new \DateTime();
-
+        // dd($req);
         if ($type == 'new') {
 
             $effectivity_date = $req['firstPageData']['date-of-effectivity'];
@@ -1353,6 +1392,7 @@ class ReportController extends Controller
                 'report_for' => json_encode($req['report-for']),
                 'created_date' => $now->format('Y-m-d H:i:s'),
                 'created_by' => auth()->user()->name,
+                'with_NOV' => $req['with-nov']
             ]);
 
             return $InspectionReport;
@@ -1383,8 +1423,9 @@ class ReportController extends Controller
                 'product' => $req['firstPageData']['product'],
                 'psic_code' => $req['firstPageData']['psic-code'],
                 'year_established' => $req['firstPageData']['year-established'],
-                'created_date' => $now->format('Y-m-d H:i:s'),
+                // 'created_date' => $now->format('Y-m-d H:i:s'),
                 'created_by' => auth()->user()->name,
+                'updated_date' => $now->format('Y-m-d H:i:s'),
             ]);
 
             return $InspectionReport;
@@ -1524,5 +1565,66 @@ class ReportController extends Controller
 
         // return view('user.report.preview', compact('data'));
     }
+
+    public function previewNOVpdf(Request $req, $id)
+    {
+        $data = DB::table('nov')->where('id', $id)->first();
+        $findings = DB::table('nov-findings')->where('nov_id', $id)->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('user.nov.pdf-preview', compact('data', 'findings'));
+        $pdf->setPaper('legal', 'portrait');
+        // $pdf->output();
+        return $pdf->stream();
+    }
+
+    public function getReportbyID(Request $req)
+    {
+        $report_id = $req->report_id;
+        $data = DB::table('inspection_report')->where('id', $report_id)->first();
+
+        return $data;
+    }
+
+
+    public function linkToReport(Request $request)
+    {
+        $inspection_report = DB::table('inspection_report')
+            ->where('emb_id', $request->emb_id)
+            ->orderByRaw('id DESC')
+            ->get();
+
+        return DataTables::of($inspection_report)
+            ->addColumn('report', function ($inspection_report) {
+                $details = 'Inspection Report';
+                return $details;
+            })
+            ->addColumn('action', function ($inspection_report) {
+                $button = '<div class="btn-group">';
+                $button .= '<button type="button" class="btn btn-default btn-flat" title="view" onclick="viewReport(' . $inspection_report->id . ', \'' . $inspection_report->emb_id . '\')"><i class="fa-solid fa-eye"></i></button>';
+
+                if ($inspection_report->recommending_approval != '') {
+                    $button .= '<button type="button" class="btn btn-default btn-flat" title="pdf" onclick="viewPDF(' . $inspection_report->id . ')"><i class="fa-solid fa-file-pdf"></i></button>';
+                }
+                $button .= '<button type="button" class="btn btn-success btn-flat" title="connect" onclick="Linking(' . $inspection_report->id . ', \'' . $inspection_report->emb_id . '\')"><i class="fa-solid fa-link"></i></button>';
+
+                $button .= '</div>';
+
+                return $button;
+            })
+            ->addColumn('report_for', function ($inspection_report) {
+                $details = json_decode($inspection_report->report_for);
+                return $details;
+            })
+            ->addColumn('created_date', function ($inspection_report) {
+
+                $details = date('m/d/Y', strtotime($inspection_report->created_date));
+                ;
+                return $details;
+            })
+            ->rawColumns(['report', 'action', 'report_for', 'created_date'])
+            ->make(true);
+    }
+
+    
 
 }

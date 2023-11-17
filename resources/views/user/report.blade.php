@@ -4,10 +4,8 @@
 <link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
 <link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 <link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/bs-stepper/css/bs-stepper.min.css">
-<link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
-<!-- <link rel="stylesheet" href="../../AdminLTE-3.2.0/dist/css/modal-animation.css"> -->
-
-
+<link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css"> <!-- <link
+  rel="stylesheet" href="../../AdminLTE-3.2.0/dist/css/modal-animation.css"> -->
 <style>
   .loader {
     border: 16px solid #f3f3f3;
@@ -26,7 +24,8 @@
     }
 
     100% {
-      transform: rotate(360deg);
+      transform:
+        rotate(360deg);
     }
   }
 
@@ -62,7 +61,7 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0">Report</h1>
+        <!-- <h1 class="m-0">Report</h1> -->
       </div><!-- /.col -->
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
@@ -79,16 +78,17 @@
 @section('content')
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-12">
-      <div class="card card-primary">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <div class="card card-secondary">
         <div class="card-header">
           <p class="text-center" id="type-of-report-header" style="font-size: 24px; margin-bottom: 0px">Type of Report
           </p>
         </div>
-        <div>
+        <!-- <div>
           <div style="clear:both;"><span style="font-size:12px;line-height:115%;font-family:Wingdings;">&thorn;</span>
           </div>
-        </div>
+        </div> -->
         <div class="card-body p-0">
           <div class="bs-stepper">
             <div class="bs-stepper-header" role="tablist">
@@ -137,12 +137,13 @@
             <div class="bs-stepper-content">
               <!-- your steps content here -->
               <div id="first-part" class="content" role="tabpanel" aria-labelledby="first-part-trigger">
-
                 <div class="col-md-12">
-                  <div class="card card-secondary" style="box-shadow: none;">
+                  <div class="card card-default" style="box-shadow: none;">
                     <div class="card-header" style="height: 50px;">
                       <!-- <h3 class="card-title"> -->
-                      <p class="text-center">Company General Information</p>
+                      <em><b>
+                          <p class="text-center text-lg">Company General Information</p>
+                        </b></em>
                       <!-- </h3> -->
 
                       <!-- <div class="card-tools">
@@ -158,16 +159,18 @@
                   </div>
 
 
-                  <button class="btn btn-primary" onclick="Next(1,2)">Next</button>
+                  <button class="btn btn-primary btn-flat" onclick="Next(1,2)">Next</button>
 
                 </div>
               </div>
               <div id="second-part" class="content" role="tabpanel" aria-labelledby="second-part-trigger">
                 <div class="col-md-12">
-                  <div class="card card-secondary" style="box-shadow: none;">
+                  <div class="card card-default" style="box-shadow: none;">
                     <div class="card-header" style="height: 50px;">
                       <!-- <h3 class="card-title"> -->
-                      <p class="text-center">Purpose of Inspection</p>
+                      <em><b>
+                          <p class="text-center text-lg">Purpose of Inspection</p>
+                        </b></em>
                       <!-- </h3> -->
 
                       <!-- <div class="card-tools">
@@ -181,16 +184,18 @@
                     </div>
                   </div>
                 </div>
-                <button class="btn btn-primary" onclick="Previous(2,1)">Previous</button>
-                <button class="btn btn-primary" onclick="Next(2,3)">Next</button>
+                <button class="btn btn-primary btn-flat" onclick="Previous(2,1)">Previous</button>
+                <button class="btn btn-primary btn-flat" onclick="Next(2,3)">Next</button>
               </div>
 
               <div id="third-part" class="content" role="tabpanel" aria-labelledby="third-part-trigger">
                 <div class="col-md-12">
-                  <div class="card card-secondary" style="box-shadow: none;">
+                  <div class="card card-default" style="box-shadow: none;">
                     <div class="card-header" style="height: 50px;">
                       <!-- <h3 class="card-title"> -->
-                      <p class="text-center">Compliance Status</p>
+                      <em><b>
+                          <p class="text-center text-lg">Compliance Status</p>
+                        </b></em>
                       <!-- </h3> -->
 
                       <!-- <div class="card-tools">
@@ -204,16 +209,18 @@
                     </div>
                   </div>
                 </div>
-                <button class="btn btn-primary" onclick="Previous(3,2)">Previous</button>
-                <button class="btn btn-primary" onclick="Next(3,4)">Next</button>
+                <button class="btn btn-primary btn-flat" onclick="Previous(3,2)">Previous</button>
+                <button class="btn btn-primary btn-flat" onclick="Next(3,4)">Next</button>
               </div>
 
               <div id="fourth-part" class="content" role="tabpanel" aria-labelledby="fourth-part-trigger">
                 <div class="col-md-12">
-                  <div class="card card-secondary" style="box-shadow: none;">
+                  <div class="card card-default" style="box-shadow: none;">
                     <div class="card-header" style="height: 50px;">
                       <!-- <h3 class="card-title"> -->
-                      <p class="text-center">Recommendation</p>
+                      <em><b>
+                          <p class="text-center text-lg">Recommendation</p>
+                        </b></em>
                       <!-- </h3> -->
 
                       <!-- <div class="card-tools">
@@ -227,13 +234,13 @@
                     </div>
                   </div>
                 </div>
-                <button class="btn btn-primary" onclick="Previous(4,3)">Previous</button>
-                <button class="btn btn-primary" onclick="Next(4,5)">Next</button>
+                <button class="btn btn-primary btn-flat" onclick="Previous(4,3)">Previous</button>
+                <button class="btn btn-primary btn-flat" onclick="Next(4,5)">Next</button>
               </div>
 
               <div id="fifth-part" class="content" role="tabpanel" aria-labelledby="fifth-part-trigger">
                 <div class="col-md-12">
-                  <div class="card card-secondary" style="box-shadow: none;">
+                  <div class="card card-default" style="box-shadow: none;">
                     <div class="card-header" style="height: 50px;">
                       <!-- <h3 class="card-title"> -->
                       <p class="text-center"></p>
@@ -250,8 +257,8 @@
                     </div>
                   </div>
                 </div>
-                <button class="btn btn-primary" onclick="Previous(5,4)">Previous</button>
-                <button type="submit" class="btn btn-primary" onclick="Next(5,6)">Submit</button>
+                <button class="btn btn-primary btn-flat" onclick="Previous(5,4)">Previous</button>
+                <button type="submit" class="btn btn-primary btn-flat" onclick="Next(5,6)">Submit</button>
               </div>
             </div>
           </div>
@@ -304,6 +311,7 @@
     window.stepper = new Stepper(document.querySelector('.bs-stepper'))
   });
 
+  const reportFor = JSON.parse(sessionStorage.getItem("report-for"));
 
 
   $(function () {
@@ -370,8 +378,10 @@
             <td>`+ value[1] + `</td>
             <td>`+ value[2] + `</td>
             <td>
-              <button class="btn btn-primary PPA-table-edit">edit</button>
-                <button class="btn btn-danger PPA-table-delete">delete</button>
+              <div class="btn-group">
+                <button class="btn btn-info btn-flat PPA-table-edit">edit</button>
+                <button class="btn btn-danger btn-flat PPA-table-delete">delete</button>
+              </div>
             </td>
           </tr>
         `);
@@ -382,10 +392,10 @@
 
     const secondPageData = JSON.parse(localStorage.getItem("secondPageData"));
     if (secondPageData) {
-      $("#verify-accuracy").prop("checked", secondPageData['verify-accuracy']);
-      $("#determine-compliance").prop("checked", secondPageData['determine-compliance']);
-      $("#investigate-community").prop("checked", secondPageData['investigate-community']);
-      $("#check-status").prop("checked", secondPageData['check-status']);
+      $("#verify-accuracy").prop("checked", JSON.parse(secondPageData['verify-accuracy']));
+      $("#determine-compliance").prop("checked", JSON.parse(secondPageData['determine-compliance']));
+      $("#investigate-community").prop("checked", JSON.parse(secondPageData['investigate-community']));
+      $("#check-status").prop("checked", JSON.parse(secondPageData['check-status']));
 
       if (secondPageData['others'] != '') {
         $("#others").prop("checked", true);
@@ -445,7 +455,7 @@
       url: "{{route('getReportData')}}",
       type: 'POST',
       data: {
-        page: [3, 5],
+        page: [2, 3, 5],
         id: id,
         emb_id: emb_id,
         _token: '{{csrf_token()}}',
@@ -454,6 +464,30 @@
 
       },
       success: function (response) {
+
+        /// 2nd page
+
+        const secondPageData = {
+          'check-status': response['purpose_of_inspection']['verify_accuracy'],
+          'determine-compliance': response['purpose_of_inspection']['determine_compliance_status'],
+          'investigate-community': response['purpose_of_inspection']['investigate_community'],
+          'verify-accuracy': response['purpose_of_inspection']['verify_accuracy'],
+          'others': response['purpose_of_inspection']['others'],
+        }
+
+        localStorage.setItem('secondPageData', JSON.stringify(secondPageData));
+
+        if (response['establishment_permits'] != undefined) {
+          localStorage.setItem('secondPageData-establishmentPermits', JSON.stringify(response['establishment_permits']));
+        } else {
+
+          const establishmentPermits = {
+            'establishment_permits': 'none',
+          }
+
+          localStorage.setItem('secondPageData-establishmentPermits', JSON.stringify(establishmentPermits));
+        }
+
         /// 3rd Page
 
 
@@ -675,6 +709,10 @@
   }
 
   function Next(current, next) {
+
+    var idParameter = getUrlParameters("id", "", true);
+    console.log(idParameter);
+
     var first;
     var second;
     var third;
@@ -682,6 +720,7 @@
     var fifth;
     var emb_id = sessionStorage.getItem("emb-id");
     var id = sessionStorage.getItem("id");
+
     if (current == 1 && next == 2) {
       first = firstPage(next);
       alldata['first'] = first;
@@ -745,27 +784,23 @@
 
     if (current == 3 && next == 4) {
       third = thirdPage(next);
-      // console.log(third);
       alldata['third'] = third;
-
 
       const firstPageData = JSON.parse(localStorage.getItem("firstPageData"));
       const secondPageData = JSON.parse(localStorage.getItem("secondPageData"));
       const secondPageDataEstablishmentPermits = JSON.parse(localStorage.getItem("secondPageData-establishmentPermits"));
-      const reportFor = JSON.parse(sessionStorage.getItem("report-for"));
-      // console.log(firstPageData);
-      // console.log(secondPageData);
-      // console.log(secondPageDataEstablishmentPermits);
-      // console.log(localStorage.getItem("secondPageData-establishmentPermits"));
+      
+
       $.ajax({
         url: "{{route('saveRaw')}}",
         type: 'POST',
         data: {
-          id: id,
+          id: idParameter,
           emb_id: emb_id,
           firstPageData: firstPageData,
           secondPageData: secondPageData,
           secondPageDataEstablishmentPermits: secondPageDataEstablishmentPermits,
+          'with-nov': sessionStorage.getItem("with-nov"),
           'report-for': reportFor,
           'permits-licenses-clearance': third['permits-licenses-clearance'],
           'law-and-citation': {
@@ -813,6 +848,27 @@
           localStorage.setItem('currentPage', next);
           sessionStorage.setItem("new-or-old", 'old');
           sessionStorage.setItem("id", response);
+          window.history.replaceState(null, null, "?id=" + response);
+
+          var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 50,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+            },
+            didClose: (toast) => {
+              // location.reload();
+            }
+          });
+
+          Toast.fire({
+            icon: 'success',
+            title: 'Successfully saving your report...'
+          })
 
         }
 
@@ -858,7 +914,7 @@
           regionaldirector: regionaldirector,
           dateofinspection: dateofinspection,
           emb_id: emb_id,
-          id: id,
+          id: idParameter,
           _token: '{{csrf_token()}}',
         },
         beforeSend: function () {
@@ -890,8 +946,9 @@
               toast.addEventListener('mouseleave', Swal.resumeTimer)
             },
             didClose: (toast) => {
-              window.close();
-              alert('sasa');
+              location.href = '/dashboard';
+
+              alert('The page will go back to dashboard');
             }
           });
 
@@ -899,8 +956,6 @@
             icon: 'success',
             title: 'Successfully submitted'
           });
-
-          window.close();
 
 
 
@@ -1432,30 +1487,35 @@
     if ($("#establishment-name").val() != '') {
       first['establishment-name'] = $("#establishment-name").val();
     } else {
+      $("#establishment-name-error").html('*required field');
       error.push('Establishment Name is valid');
     }
 
     if ($("#nature-of-business").val() != '') {
       first['nature-of-business'] = $("#nature-of-business").val();
     } else {
+      $("#nature-of-business-error").html('*required field');
       error.push('Nature of Business is valid');
     }
 
     if ($("#product").val() != '') {
       first['product'] = $("#product").val();
     } else {
+      $("#product-error").html('*required field');
       error.push('Product is valid');
     }
 
     if ($("#date-of-effectivity").val() != '') {
       first['date-of-effectivity'] = $("#date-of-effectivity").val();
     } else {
+      $("#date-of-effectivity-error").html('*required field');
       error.push('Date of Effectivity is valid');
     }
 
     if ($("#date-of-expiry").val() != '') {
       first['date-of-expiry'] = $("#date-of-expiry").val();
     } else {
+      $("#date-of-expiry-error").html('*required field');
       error.push('Date of Expiry is valid');
     }
 
@@ -1506,9 +1566,29 @@
 
       return first;
     } else {
-      alert('required fields');
+      alert('Some of the fields are required');
     }
 
+  }
+
+
+  function getUrlParameters(parameter, staticURL, decode) {
+
+    var currLocation = (staticURL.length) ? staticURL : window.location.search,
+      parArr = currLocation.split("?")[1].split("&"),
+      returnBool = true;
+
+    for (var i = 0; i < parArr.length; i++) {
+      parr = parArr[i].split("=");
+      if (parr[0] == parameter) {
+        return (decode) ? decodeURIComponent(parr[1]) : parr[1];
+        returnBool = true;
+      } else {
+        returnBool = false;
+      }
+    }
+
+    if (!returnBool) return false;
   }
 
 </script>

@@ -27,8 +27,9 @@
 @section('content')
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-12">
-      <div class="card card-primary">
+  <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <div class="card card-secondary">
         <div class="card-header">
           <!-- <h3 class="card-title"> -->
           <p class="text-center" style="font-size: 24px; margin-bottom: 0px">Notice of Violation Form</p>
@@ -75,17 +76,11 @@
               <div id="first-part" class="content" role="tabpanel" aria-labelledby="first-part-trigger">
 
                 <div class="col-md-12">
-                  <div class="card card-secondary" style="box-shadow: none;">
+                  <div class="card card-default" style="box-shadow: none;">
                     <div class="card-header" style="height: 50px;">
-                      <!-- <h3 class="card-title"> -->
-                      <p class="text-center">Company Basic Info</p>
-                      <!-- </h3> -->
-
-                      <!-- <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                          <i class="fas fa-minus"></i>
-                        </button>
-                      </div> -->
+                    
+                      <em><b><p class="text-center text-lg">BASIC INFORMATION</p></b></em>
+                      
                     </div>
                     <div class="card-body">
 
@@ -98,77 +93,59 @@
                   </div>
 
 
-                  <button class="btn btn-primary" onclick="NextStep(1,2)">Next</button>
+                  <button class="btn btn-primary btn-flat" onclick="NextStep(1,2)">Next</button>
 
                 </div>
               </div>
               <div id="second-part" class="content" role="tabpanel" aria-labelledby="second-part-trigger">
                 <div class="col-md-12">
-                  <div class="card card-secondary" style="box-shadow: none;">
+                  <div class="card card-default" style="box-shadow: none;">
                     <div class="card-header" style="height: 50px;">
-                      <!-- <h3 class="card-title"> -->
-                      <p class="text-center">ACT/S CONSTITUTING THE VIOLATION</p>
-                      <!-- </h3> -->
 
-                      <!-- <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                          <i class="fas fa-minus"></i>
-                        </button>
-                      </div> -->
+                      <em><b><p class="text-center text-lg">ACT/S CONSTITUTING THE VIOLATION</p></b></em>
+
                     </div>
                     <div class="card-body">
                       @include('user.nov.acts-constituting-violation')
                     </div>
                   </div>
                 </div>
-                <button class="btn btn-primary" onclick="stepper.previous()">Previous</button>
-                <button class="btn btn-primary" onclick="NextStep(2,3)">Next</button>
+                <button class="btn btn-primary btn-flat" onclick="stepper.previous()">Previous</button>
+                <button class="btn btn-primary btn-flat" onclick="NextStep(2,3)">Next</button>
               </div>
 
               <div id="third-part" class="content" role="tabpanel" aria-labelledby="third-part-trigger">
                 <div class="col-md-12">
-                  <div class="card card-secondary" style="box-shadow: none;">
+                  <div class="card card-default" style="box-shadow: none;">
                     <div class="card-header" style="height: 50px;">
-                      <!-- <h3 class="card-title"> -->
-                      <p class="text-center">PROPOSED TECHNICAL CONFERENCE SCHEDULE</p>
-                      <!-- </h3> -->
-
-                      <!-- <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                          <i class="fas fa-minus"></i>
-                        </button>
-                      </div> -->
+                    
+                      <em><b><p class="text-center text-lg">PROPOSED TECHNICAL CONFERENCE SCHEDULE</p></b></em>
+                      
                     </div>
                     <div class="card-body">
                       @include('user.nov.proposed-technical-schedule')
                     </div>
                   </div>
                 </div>
-                <button class="btn btn-primary" onclick="stepper.previous()">Previous</button>
-                <button class="btn btn-primary" onclick="NextStep(3,4)">Next</button>
+                <button class="btn btn-primary btn-flat" onclick="stepper.previous()">Previous</button>
+                <button class="btn btn-primary btn-flat" onclick="NextStep(3,4)">Next</button>
               </div>
 
               <div id="fourth-part" class="content" role="tabpanel" aria-labelledby="fourth-part-trigger">
                 <div class="col-md-12">
-                  <div class="card card-secondary" style="box-shadow: none;">
+                  <div class="card card-default" style="box-shadow: none;">
                     <div class="card-header" style="height: 50px;">
-                      <!-- <h3 class="card-title"> -->
-                      <p class="text-center">Review NOV Details</p>
-                      <!-- </h3> -->
-
-                      <!-- <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                          <i class="fas fa-minus"></i>
-                        </button>
-                      </div> -->
+                    
+                      <em><b><p class="text-center text-lg">REVIEW DETAILS</p></b></em>
+                      
                     </div>
                     <div class="card-body">
                       @include('user.nov.review-nov-details')
                     </div>
                   </div>
                 </div>
-                <button class="btn btn-primary" onclick="stepper.previous()">Previous</button>
-                <button class="btn btn-primary" onclick="NextStep(4,5)">Finish</button>
+                <button class="btn btn-primary btn-flat" onclick="stepper.previous()">Previous</button>
+                <button class="btn btn-primary btn-flat" onclick="NextStep(4,5)">Finish</button>
               </div>
 
             </div>
@@ -199,6 +176,8 @@
   
 
   var emb_id = sessionStorage.getItem("emb-id");
+  var report_id = sessionStorage.getItem("report-id");
+  const Sector = JSON.parse(sessionStorage.getItem("nov-sector"));
 
   $(function () {
     stepper.to(1);
@@ -207,7 +186,7 @@
 
     $("#nov-id").val(ID);
 
-    if (ID) {
+    if (ID != 0 ) {
       $.ajax({
         url: "{{route('getNOVview')}}",
         type: 'POST',
@@ -234,8 +213,10 @@
           $.each(response[1], function (index, value) {
             var tr = `<tr>
                     <td>
-                        <button class="btn btn-primary acts-consituting-violation-edit-btn" id="acts-consituting-violation-edit-btn" >Edit</button>
-                        <button class="btn btn-danger acts-consituting-violation-delete-btn" id="acts-consituting-violation-delete-btn" >Delete</button>
+                        <div class="btn-group">
+                            <button class="btn btn-info btn-flat acts-consituting-violation-edit-btn" id="acts-consituting-violation-edit-btn" >Edit</button>
+                            <button class="btn btn-danger btn-flat acts-consituting-violation-delete-btn" id="acts-consituting-violation-delete-btn" >Delete</button>
+                        </div>
                     </td>
                     <td>`+ value['findings'] + `</td>
                     <td style='white-space:pre'>`+ value['findings_description'] + `</td>
@@ -281,6 +262,8 @@
 
     if (current == 3 && nextstep == 4) {
 
+      
+
       var CaseNumber = $("#case-number").val();
       var Name = $("#name").val();
       var CompanyName = $("#company-name").val();
@@ -298,7 +281,7 @@
         $(this).find("td:eq(1)").each(function () {
           tableData += `<tr data-widget="expandable-table" aria-expanded="false">
                           <td><i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
-                            `+ this.innerHTML + `
+                            <em>`+ this.innerHTML + `</em>
                           </td>
                         </tr>`;
         });
@@ -381,6 +364,8 @@
 
       });
 
+      
+      
       $.ajax({
         url: "{{route('submitNOV')}}",
         type: 'POST',
@@ -397,6 +382,8 @@
           WebConferencing: TCLink,
           arrayFindings: arrayFindings,
           EmbID : emb_id,
+          report_id : report_id,
+          Sector : Sector,
           _token: '{{csrf_token()}}',
         },
         success: function (response) {

@@ -11,7 +11,7 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0"></h1>
+        <h1 class="m-0"> </h1>
       </div><!-- /.col -->
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
@@ -19,14 +19,10 @@
           <li class="breadcrumb-item active">REPORT</li>
         </ol>
       </div><!-- /.col -->
-    </div><!-- /.row -->
+    </div>
+    <!-- /.row -->
   </div><!-- /.container-fluid -->
-</div>
-@stop
-
-
-@section('content')
-<div class="container-fluid">
+</div> @stop @section('content') <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
       <div class="card card-secondary">
@@ -37,12 +33,15 @@
         </div>
         <div class="card-body">
           <!-- <div class="form-group"> -->
-          <table class="table table-bordered" id="report-list">
+          <table class="table table" id="report-list">
             <thead>
-              <th>Report Type</th>
+              <th>EMB ID</th>
               <th>Company Name</th>
-              <th>Nature of Business</th>
+              <th>Date</th>
+              <th>Report Type</th>
+              <th>Report For</th>
               <th>Action</th>
+              <th>With NOV</th>
             </thead>
           </table>
           <!-- </div> -->
@@ -70,9 +69,9 @@
 
 <script>
 
-sessionStorage.clear();
-      localStorage.clear();
-      
+  sessionStorage.clear();
+  localStorage.clear();
+
   $(function () {
 
     var table = $('#report-list').DataTable({
@@ -96,23 +95,39 @@ sessionStorage.clear();
       },
       columns: [
         {
-          data: 'report_type',
-          name: 'report_type',
+          data: 'emb_id',
+          name: 'emb_id',
         },
         {
           data: 'company_name',
           name: 'company_name',
         },
         {
-          data: 'nature_of_business',
-          name: 'nature_of_business',
+          data: 'created_date',
+          name: 'created_date',
+        },
+        {
+          data: 'report_type',
+          name: 'report_type',
+        },
+        
+        
+        {
+          data: 'report_for',
+          name: 'report_for',
         },
         {
           data: 'action',
           name: 'action',
         },
+        {
+          data: 'with_NOV',
+          name: 'with_NOV',
+        },
       ],
     });
+
+    
 
 
   });
@@ -125,7 +140,7 @@ sessionStorage.clear();
 
     sessionStorage.setItem("id", id);
     sessionStorage.setItem("emb-id", emb_id);
-    sessionStorage.setItem("new-or-old", 'old');
+    sessionStorage.setItem("new-or1-old", 'old');
 
     // if (type == 'old') {
     //// ajax call for all the data
@@ -136,8 +151,8 @@ sessionStorage.clear();
       url: "{{route('getReportData')}}",
       type: 'POST',
       data: {
-        page : [1, 2, 4], 
-        id : id,
+        page: [1, 2, 4],
+        id: id,
         emb_id: emb_id,
         _token: '{{csrf_token()}}',
       },
@@ -168,8 +183,8 @@ sessionStorage.clear();
           'operating-hours-day': response['inspection_report']['operating_hours_per_day'],
           'operating-hours-week': response['inspection_report']['operating_hours_per_week'],
           'operating-hours-year': response['inspection_report']['operating_hours_per_year'],
-          'pco-accreditation-number': response['inspection_report']['operating_hours_per_week'],
-          'phone-fax': response['inspection_report']['pco_accreditation'],
+          'pco-accreditation-number': response['inspection_report']['pco_accreditation'],
+          'phone-fax': response['inspection_report']['phone_fax_number'],
           'product': response['inspection_report']['product'],
           'psic-code': response['inspection_report']['psic_code'],
           'year-established': response['inspection_report']['year_established'],
@@ -207,8 +222,8 @@ sessionStorage.clear();
         const arrayrecommendation = [];
         $.each(response['recommendation'], function (index, value) {
           const recommendation = {
-            'id' : value['element_id'],
-            'value' : value['value']
+            'id': value['element_id'],
+            'value': value['value']
           }
           arrayrecommendation.push(recommendation);
         });
@@ -221,12 +236,45 @@ sessionStorage.clear();
     });
     // }
 
-    location.href = "/report";
+    location.href = "/report?id=" + id;
   }
 
-  function viewPDF(ID) 
-  {
+  function viewPDF(ID) {
     window.open("/preview-inspection-report/" + ID);
+  }
+
+  function viewNOV(id, report_id) {
+
+    if (id == 0) {
+
+      $.ajax({
+        url: "{{route('/get-report/id')}}",
+        type: 'POST',
+        data: {
+          report_id: report_id,
+          _token: '{{csrf_token()}}',
+        },
+        success: function (response) {
+          sessionStorage.setItem("emb-id", response['emb_id'] );
+          sessionStorage.setItem("report-id", response['id'] );
+
+          sessionStorage.setItem("company-name", response['establishment_name']);
+          sessionStorage.setItem("company-contact", response['phone_fax_number']);
+          sessionStorage.setItem("company-email", response['email']);
+          sessionStorage.setItem("company-address", response['address']);
+          
+          window.open("/nov");
+        }
+
+      });
+
+    } else {
+      sessionStorage.setItem("nov-id", id);
+      window.open("/nov");
+    }
+
+
+
   }
 
   // function deleteNOV(ID) {

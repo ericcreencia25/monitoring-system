@@ -53,6 +53,9 @@ class NovController extends Controller
 
         $arrayFindings = $request->arrayFindings;
 
+        $report_id = $request->report_id;
+        $Sector = json_encode($request['Sector']);
+
         if ($ID) {
 
             $now = new \DateTime();
@@ -84,7 +87,7 @@ class NovController extends Controller
                         'findings_description' => $value[1],
                         'fine' => $value[3],
                         'created_by' => auth()->user()->name,
-                        'created_date' => $now->format('Y-m-d H:i:s'),
+                        'created_date' => $now->format('Y-m-d H:i:s')
                     ]);
                 }
 
@@ -100,6 +103,7 @@ class NovController extends Controller
 
             $novID = DB::table('nov')->insertGetId([
                 'emb_id' => $EmbID,
+                'report_id' => $report_id,
                 'case_number' => $CaseNumber,
                 'name' => $Name,
                 'company_name' => $CompanyName,
@@ -111,6 +115,7 @@ class NovController extends Controller
                 'web_conferencing' => $WebConferencing,
                 'created_by' => auth()->user()->name,
                 'created_date' => $now->format('Y-m-d H:i:s'),
+                'sector' => $Sector
             ]);
 
             if ($arrayFindings) {
@@ -189,8 +194,10 @@ class NovController extends Controller
                 return $details;
             })
             ->addColumn('action', function ($nov) {
-                $details = '<button class="btn btn-info" onclick="viewNOV(' . $nov->id . ')">View</button><button class="btn btn-danger" onclick="deleteNOV(' . $nov->id . ')">Delete</button>';
-                return $details;
+                $button = '<div class="btn-group">';
+                $button .= '<button class="btn btn-default btn-flat" onclick="viewNOV(' . $nov->id . ')">View</button><button class="btn btn-default btn-flat" onclick="deleteNOV(' . $nov->id . ')">Delete</button><button class="btn btn-default btn-flat" onclick="viewPDF(' . $nov->id . ')">PDF</button>';
+                $button .= '</div>';
+                return $button;
             })
             ->rawColumns(['case_number', 'name', 'company_name', 'action'])
             ->make(true);
@@ -201,19 +208,30 @@ class NovController extends Controller
     {
         $emb_id = $request->emb_id;
         $nov = DB::table('nov')
-        ->where('emb_id', $emb_id)
-        ->get();
+            ->where('emb_id', $emb_id)
+            ->get();
 
         return DataTables::of($nov)
             ->addColumn('case_number', function ($nov) {
-                $details = '<a href="#" onclick="viewNOV(' . $nov->id . ')" style="cursor: pointer">' .$nov->case_number . '</a>';
+                $details = '<em><b><p class="text">' . $nov->case_number . '</a></b></em>';
+                return $details;
+            })
+            ->addColumn('sector', function ($nov) {
+                $details = json_decode($nov->sector);
                 return $details;
             })
             ->addColumn('action', function ($nov) {
-                $details = '<button class="btn btn-info" onclick="viewNOV(' . $nov->id . ')">View</button>';
-                return $details;
+                $btn = '<div class="btn-group">';
+                $btn .= '<button class="btn btn-default btn-flat" title="view" onclick="viewNOV(' . $nov->id . ')"><i class="fa-solid fa-eye"></i></button>';
+
+                if (empty($nov->report_id)) {
+                    $btn .= '<button class="btn btn-default btn-flat" title="link to report" onclick="linkToReport(' . $nov->id . ', \'' . $nov->emb_id . '\')"><i class="fa-solid fa-link"></i></button>';
+                }
+
+                $btn .= '</div>';
+                return $btn;
             })
-            ->rawColumns(['case_number', 'name', 'company_name', 'action'])
+            ->rawColumns(['case_number', 'sector', 'action'])
             ->make(true);
 
     }
@@ -240,7 +258,7 @@ class NovController extends Controller
 
         $check = DB::table('prohibited_acts')->where('prohibited_acts', $OthersProhibitedActs)->first();
 
-        if($check) {
+        if ($check) {
 
             return 'Existing Prohibited Act/s';
 
@@ -255,7 +273,7 @@ class NovController extends Controller
             return 'Successfully added';
 
         }
-        
+
     }
 
     public function getProhibitedActs(Request $request)
@@ -264,5 +282,45 @@ class NovController extends Controller
 
         return $data;
     }
+
+    public function getNOVbyID(Request $request)
+    {
+        $report_id = $request->report_id;
+        $data = DB::table('nov')
+            ->where('report_id', $report_id)
+            ->get();
+
+        return $data;
+    }
+
+
+    public function saveLinkFromNOVToReports(Request $req)
+    {
+        $novid = $req->novid;
+        $reportid = $req->reportid;
+        $emb_id = $req->emb_id;
+
+        try {
+            $data = DB::table('nov')
+                ->where([
+                    ['emb_id', $emb_id],
+                    ['id', $novid],
+                ])
+                ->update([
+                    'report_id' => $reportid
+                ]);
+
+                return 'success';
+
+        } catch (\Throwable $e) {
+            report($e);
+
+            return false;
+            
+        }
+    }
+
+
+
 
 }

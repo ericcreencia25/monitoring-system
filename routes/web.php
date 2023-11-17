@@ -45,8 +45,11 @@ Route::post('getReportList', [ReportController::class, 'getReportList'])->name('
 Route::post('getReportData', [ReportController::class, 'getReportData'])->name('getReportData');
 Route::post('/save-final-step', [ReportController::class, 'saveFinalStep'])->name('saveFinalStep');
 Route::get('/preview-inspection-report/{id}', [ReportController::class, 'previewInspectionReport'])->name('previewInspectionReport');
+Route::post('/get-report/id', [ReportController::class, 'getReportbyID'])->name('/get-report/id');
+Route::post('linkToReport', [ReportController::class, 'linkToReport'])->name('linkToReport');
 
 // NOV
+Route::get('/preview-nov-pdf/{id}', [ReportController::class, 'previewNOVpdf'])->name('previewNOVpdf');
 Route::get('nov', [NovController::class, 'index'])->middleware('auth');
 Route::post('submitNOV', [NovController::class, 'submitNOV'])->name('submitNOV');
 Route::post('getNOVList', [NovController::class, 'getNOVList'])->name('getNOVList');
@@ -56,6 +59,8 @@ Route::get('nov-list', [NovController::class, 'novList'])->middleware('auth');
 Route::get('/preview-nov/{id}', [NovController::class, 'previewNOV'])->name('previewNOV');
 Route::post('addProhibitedActs', [NovController::class, 'addProhibitedActs'])->name('addProhibitedActs');
 Route::post('getProhibitedActs', [NovController::class, 'getProhibitedActs'])->name('getProhibitedActs');
+Route::post('/get-nov/id', [NovController::class, 'getNOVbyID'])->name('/get-nov/id');
+Route::post('link-nov-reports', [NovController::class, 'saveLinkFromNOVToReports'])->name('link-nov-reports');
 
 // Shapefiles
 Route::get('shapefiles/{ID}', [ShapefilesController::class, 'index'])->middleware('auth');

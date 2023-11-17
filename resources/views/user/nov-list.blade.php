@@ -37,7 +37,7 @@
         </div>
         <div class="card-body">
           <!-- <div class="form-group"> -->
-          <table class="table table-bordered" id="nov-list">
+          <table class="table table" id="nov-list">
             <thead>
               <th>Case Number</th>
               <th>Name</th>
@@ -133,4 +133,9 @@
     alert(ID);
   }
 
+  function viewPDF(ID) {
+    window.open("/preview-nov-pdf/" + ID, "_blank");
+  }
+
+  
 </script>

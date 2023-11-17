@@ -40,12 +40,12 @@ class DashboardController extends Controller
 
     public function establishmentAll(Request $request)
     {
-        $url = 'https://iis.emb.gov.ph/embis/api/Pbs/emeis_company_api?search=&limit=10000&offset=' . $request->start;
+        $url = 'https://iis.emb.gov.ph/embis/api/Pbs/emeis_company_api?search=&limit=1000&offset=' . $request->start;
         $client = new Client(['verify' => false]);
         $res = $client->get($url);
 
         $result = json_decode($res->getBody(), true);
-
+        
         return DataTables::of($result)
             ->addColumn('Action', function ($result) {
                 if ($result['establishment_name'] != '' || $result['establishment_name'] != null) {
@@ -86,6 +86,7 @@ class DashboardController extends Controller
         $emb_id = $request->emb_id;
         $establishment_name = $request->establishment_name;
         $theme = $request->theme;
+        $cnt = $request->cnt;
 
         $now = new \DateTime();
 
@@ -94,6 +95,7 @@ class DashboardController extends Controller
             DB::table('saved_company')->insert([
                 'company_name' => $company_name,
                 'emb_id' => $emb_id,
+                'cnt' => $cnt,
                 'establishment_name' => $establishment_name,
                 'created_date' => $now->format('Y-m-d H:i:s'),
                 'created_by' => auth()->user()->name,
@@ -116,19 +118,19 @@ class DashboardController extends Controller
             ->get();
 
         return DataTables::of($result)
-            ->addColumn('emb_id', function ($result) {
-                $details = $result->emb_id;
+            ->addColumn('Action', function ($result) {
+                if ($result->establishment_name != '' || $result->establishment_name != null) {
+                    $name = $result->establishment_name;
+                } else {
+                    $name = $result->company_name;
+                }
+                $details = '<a href="#" class="flex justify-between items-center" style="height: 60px;" onclick="getEstablishmentDetails(' . $result->cnt . ')">
+                    <h3 class="text-sm font-semibold text-gray-500">' . $name . '</h3>
+                    <p class="text-md text-gray-400"></p>
+                </a>';
                 return $details;
             })
-            ->addColumn('establishment_name', function ($result) {
-                $details = $result->establishment_name;
-                return $details;
-            })
-            ->addColumn('action', function ($result) {
-                $details = '<button class="btn btn-default">view</button>';
-                return $details;
-            })
-            ->rawColumns(['emb_id', 'establishment_name', 'action'])
+            ->rawColumns(['Action'])
             ->make(true);
     }
 

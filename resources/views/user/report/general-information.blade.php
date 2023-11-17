@@ -1,25 +1,28 @@
 <div class="form-group">
   <label for="inputName" style="margin-bottom: 0px;">Establishment Name</label>
-  <input type="text" id="establishment-name" class="form-control">
+  <input type="text" id="establishment-name" class="form-control rounded-0">
+  <label for="inputName" style="margin-bottom: 0px; color:red; font-size:11px" id="establishment-name-error"></label>
 </div>
 <div class="form-group">
   <label for="inputName" style="margin-bottom: 0px;">Nature of Business</label>
-  <input type="text" id="nature-of-business" class="form-control">
+  <input type="text" id="nature-of-business" class="form-control rounded-0">
+  <label for="inputName" style="margin-bottom: 0px; color:red; font-size:11px" id="nature-of-business-error"></label>
 </div>
 <div class="form-group">
   <label for="inputName" style="margin-bottom: 0px;">Address</label>
-  <input type="text" id="address" class="form-control">
+  <input type="text" id="address" class="form-control rounded-0">
+  <label for="inputName" style="margin-bottom: 0px; color:red; font-size:11px" id="address-error"></label>
 </div>
 <div class="form-group">
   <label for="inputName" style="margin-bottom: 0px;">Geographical Coordinates</label>
-  <input type="text" id="geograpical-coordinates" class="form-control">
+  <input type="text" id="geograpical-coordinates" class="form-control rounded-0">
 </div>
 <div class="form-group">
   <div class="row">
     <div class="col-4">
       <label for="inputName" style="margin-bottom: 0px;">Year Established</label>
       <div class="input-group date" id="set-year-established" data-target-input="nearest">
-        <input type="text" class="form-control datetimepicker-input" data-target="#set-year-established"
+        <input type="text" class="form-control datetimepicker-input rounded-0" data-target="#set-year-established"
           id="year-established" placeholder="Enter Date" />
         <div class="input-group-append" data-target="#set-year-established" data-toggle="datetimepicker">
           <div class="input-group-text"><i class="fa fa-calendar"></i></div>
@@ -28,11 +31,12 @@
     </div>
     <div class="col-4">
       <label for="inputName" style="margin-bottom: 0px;">PSIC Code</label>
-      <input type="text" id="psic-code" class="form-control">
+      <input type="text" id="psic-code" class="form-control rounded-0">
     </div>
     <div class="col-4">
       <label for="inputName" style="margin-bottom: 0px;">Product</label>
-      <input type="text" id="product" class="form-control">
+      <input type="text" id="product" class="form-control rounded-0">
+      <label for="inputName" style="margin-bottom: 0px; color:red; font-size:11px" id="product-error"></label>
     </div>
   </div>
 </div>
@@ -40,15 +44,15 @@
   <div class="row">
     <div class="col-4">
       <label for="inputName" style="margin-bottom: 0px;">Operating hours/day</label>
-      <input type="number" id="operating-hours-day" class="form-control">
+      <input type="number" id="operating-hours-day" class="form-control rounded-0">
     </div>
     <div class="col-4">
       <label for="inputName" style="margin-bottom: 0px;">Operating hours/week</label>
-      <input type="number" id="operating-hours-week" class="form-control">
+      <input type="number" id="operating-hours-week" class="form-control rounded-0">
     </div>
     <div class="col-4">
       <label for="inputName" style="margin-bottom: 0px;">Operating hours/year</label>
-      <input type="number" id="operating-hours-year" class="form-control">
+      <input type="number" id="operating-hours-year" class="form-control rounded-0">
     </div>
   </div>
 </div>
@@ -57,11 +61,11 @@
   <div class="row">
     <div class="col-6">
       <label for="inputName" style="margin-bottom: 0px;">Emil</label>
-      <input type="text" id="email" class="form-control">
+      <input type="text" id="email" class="form-control rounded-0">
     </div>
     <div class="col-6">
       <label for="inputName" style="margin-bottom: 0px;">Phone/Fax</label>
-      <input type="text" id="phone-fax" class="form-control">
+      <input type="text" id="phone-fax" class="form-control rounded-0">
     </div>
   </div>
 </div>
@@ -73,7 +77,7 @@
     </div>
     <div class="col-md-1">
       <div class="card-tools">
-        <button type="button" class="btn btn-primary btn-block" id="modal-add-ppa-btn">
+        <button type="button" class="btn btn-default btn-flat btn-block" id="modal-add-ppa-btn">
           <i class="fa fa-edit"></i>
         </button>
       </div>
@@ -98,38 +102,40 @@
 
 <div class="form-group">
   <label for="inputClientCompany" style="margin-bottom: 0px;">Managing Head Name</label>
-  <input type="text" id="managing-head" class="form-control">
+  <input type="text" id="managing-head" class="form-control rounded-0">
 </div>
 
 <div class="form-group">
   <label for="inputClientCompany" style="margin-bottom: 0px;">Name of PCO</label>
-  <input type="text" id="name-of-pco" class="form-control">
+  <input type="text" id="name-of-pco" class="form-control rounded-0">
 </div>
 
 <div class="form-group">
   <div class="row">
     <div class="col-4">
       <label for="inputName" style="margin-bottom: 0px;">PCO Accreditation Number</label>
-      <input type="text" id="pco-accreditation-number" class="form-control">
+      <input type="text" id="pco-accreditation-number" class="form-control rounded-0">
     </div>
     <div class="col-4">
       <label for="inputName" style="margin-bottom: 0px;">Date of Effectivity</label>
       <div class="input-group date" id="set-date-of-effectivity" data-target-input="nearest">
-        <input type="text" class="form-control datetimepicker-input" data-target="#set-date-of-effectivity"
+        <input type="text" class="form-control rounded-0 datetimepicker-input" data-target="#set-date-of-effectivity"
           id="date-of-effectivity" placeholder="Enter Date" />
         <div class="input-group-append" data-target="#set-date-of-effectivity" data-toggle="datetimepicker">
           <div class="input-group-text"><i class="fa fa-calendar"></i></div>
         </div>
+        <label for="inputName" style="margin-bottom: 0px; color:red; font-size:11px" id="date-of-effectivity-error"></label>
       </div>
     </div>
     <div class="col-4">
       <label for="inputName" style="margin-bottom: 0px;">Date of Expiry</label>
       <div class="input-group date" id="set-date-of-expiry" data-target-input="nearest">
-        <input type="text" class="form-control datetimepicker-input" data-target="#set-date-of-expiry"
+        <input type="text" class="form-control rounded-0 datetimepicker-input" data-target="#set-date-of-expiry"
           id="date-of-expiry" placeholder="Enter Date" />
         <div class="input-group-append" data-target="#set-date-of-expiry" data-toggle="datetimepicker">
           <div class="input-group-text"><i class="fa fa-calendar"></i></div>
         </div>
+        <label for="inputName" style="margin-bottom: 0px; color:red; font-size:11px" id="date-of-expiry-error"></label>
       </div>
     </div>
   </div>
@@ -151,18 +157,18 @@
 
             <div class="form-group">
               <label for="inputName" style="margin-bottom: 0px;">Product Lines</label>
-              <input type="text" id="product-lines-add" class="form-control" required>
+              <input type="text" id="product-lines-add" class="form-control rounded-0" required>
             </div>
 
             <div class="form-group">
               <label for="inputName" style="margin-bottom: 0px;">Production Rate as Declared in the ECC
                 (Unit/day)</label>
-              <input type="text" id="production-rate-add" class="form-control" required>
+              <input type="text" id="production-rate-add" class="form-control rounded-0" required>
             </div>
 
             <div class="form-group">
               <label for="inputName" style="margin-bottom: 0px;">Actual Production Rate (Unit/day)</label>
-              <input type="text" id="actual-production-rate-add" class="form-control" required>
+              <input type="text" id="actual-production-rate-add" class="form-control rounded-0" required>
             </div>
 
             <div class="form-group">
@@ -255,8 +261,10 @@
           <td>`+ ProductionRate + `</td>
           <td>`+ ActualProductionRate + `</td>
           <td>
-            <button class="btn btn-primary PPA-table-edit">edit</button>
-              <button class="btn btn-danger PPA-table-delete">delete</button>
+            <div class="btn-group">
+                <button class="btn btn-info btn-flat PPA-table-edit">edit</button>
+                <button class="btn btn-danger btn-flat PPA-table-delete">delete</button>
+            </div>
           </td>
         </tr>
       `);

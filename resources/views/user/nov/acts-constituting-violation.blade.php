@@ -7,10 +7,10 @@
             <!-- /.card-header -->
             <div class="card-body">
                 <div class="form-group">
-                    <input type="text" id="findings-add" class="form-control" placeholder="Finding/s">
+                    <input type="text" id="findings-add" class="form-control rounded-0" placeholder="Finding/s">
                 </div>
                 <div class="form-group">
-                    <textarea id="compose-textarea-findings" class="form-control" style="height: 100px"
+                    <textarea id="compose-textarea-findings" class="form-control rounded-0" style="height: 100px"
                         placeholder="Description"></textarea>
                 </div>
             </div>
@@ -25,7 +25,7 @@
             <!-- /.card-header -->
             <div class="card-body">
                 <div class="form-group">
-                    <select class="form-control select2" id="prohibited-act-add" style="width: 100%; height: 100%;">
+                    <select class="form-control rounded-0 select2" id="prohibited-act-add" style="width: 100%; height: 100%;">
                         <option value="">N/A</option>
                         <option value="Add Other">Add Other</option>
                         <!-- <option value="RA 6969">RA 6969</option>
@@ -37,7 +37,7 @@
                 </div>
                 <div class="form-group">
                     <div class="input-group input-group-sm" id="others-prohibited-acts-div" hidden>
-                        <input class="form-control" id="others-prohibited-acts" placeholder="others">
+                        <input class="form-control rounded-0" id="others-prohibited-acts" placeholder="others">
                         <span class="input-group-append">
                             <button type="button" class="btn btn-info btn-flat" id="Add-Prohibited-Acts">Add</button>
                         </span>
@@ -53,20 +53,23 @@
                                     PhP
                                 </span>
                             </div>
-                            <input type="text" class="form-control" id="fine-violation">
+                            <input type="text" class="form-control rounded-0" id="fine-violation">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="form-group">
+            <button class="btn btn-primary btn-flat btn-block" id="add-act">Save</button>
+        </div>
     </div>
 
     <div class="col-8"></div>
-    <div class="col-4">
+    <!-- <div class="col-4">
         <div class="form-group">
-            <button class="btn btn-primary btn-block" id="add-act">Save</button>
+            <button class="btn btn-primary btn-flat btn-block" id="add-act">Save</button>
         </div>
-    </div>
+    </div> -->
 
 </div>
 
@@ -204,8 +207,10 @@
 
             var tr = `<tr>
                     <td>
-                        <button class="btn btn-primary acts-consituting-violation-edit-btn" id="acts-consituting-violation-edit-btn" >Edit</button>
-                        <button class="btn btn-danger acts-consituting-violation-delete-btn" id="acts-consituting-violation-delete-btn" >Delete</button>
+                        <div class="btn-group">
+                            <button class="btn btn-info btn-flat acts-consituting-violation-edit-btn" id="acts-consituting-violation-edit-btn" >Edit</button>
+                            <button class="btn btn-danger btn-flat acts-consituting-violation-delete-btn" id="acts-consituting-violation-delete-btn" >Delete</button>
+                        </div>
                     </td>
                     <td>`+ Findings + `</td>
                     <td style='white-space:pre'>`+ ComposeTextareaFindings + `</td>

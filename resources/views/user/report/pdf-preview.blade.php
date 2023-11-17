@@ -318,7 +318,7 @@
                                         <span style="font-family:'Bookman Old Style';">New</span>
                                     </p>
                                 </td>
-                                <td style="width:47.05pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:top;">
+                                <td style="width:30.35pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:top;">
                                     <p style="margin-top:0pt; margin-bottom:0pt; text-align:center; font-size:9pt;">
                                         <span style="font-family:'Bookman Old Style';">Renewal</span>
                                     </p>
@@ -333,7 +333,7 @@
                                         @if($data['establishment_permits']->pmpin != '')
                                         <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                         @else
-                                        <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
                                         @endif
                                         <span style="font-family:'Bookman Old Style';">] PMPIN
                                             Application</span>
@@ -343,7 +343,7 @@
                                         @if($data['establishment_permits']->hazwaste_id_reg != '')
                                         <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                         @else
-                                        <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
                                         @endif
                                         <span style="font-family:'Bookman Old Style';">] Hazardous
                                             Waste
@@ -355,7 +355,7 @@
                                         @if($data['establishment_permits']->hazwaste_trans_reg != '')
                                         <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                         @else
-                                        <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
                                         @endif
 
                                         <span style="font-family:'Bookman Old Style';">] Hazardous Waste
@@ -367,7 +367,7 @@
                                         @if($data['establishment_permits']->hazwaste_tsd_reg != '')
                                         <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                         @else
-                                        <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
                                         @endif
 
                                         <span style="font-family:'Bookman Old Style';">] Hazardous Waste
@@ -379,7 +379,7 @@
                                         @if($data['establishment_permits']->pto_apse != '')
                                         <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                         @else
-                                        <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
                                         @endif
 
                                         <span style="font-family:'Bookman Old Style';">] Permit to
@@ -391,7 +391,7 @@
                                         @if($data['establishment_permits']->discharge_permit != '')
                                         <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                         @else
-                                        <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
                                         @endif
                                         <span style="font-family:'Bookman Old Style';">] Discharge
                                             Permit</span>
@@ -410,7 +410,7 @@
                                         == 'new')
                                         <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                         @else
-                                        <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
                                         @endif
                                         <span style="font-family:'Bookman Old Style';">]</span>
                                     </p>
@@ -421,7 +421,7 @@
                                         == 'new')
                                         <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                         @else
-                                        <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
                                         @endif
                                         <span style="font-family:'Bookman Old Style';">]</span>
                                     </p>
@@ -431,7 +431,7 @@
                                         == 'new')
                                         <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                         @else
-                                        <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
                                         @endif
                                         <span style="font-family:'Bookman Old Style';">]</span>
                                     </p>
@@ -441,7 +441,7 @@
                                         == 'new')
                                         <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                         @else
-                                        <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
                                         @endif
                                         <span style="font-family:'Bookman Old Style';">]</span>
                                     </p>
@@ -451,7 +451,7 @@
                                         == 'new')
                                         <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                         @else
-                                        <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
                                         @endif
                                         <span style="font-family:'Bookman Old Style';">]</span>
                                     </p>
@@ -461,7 +461,7 @@
                                         == 'new')
                                         <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                         @else
-                                        <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
                                         @endif
                                         <span style="font-family:'Bookman Old Style';">]</span>
                                     </p>
@@ -471,86 +471,82 @@
                                         == 'new')
                                         <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                         @else
-                                        <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
                                         @endif
                                         <span style="font-family:'Bookman Old Style';">]</span>
                                     </p>
                                 </td>
+
                                 <td style="width:30.35pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:top;">
                                     <p style="margin-top:0pt; margin-bottom:5pt; text-align:center; font-size:9pt;">
                                         <span style="font-family:'Bookman Old Style';">[</span>
-                                        @if($data['establishment_permits']->pmpin
-                                        == 'renewal')
+                                        @if($data['establishment_permits']->pmpin == 'renewal')
                                         <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                         @else
-                                        <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
+                                        @endif
+                                        <span style="font-family:'Bookman Old Style';">]</span>
+                                    </p>
+
+                                    <p style="margin-top:0pt; margin-bottom:5pt; text-align:center; font-size:9pt;">
+                                        <span style="font-family:'Bookman Old Style';">[</span>
+                                        @if($data['establishment_permits']->hazwaste_id_reg == 'renewal')
+                                        <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
+                                        @else
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
                                         @endif
                                         <span style="font-family:'Bookman Old Style';">]</span>
                                     </p>
                                     <p style="margin-top:0pt; margin-bottom:5pt; text-align:center; font-size:9pt;">
                                         <span style="font-family:'Bookman Old Style';">[</span>
-                                        @if($data['establishment_permits']->hazwaste_id_reg
-                                        == 'renewal')
+                                        @if($data['establishment_permits']->hazwaste_trans_reg == 'renewal')
                                         <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                         @else
-                                        <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
                                         @endif
                                         <span style="font-family:'Bookman Old Style';">]</span>
                                     </p>
                                     <p style="margin-top:0pt; margin-bottom:5pt; text-align:center; font-size:9pt;">
                                         <span style="font-family:'Bookman Old Style';">[</span>
-                                        @if($data['establishment_permits']->hazwaste_trans_reg
-                                        == 'renewal')
+                                        @if($data['establishment_permits']->hazwaste_tsd_reg == 'renewal')
                                         <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                         @else
-                                        <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
                                         @endif
                                         <span style="font-family:'Bookman Old Style';">]</span>
                                     </p>
                                     <p style="margin-top:0pt; margin-bottom:5pt; text-align:center; font-size:9pt;">
                                         <span style="font-family:'Bookman Old Style';">[</span>
-                                        @if($data['establishment_permits']->hazwaste_tsd_reg
-                                        == 'renewal')
+                                        @if($data['establishment_permits']->pto_apse == 'renewal')
                                         <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                         @else
-                                        <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
                                         @endif
                                         <span style="font-family:'Bookman Old Style';">]</span>
                                     </p>
                                     <p style="margin-top:0pt; margin-bottom:5pt; text-align:center; font-size:9pt;">
                                         <span style="font-family:'Bookman Old Style';">[</span>
-                                        @if($data['establishment_permits']->pto_apse
-                                        == 'renewal')
+                                        @if($data['establishment_permits']->discharge_permit == 'renewal')
                                         <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                         @else
-                                        <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
                                         @endif
                                         <span style="font-family:'Bookman Old Style';">]</span>
                                     </p>
                                     <p style="margin-top:0pt; margin-bottom:5pt; text-align:center; font-size:9pt;">
                                         <span style="font-family:'Bookman Old Style';">[</span>
-                                        @if($data['establishment_permits']->discharge_permit
-                                        == 'renewal')
-                                    <div style="font-family: DejaVu Sans, sans-serif;">✔</div>
-                                    @else
-                                    <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
-                                    @endif
-                                    <span style="font-family:'Bookman Old Style';">]</span>
-                                    </p>
-                                    <p style="margin-top:0pt; margin-bottom:5pt; text-align:center; font-size:9pt;">
-                                        <span style="font-family:'Bookman Old Style';">[</span>
-                                        @if($data['establishment_permits']->other
-                                        == 'renewal')
-                                    <div style="font-family: DejaVu Sans, sans-serif;">✔</div>
-                                    @else
-                                    <span style="font-family:'Bookman Old Style';">&nbsp;&nbsp;&nbsp;</span>
-                                    @endif
-                                    <span style="font-family:'Bookman Old Style';">]</span>
+                                        @if($data['establishment_permits']->other == 'renewal')
+                                        <span style="font-family: DejaVu Sans, sans-serif;">✔</span>
+                                        @else
+                                        <span style="font-family: DejaVu Sans, sans-serif;">&nbsp;&nbsp;&nbsp;</span>
+                                        @endif
+                                        <span style="font-family:'Bookman Old Style';">]</span>
                                     </p>
                                 </td>
+                                
+                                
                             </tr>
                         </tbody>
-                        09178120370
                     </table>
                     <p
                         style="margin-top:0pt; margin-left:12.35pt; margin-bottom:0pt; text-indent:-12.35pt; line-height:115%; font-size:9pt;">
