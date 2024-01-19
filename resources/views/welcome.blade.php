@@ -3,27 +3,84 @@
 <link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
 <link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-
 <link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/dropzone/min/dropzone.min.css">
+
 <style>
   .dataTables_filter {
     display: none;
   }
-</style> @vite('resources/css/app.css') @section('header') <div class="content-header">
+
+  .blink {
+    animation: blink 1s steps(1, end) infinite;
+  }
+
+  @keyframes blink {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .spinner {
+     position: absolute;
+     left: 65%;
+     top: 50%;
+     height:60px;
+     width:60px;
+     margin:0px auto;
+     -webkit-animation: rotation .6s infinite linear;
+     -moz-animation: rotation .6s infinite linear;
+     -o-animation: rotation .6s infinite linear;
+     animation: rotation .6s infinite linear;
+     border-left:6px solid rgba(0,174,239,.15);
+     border-right:6px solid rgba(0,174,239,.15);
+     border-bottom:6px solid rgba(0,174,239,.15);
+     border-top:6px solid rgba(0,174,239,.8);
+     border-radius:100%;
+  }
+
+  @-webkit-keyframes rotation {
+     from {-webkit-transform: rotate(0deg);}
+     to {-webkit-transform: rotate(359deg);}
+  }
+  @-moz-keyframes rotation {
+     from {-moz-transform: rotate(0deg);}
+     to {-moz-transform: rotate(359deg);}
+  }
+  @-o-keyframes rotation {
+     from {-o-transform: rotate(0deg);}
+     to {-o-transform: rotate(359deg);}
+  }
+  @keyframes rotation {
+     from {transform: rotate(0deg);}
+     to {transform: rotate(359deg);}
+  }
+</style> 
+@vite('resources/css/app.css') 
+
+@section('header') 
+<div class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0">Dashboard</h1>
+        <h1 class="m-0">Home  </h1>
       </div><!-- /.col -->
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="#">Home</a></li>
-          <li class="breadcrumb-item active">Dashboard v1</li>
+          <!-- <li class="breadcrumb-item active">Dashboard v1</li> -->
         </ol>
       </div><!-- /.col -->
     </div><!-- /.row -->
   </div><!-- /.container-fluid -->
-</div> @stop @section('content') <!-- <div class="container-fluid"> --> <!--
+</div> 
+@stop @section('content') 
+<!-- <div class="container-fluid"> --> <!--
     component -->
 <main class="flex w-full h-full shadow-lg rounded-3xl">
   <section class="flex flex-col pt-3 w-4/12 bg-gray-50 h-auto "> <label class="px-3"> <input class="rounded-lg p-4 bg-gray-100
@@ -55,6 +112,7 @@
           <div class="card-body">
             <div class="form-group">
               <center><label>SELECT REPORT TYPE</label></center>
+              
               <div class="row">
                 <div class="col-md-4">
                   <div class="icheck-primary d-inline">
@@ -82,7 +140,15 @@
 
             <div class="form-group">
               <center><label>SELECT REPORT FOR</label></center>
-              <div class="row">
+              <select class="select2" multiple="multiple" name="report-for" id="report-for" data-placeholder="Select a State" style="width: 100%;">
+                <option value="AIR">AIR</option>
+                <option value="WATER">WATER</option>
+                <option value="EIA">EIA</option>
+                <option value="HAZWASTE">HAZWASTE</option>
+                <option value="CHEMICALS">CHEMICALS</option>
+                <option value="INTEGRATED">INTEGRATED</option>
+              </select>
+              <!-- <div class="row">
                 <div class="col-md-4">
                   <div class="icheck-primary d-inline">
                     <input type="checkbox" id="air-report-for" name="report-for" value="AIR">
@@ -137,7 +203,7 @@
                   </div>
                 </div>
 
-              </div>
+              </div> -->
             </div>
 
             <div class="form-group">
@@ -150,6 +216,39 @@
               </div>
 
             </div>
+            <div class="form-group" id="nov-additional" hidden="hidden">
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="icheck-primary d-inline">
+                    <input type="radio" id="with-nov" name="nov-additional" value="with existing NOV prior to the monitoring conducted">
+                    <label for="with-nov"></label>
+                    with existing NOV prior to the monitoring conducted
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="icheck-primary d-inline">
+                    <input type="radio" id="with-nov-with-reco" name="nov-additional" value="with existing NOV and with recommendation to issue another">
+                    <label for="with-nov-with-reco"></label>
+                    with existing NOV and with recommendation to issue another
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="icheck-primary d-inline">
+                    <input type="radio" id="without-nov" name="nov-additional" value="without existing NOV but with recommendation to issue NOV">
+                    <label for="without-nov"></label>
+                    without existing NOV but with recommendation to issue NOV
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="form-group" id="with-nov-input" hidden="hidden">
+              <label for="inputName">Linked/Relate Transaction To:</label>
+              <input type="text" id="" class="form-control">
+            </div>
+
           </div>
         </div>
 
@@ -178,63 +277,30 @@
           <div class="card-body">
 
             <div class="form-group">
-              <center><label>SELECT SECTOR</label></center>
-              <div class="row">
-                <div class="col-md-4">
-                  <div class="icheck-primary d-inline">
-                    <input type="checkbox" id="air-report-sector" name="report-sector" value="AIR">
-                    <label for="air-report-sector"></label>
-                    AIR
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="icheck-primary d-inline">
-                    <input type="checkbox" id="water-report-sector" name="report-sector" value="WATER">
-                    <label for="water-report-sector"></label>
-                    WATER
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="icheck-primary d-inline">
-                    <input type="checkbox" id="eia-report-sector" name="report-sector" value="EIA">
-                    <label for="eia-report-sector"></label>
-                    EIA
-                  </div>
-                </div>
+              <center><label>VIOLATION FOR</label></center>
 
-                <div class="col-md-4">
-                  <div class="icheck-primary d-inline">
-                    <input type="checkbox" id="hazwaste-report-sector" name="report-sector" value="HAZWASTE">
-                    <label for="hazwaste-report-sector"></label>
-                    HAZWASTE
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="icheck-primary d-inline">
-                    <input type="checkbox" id="chemicals-report-sector" name="report-sector" value="CHEMICALS">
-                    <label for="chemicals-report-sector"></label>
-                    CHEMICALS
-                  </div>
-                </div>
+              <select class="form-control select2" multiple="multiple" name="report-for-nov" id="report-for-nov" data-placeholder="Select a Sector" style="width: 100%;">
+                <option value="AIR">AIR</option>
+                <option value="WATER">WATER</option>
+                <option value="EIA">EIA</option>
+                <option value="HAZWASTE">HAZWASTE</option>
+                <option value="CHEMICALS">CHEMICALS</option>
+              </select>
 
-                <!-- <div class="col-md-4">
-                      <div class="icheck-primary d-inline">
-                        <input type="checkbox" id="solid-waste-report-sector" name="report-sector" value="SOLID WASTE">
-                        <label for="solid-waste-report-sector"></label>
-                        SOLID WASTE
-                      </div>
-                    </div> -->
+            </div>
 
-
-                <!-- <div class="col-md-4">
-                      <div class="icheck-primary d-inline">
-                        <input type="checkbox" id="integrated-report-sector" name="report-sector" value="INTEGRATED">
-                        <label for="integrated-report-sector"></label>
-                        INTEGRATED
-                      </div>
-                    </div> -->
-
+            <div class="form-group">
+              <center><label>VIOLATION IN RELATION TO EXCEEDANCE</label></center>
+              <div class="select2-danger">
+                <select class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger" multiple="multiple" name="violation-with-exceedance" id="violation-with-exceedance" data-placeholder="Select a Sector" style="width: 100%;">
+                  <option value="AIR">AIR</option>
+                  <option value="WATER">WATER</option>
+                  <option value="EIA">EIA</option>
+                  <option value="HAZWASTE">HAZWASTE</option>
+                  <option value="CHEMICALS">CHEMICALS</option>
+                </select>
               </div>
+
             </div>
 
           </div>
@@ -311,7 +377,6 @@
                         SOLID WASTE
                       </div>
                     </div> -->
-
 
                 <!-- <div class="col-md-4">
                       <div class="icheck-primary d-inline">
@@ -369,10 +434,379 @@
   </div>
 </div>
 
+<div class="modal fade" id="modal-commitment">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          COMMITMENT
+        </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <input class="form-control" id="report-id-modal" hidden>
+      </div>
+      <div class="modal-body">
+
+        <div class="card-body">
+
+          <div class="form-group" hidden>
+            <label for="inputName">EMB ID</label>
+            <input type="text" id="emb-id-commitment" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="inputName">Company Name</label>
+            <input type="text" id="company-name-commitment" class="form-control" readonly>
+          </div>
+          
+          <div class="form-group">
+            <label for="inputStatus">Nov #</label>
+            <select id="nov-list-select" class="form-control custom-select">
+              <!-- <option selected="" disabled="">Select one</option>
+              <option>On Hold</option>
+              <option>Canceled</option>
+              <option>Success</option> -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="inputStatus">Commitment For</label>
+            <select id="commitment-for" class="form-control custom-select">
+              <!-- <option selected="" disabled="">Select one</option>
+              <option>On Hold</option>
+              <option>Canceled</option>
+              <option>Success</option> -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="inputName">R.O. Case #</label>
+            <input type="text" id="ro-case-commitment" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="inputClientCompany">PAB CASE #</label>
+            <input type="text" id="pab-case-commitment" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="inputProjectLeader">Techinical Conference Date</label>
+            <input type="text" id="tcd-commitment" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="inputProjectLeader">Presider</label>
+            <input type="text" id="presider" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="inputProjectLeader">Commitment Due Date</label>
+            <div class="input-group date" id="setcommitmentdate" data-target-input="nearest">
+                <input type="text" class="form-control rounded-0 datetimepicker-input" data-target="#setcommitmentdate" id="set-commitment-date"
+                    placeholder="Enter Date" />
+                <div class="input-group-append" data-target="#setcommitmentdate" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputProjectLeader">Entry Date</label>
+            <div class="input-group date" id="setdate" data-target-input="nearest">
+                <input type="text" class="form-control rounded-0 datetimepicker-input" data-target="#setdate" id="entry-date"
+                    placeholder="Enter Date" />
+                <div class="input-group-append" data-target="#setdate" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputProjectLeader">Entry Time</label>
+            <div class="input-group date" id="settime" data-target-input="nearest">
+                <input type="text" class="form-control rounded-0 datetimepicker-input" data-target="#settime" id="entry-time"
+                    placeholder="Enter Time" />
+                <div class="input-group-append" data-target="#settime" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputProjectLeader">Input By</label>
+            <input type="text" id="input-by-commitment" class="form-control" readonly>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-primary" id="generate-nov-proceed">Proceed</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-generate-compliance">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          COMPLIANCE
+        </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <input class="form-control" id="report-id-modal" hidden>
+      </div>
+      <div class="modal-body">
+
+        <div class="card-body">
+
+          <div class="form-group" hidden>
+            <label for="inputName">EMB ID</label>
+            <input type="text" id="emb-id-compliance" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="inputName">Company Name</label>
+            <input type="text" id="company-name-compliance" class="form-control" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="inputStatus">IIS #</label>
+            <select id="ii-select-compliance" class="form-control custom-select">
+              <!-- <option selected="" disabled="">Select one</option>
+              <option>On Hold</option>
+              <option>Canceled</option>
+              <option>Success</option> -->
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="inputStatus">Nov #</label>
+            <select id="nov-list-select-compliance" class="form-control custom-select">
+              <!-- <option selected="" disabled="">Select one</option>
+              <option>On Hold</option>
+              <option>Canceled</option>
+              <option>Success</option> -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="inputStatus">Compliance For</label>
+            <select id="compliance-for" class="form-control custom-select">
+              <!-- <option selected="" disabled="">Select one</option>
+              <option>On Hold</option>
+              <option>Canceled</option>
+              <option>Success</option> -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="inputName">R.O. Case #</label>
+            <input type="text" id="ro-case-compliance" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="inputClientCompany">PAB CASE #</label>
+            <input type="text" id="pab-case-compliance" class="form-control">
+          </div>
+      
+
+          <div class="form-group">
+            <label for="inputProjectLeader">Commitment Due Date</label>
+            <div class="input-group date" id="setcommitmentdatecompliance" data-target-input="nearest">
+                <input type="text" class="form-control rounded-0 datetimepicker-input" data-target="#setcommitmentdatecompliance" id="set-commitment-date-compliance"
+                    placeholder="Enter Date" />
+                <div class="input-group-append" data-target="#setcommitmentdatecompliance" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputProjectLeader">Compliance Date</label>
+            <input type="text" id="compliance-date" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="inputProjectLeader">Entry Date</label>
+            <div class="input-group date" id="setdatecompliance" data-target-input="nearest">
+                <input type="text" class="form-control rounded-0 datetimepicker-input" data-target="#setdatecompliance" id="entry-date-compliance"
+                    placeholder="Enter Date" />
+                <div class="input-group-append" data-target="#setdatecompliance" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputProjectLeader">Entry Time</label>
+            <div class="input-group date" id="settimecompliance" data-target-input="nearest">
+                <input type="text" class="form-control rounded-0 datetimepicker-input" data-target="#settime" id="entry-time-compliance"
+                    placeholder="Enter Time" />
+                <div class="input-group-append" data-target="#settimecompliance" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputProjectLeader">Input By</label>
+            <input type="text" id="input-by-compliance" class="form-control" readonly>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-primary" id="generate-nov-proceed">Proceed</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-generate-decision">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          DECISION
+        </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <input class="form-control" id="report-id-modal" hidden>
+      </div>
+      <div class="modal-body">
+
+        <div class="card-body">
+
+          <div class="form-group" hidden>
+            <label for="inputName">EMB ID</label>
+            <input type="text" id="emb-id-decision" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="inputName">Company Name</label>
+            <input type="text" id="company-name-decision" class="form-control" readonly>
+          </div>
+          
+          <div class="form-group">
+            <label for="inputStatus">Nov #</label>
+            <select id="nov-list-select-decision" class="form-control custom-select">
+              <!-- <option selected="" disabled="">Select one</option>
+              <option>On Hold</option>
+              <option>Canceled</option>
+              <option>Success</option> -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="inputStatus">Decision Type</label>
+            <select id="compliance-for" class="form-control custom-select">
+              <option selected="" disabled="">Select one</option>
+              <option>Local</option>
+              <option>PAB</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="inputName">R.O. Case #</label>
+            <input type="text" id="ro-case-decision" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="inputClientCompany">PAB CASE #</label>
+            <input type="text" id="pab-case-decision" class="form-control">
+          </div>
+      
+
+          <div class="form-group">
+            <label for="inputProjectLeader">Commitment Due Date</label>
+            <div class="input-group date" id="setcommitmentdatedecision" data-target-input="nearest">
+                <input type="text" class="form-control rounded-0 datetimepicker-input" data-target="#setcommitmentdatedecision" id="set-commitment-date-decision"
+                    placeholder="Enter Date" />
+                <div class="input-group-append" data-target="#setcommitmentdatedecision" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputProjectLeader">Entry Date</label>
+            <div class="input-group date" id="setdatedecision" data-target-input="nearest">
+                <input type="text" class="form-control rounded-0 datetimepicker-input" data-target="#setdatedecision" id="entry-date-decision"
+                    placeholder="Enter Date" />
+                <div class="input-group-append" data-target="#setdatedecision" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputProjectLeader">Entry Time</label>
+            <div class="input-group date" id="settimedecision" data-target-input="nearest">
+                <input type="text" class="form-control rounded-0 datetimepicker-input" data-target="#settime" id="entry-time-decision"
+                    placeholder="Enter Time" />
+                <div class="input-group-append" data-target="#settimedecision" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputProjectLeader">Input By</label>
+            <input type="text" id="input-by-decision" class="form-control" readonly>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-primary" id="generate-nov-proceed">Proceed</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-history-of-violation">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          History of Violation
+        </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <input class="form-control" id="report-id-modal" hidden>
+      </div>
+      <div class="modal-body">
+
+        <div class="card-body">
+
+        </div>
+      </div>
+
+      <!-- <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-primary" id="generate-nov-proceed">Proceed</button>
+      </div> -->
+
+    </div>
+  </div>
+</div>
+
 
 @stop
 
 <script src="../../AdminLTE-3.2.0/plugins/jquery/jquery.min.js"></script>
+
+<script src="../../AdminLTE-3.2.0/plugins/select2/js/select2.full.min.js"></script>
 
 <script src="../../AdminLTE-3.2.0/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="../../AdminLTE-3.2.0/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
@@ -398,19 +832,93 @@
     sessionStorage.clear();
     localStorage.clear();
 
+    $('.select2').select2();
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    });
+
+    //commitment
+    $('#setcommitmentdate').datetimepicker({
+            format: 'DD/MM/YYYY',
+        });
+
+    $('#setdate').datetimepicker({
+            format: 'DD/MM/YYYY',
+        });
+
+    $('#settime').datetimepicker({
+            format: 'HH:mm:ss'
+        });
+
+    //compliance
+    $('#setcommitmentdatecompliance').datetimepicker({
+            format: 'DD/MM/YYYY',
+        });
+
+    $('#setdatecompliance').datetimepicker({
+            format: 'DD/MM/YYYY',
+        });
+
+    $('#settimecompliance').datetimepicker({
+            format: 'HH:mm:ss'
+        });
+
+    //decision
+    $('#setcommitmentdatedecision').datetimepicker({
+            format: 'DD/MM/YYYY',
+        });
+
+    $('#setdatedecision').datetimepicker({
+            format: 'DD/MM/YYYY',
+        });
+
+    $('#settimedecision').datetimepicker({
+            format: 'HH:mm:ss'
+        });
+
+    $("#notice-of-violation").on('change', function() {
+
+      if ($(this).is(":checked")) {
+
+        $("#nov-additional").removeAttr('hidden');
+      } else {
+
+        $("#nov-additional").attr('hidden','hidden');
+      }
+
+    });
+
+    $("input[type='radio'][name='nov-additional']").on('change', function() {
+
+      if ($(this).val() == 'without existing NOV but with recommendation to issue NOV') {
+        $("#with-nov-input").attr('hidden','hidden');
+      } else {
+        $("#with-nov-input").removeAttr('hidden');
+      }
+
+    });
+
+    
+
     $("#generate-report-proceed").on('click', function () {
+
+
 
       var ReportType = $("input[type='radio'][name='report-type']:checked").val();
       // var ReportFor = $("input[type='checkbox'][name='report-for']:checked").val();
 
-      var ReportFor = $('input[type=checkbox][name="report-for"]:checked').map(function (_, el) {
+      // var ReportFor = $('input[type=checkbox][name="report-for"]:checked').map(function (_, el) {
 
-        if ($(el).val() != 'INTEGRATED') {
-          return $(el).val();
-        }
+      //   if ($(el).val() != 'INTEGRATED') {
+      //     return $(el).val();
+      //   }
 
-      }).get();
-      console.log(ReportFor);
+      // }).get();
+
+      var ReportFor = $('#report-for').val();
+
       var CompanyName = $("#company-name").val();
       var CompanyAddress = $("#company-address").val();
       var CompanyEmail = $("#company-email").val();
@@ -444,8 +952,15 @@
       localStorage.removeItem("secondPageData-establishmentPermits");
 
 
+      if ( ReportType == 'Inspection' ) {
+        window.open("/report?id=0&type=inspection");
+      } else if ( ReportType == 'Investigation' ) {
+        window.open("/report?id=0&type=investigation");
+      }  else if ( ReportType == 'Monitoring' ) {
+        window.open("/report?id=0&type=monitoring");
+      } 
 
-      window.open("/report?id=0");
+      
     });
 
     $("#generate-nov-proceed").on('click', function () {
@@ -453,12 +968,12 @@
       sessionStorage.clear();
       localStorage.clear();
       sessionStorage.setItem("nov-id", 0);
-      // var ReportType = $("input[type='radio'][name='report-type']:checked").val();
-      // var ReportFor = $("input[type='checkbox'][name='report-for']:checked").val();
 
-      var Sector = $('input[type=checkbox][name="report-sector"]:checked').map(function (_, el) {
-        return $(el).val();
-      }).get();
+      // var Sector = $('input[type=checkbox][name="report-sector"]:checked').map(function (_, el) {
+      //   return $(el).val();
+      // }).get();
+
+      var Sector = $('#report-for-nov').val();
 
       var CompanyName = $("#company-name").val();
       var CompanyAddress = $("#company-address").val();
@@ -514,9 +1029,16 @@
       },
       columns: [
         {
-          data: 'Action',
+          data: 'cnt',
           className: "whitespace-normal px-6 py-4 font-thin text font-sans",
-          name: 'Action'
+          // name: 'cnt',
+          render: function (data, type, row) {
+            // console.log(row);
+            return `<a href="#" class="flex justify-between items-center" style="height: 60px;" onclick="getEstablishmentDetails(` + row['cnt'] + `)">
+                      <h3 class="text-sm font-semibold text-gray-500">`+ row['company_name'] + `</h3>
+                      <p class="text-md text-gray-400"></p>
+                      </a>`
+          }
         },
       ],
       "drawCallback": function (settings) {
@@ -526,7 +1048,6 @@
         $(row).addClass('py-5 border-b px-3 transition hover:bg-pink-100');
       },
     });
-
 
 
   });
@@ -569,24 +1090,20 @@
       },
       beforeSend: function (xhr, opts) {
         // $("#iee-checklist-table-land #"+BtnID+"").html(`<i class="fa fa-spinner fa-spin"></i>Loading`);
+        $("#DashboardBody").html(`<div class="spinner"></div>`);
       },
       success: function (result) {
+        console.log(result);
+        $("#smr-list").attr('hidden', 'hidden');
+
         var response = '';
         response = result[0];
-
-        console.log(result);
-
-
-        if (result[1] > 0) {
+        
+        if (result[1] > 0)
           var saved = 'yellow';
-        } else {
+        else
           var saved = 'none';
-        }
-
-
-
-
-
+        
         if (response['company_type'] == response['company_id'])
           CompanyCategory = 'MAIN'
         else
@@ -618,7 +1135,7 @@
           province_name = '';
 
         if (response['region_name'])
-          region_name = response['region_name'] + ', ';
+          region_name = response['region_name'] + ' ';
         else
           region_name = '';
 
@@ -628,6 +1145,7 @@
           establishment_name = response['establishment_name'];
         else
           establishment_name = response['company_name'];
+        
         //icons
         // <li class="w-6 h-6">
         //         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -659,9 +1177,8 @@
                   </div>
 
                   <div class="flex flex-col">
-
-                      <h3 class="text-primary">`+ EstablishmentName(response['establishment_name'], response['company_name']) + `
-                      </h3>
+                      <h4 class="text-primary">`+ EstablishmentName(response['establishment_name'], response['company_name']) + `
+                      </h4>
                       <p class="text-black text-gray-400 text-sm" id="company_email">`+ response['email'] + `</p>
                   </div>
               </div>
@@ -692,26 +1209,22 @@
               <div class="row">
                   <div class="col-md-3">
                       <button type="button" class="btn btn-default" data-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-file-export"></i> Generate Report
+                        <i class="fa-solid fa-file-export"></i> Generate
                       </button>
                       <ul class="dropdown-menu">
-                          <li class="dropdown-item" data-toggle="modal" data-target="#modal-generate-report" href="#"><a
-                                  href="#">Report</a></li>
-                          <li class="dropdown-item" data-toggle="modal" data-target="#modal-generate-nov" href="#"><a
-                                  href="#">NOV</a></li>
-                          <li class="dropdown-item" data-toggle="modal" data-target="#modal-generate-commitment" href="#"><a
-                                  href="#">Commitment</a></li>
-                          <li class="dropdown-item" data-toggle="modal" data-target="#modal-generate-compliance" href="#"><a
-                                  href="#">Compliance</a></li>
-                          <li class="dropdown-item" data-toggle="modal" data-target="#modal-generate-decision" href="#"><a
-                                  href="#">Decision</a></li>
+                          <li class="dropdown-item" data-toggle="modal" data-target="#modal-generate-report" href="#"><a href="#">Report</a></li>
+                          <li class="dropdown-item" data-toggle="modal" data-target="#modal-generate-nov" href="#"><a href="#">Notice of Violation</a></li>
+                          <li class="dropdown-item" data-toggle="modal" onclick="Commitment('`+response['company_name']+`', '`+response['emb_id']+`')"><a href="#">Commitment</a></li>
+                          <li class="dropdown-item" data-toggle="modal" onclick="Compliance('`+response['company_name']+`', '`+response['emb_id']+`')"><a href="#">Compliance</a></li>
+                          <li class="dropdown-item" data-toggle="modal" onclick="Decision('`+response['company_name']+`', '`+response['emb_id']+`')"><a href="#">Decision</a></li>
+                          <li class="dropdown-item" data-toggle="modal" disabled><a href="#">Evaluate Compliance</a></li>
+                          <li class="dropdown-item" data-toggle="modal" disabled><a href="#">Generate PAB Proceedings</a></li>
                       </ul>
                   </div>
               </div>
 
               <br>
           </section>
-
 
           <section>
 
@@ -1133,24 +1646,59 @@
                               aria-labelledby="vert-tabs-right-nov-tab">
 
                               <div class="card card-secondary" style="box-shadow: none;">
+
                                   <div class="card-header">
                                       <h3 class="card-title">Notice of Violation</h3>
                                   </div>
+
                                   <div class="card-body">
-                                      <div class="form-group">
+
+                                    <div class="form-group">
 
                                       <table class="table table-bordered" id="nov-list" style="width: 100%">
-                                              <thead>
-                                                  <th >CASE NUMBER</th>
-                                                  <th >SECTOR</th>
-                                                  <th >ACTION</th>
-                                              </thead>
+                                        <thead>
+                                          <th >CASE NUMBER</th>
+                                          <th >SECTOR</th>
+                                          <th >ACTION</th>
+                                        </thead>
 
-                                              <tbody>
-                                              </tbody>
-                                          </table>
-                                      </div>
+                                        <tbody>
+                                        </tbody>
 
+                                      </table>
+
+                                    </div>
+
+                                  </div>
+                              </div>
+
+                          </div>
+
+                          <div class="tab-pane fade" id="vert-tabs-right-smr" role="tabpanel"
+                              aria-labelledby="vert-tabs-right-smr-tab">
+
+                              <div class="card card-secondary" style="box-shadow: none;">
+                                  <div class="card-header">
+                                      <h3 class="card-title">SMR</h3>
+                                  </div>
+
+                                  <div class="card-body">
+                                    <div class="form-group">
+                                      <button class="btn btn-info btn-block" id="smr-find" onclick="findSMR(`+response['company_id']+`)">Find  <i class="fas fa-search fa-fw"></i> </button>
+                                    </div>
+                                    <div class="form-group">
+
+                                      <table class="table table-bordered" id="smr-list" style="width: 100%" hidden>
+                                        <thead>
+                                          <th >YEAR</th>
+                                          <th >QUARTER</th>
+                                          <th >REMARKS</th>
+                                          <th >STATUS</th>
+                                        </thead>
+                                        <tbody id="smr-body">
+                                        </tbody>
+                                      </table>
+                                    </div>
 
                                   </div>
                               </div>
@@ -1191,18 +1739,16 @@
                           aria-orientation="vertical">
                           <a class="nav-link active" id="vert-tabs-right-home-tab" data-toggle="pill" href="#vert-tabs-right-home"
                               role="tab" aria-controls="vert-tabs-right-home" aria-selected="true">Company Details</a>
-                          
                           <a class="nav-link" id="vert-tabs-right-shapefiles-tab" data-toggle="pill"
                               href="#vert-tabs-right-shapefiles" role="tab" aria-controls="vert-tabs-right-shapefiles"
                               aria-selected="false">GeoCoordinates</a>
+                          <a class="nav-link" id="vert-tabs-right-smr-tab" data-toggle="pill" href="#vert-tabs-right-smr"
+                              role="tab" aria-controls="vert-tabs-right-smr" aria-selected="false">SMR</a>
                           <a class="nav-link" id="vert-tabs-right-report-tab" data-toggle="pill" href="#vert-tabs-right-report"
                               role="tab" aria-controls="vert-tabs-right-report" aria-selected="false">Reports</a>
                           <a class="nav-link" id="vert-tabs-right-nov-tab" data-toggle="pill" href="#vert-tabs-right-nov"
                               role="tab" aria-controls="vert-tabs-right-nov" aria-selected="false">Notice of Violation</a>
-                          <a class="nav-link" id="vert-tabs-right-nov-tab" data-toggle="pill" href="#vert-tabs-right-nov"
-                              role="tab" aria-controls="vert-tabs-right-nov" aria-selected="false">SMR</a>
                           
-
                       </div>
                   </div>
               </div>
@@ -1368,6 +1914,70 @@
     });
   }
 
+  function findSMR(company_id)
+  {
+
+    $.ajax({
+      url: "{{route('/find-smr')}}",
+      type: 'POST',
+      data: {
+        company_id: company_id,
+        _token: '{{csrf_token()}}',
+      },
+      beforeSend: function (xhr, opts) {
+        // $("#iee-checklist-table-land #"+BtnID+"").html(`<i class="fa fa-spinner fa-spin"></i>Loading`);
+        $("#smr-find").html('<span class = "spinner-border spinner-border-sm"></span> Finding...');
+      },
+      success: function (response) {
+        console.log(response);
+        $("#smr-find").html('Find  <i class="fas fa-search fa-fw"></i>');
+
+        // 131957
+
+        $("#smr-list").removeAttr('hidden');
+        $.each(response, function (index, value) {
+          
+          if(value['date_quarter'] == 1) {
+            var quarter = '1st';
+          } else if(value['date_quarter'] == 2) {
+            var quarter = '2nd';
+          } else if(value['date_quarter'] == 3) {
+            var quarter = '3rd';
+          } else if(value['date_quarter'] == 4) {
+            var quarter = '4th';
+          }
+
+          if(value['smr_status'] == 1) {
+            var status = 'Saved';
+          } else if(value['smr_status'] == 2) {
+            var status = 'For Notarization';
+          } else if(value['smr_status'] == 3) {
+            var status = 'For Evaluation by EMB';
+          } else if(value['smr_status'] == 4) {
+            var status = 'Sufficient';
+          } else if(value['smr_status'] == 5) {
+            var status = 'Deficient';
+          } else if(value['smr_status'] == 6) {
+            var status = 'Received';
+          }
+
+
+          var details = `<tr>`;
+          details += `<td>`+value['date_year']+`</td>`;
+          details += `<td>`+quarter+`</td>`;
+          details += `<td>`+value['smr_notes']+`</td>`;
+          details += `<td>`+status+`</td>`;
+          details += `</tr>`;
+          $("#smr-body").append(details);       
+        });
+
+         
+      }
+    });
+    
+    
+  }
+
 
   function isset(object) {
     if (object == null || object == '') {
@@ -1390,12 +2000,12 @@
   function EstablishmentStatus(status) {
 
     if (status == '0') {
-      return `<div class="rounded-full w-3 h-3 bg-green-700"></div>
+      return `<div class="rounded-full w-3 h-3 bg-green-700 blink"></div>
                 </div>
                 <div>
                 <p class="text-large text-gray-500 h-3 font-large">Active</p>`;
     } else {
-      return `<div class="rounded-full w-3 h-3 bg-red-700"></div>
+      return `<div class="rounded-full w-3 h-3 bg-red-700 blink"></div>
                 </div>
                 <div>
                 <p class="text-large text-gray-500 h-3 font-large">Inactive</p>`;
@@ -1420,7 +2030,7 @@
       url: "{{route('getReportData')}}",
       type: 'POST',
       data: {
-        page: [1, 2, 4],
+        page: [1],
         id: id,
         emb_id: emb_id,
         _token: '{{csrf_token()}}',
@@ -1462,42 +2072,7 @@
 
         localStorage.setItem('firstPageData', JSON.stringify(firstPageData));
 
-        /// 2nd page
-
-        const secondPageData = {
-          'check-status': response['purpose_of_inspection']['verify_accuracy'],
-          'determine-compliance': response['purpose_of_inspection']['determine_compliance_status'],
-          'investigate-community': response['purpose_of_inspection']['investigate_community'],
-          'verify-accuracy': response['purpose_of_inspection']['verify_accuracy'],
-          'others': response['purpose_of_inspection']['others'],
-        }
-
-        localStorage.setItem('secondPageData', JSON.stringify(secondPageData));
-
-        if (response['establishment_permits'] != undefined) {
-          localStorage.setItem('secondPageData-establishmentPermits', JSON.stringify(response['establishment_permits']));
-        } else {
-          const establishmentPermits = {
-            'establishment_permits': 'none',
-          }
-          localStorage.setItem('secondPageData-establishmentPermits', JSON.stringify(establishmentPermits));
-        }
-
-
-        /// 4th Page
-
-        const arrayrecommendation = [];
-        $.each(response['recommendation'], function (index, value) {
-          const recommendation = {
-            'id': value['element_id'],
-            'value': value['value']
-          }
-          arrayrecommendation.push(recommendation);
-        });
-
-        localStorage.setItem('fourthPageData', JSON.stringify(arrayrecommendation));
-
-        window.open("/report?id=" + id);
+        window.open("/report?id=" + id + "&type=");
       }
 
     });
@@ -1559,6 +2134,38 @@
 
   }
 
+  function linkToNOV(id, report_id) {
+
+    $("#modal-history-of-violation").modal();
+
+    // sessionStorage.clear();
+    // sessionStorage.setItem("nov-id", id);
+    // // var ReportType = $("input[type='radio'][name='report-type']:checked").val();
+    // // var ReportFor = $("input[type='checkbox'][name='report-for']:checked").val();
+
+    // var Sector = $('input[type=checkbox][name="report-sector"]:checked').map(function (_, el) {
+    //   return $(el).val();
+    // }).get();
+
+    // var CompanyName = $("#company-name").val();
+    // var CompanyAddress = $("#company-address").val();
+    // var CompanyEmail = $("#company-email").val();
+    // var CompanyContact = $("#company-contact").val();
+    // var emb_id = $("#emb_id").val();
+
+    // sessionStorage.setItem("emb-id", emb_id);
+    // sessionStorage.setItem("report-id", report_id);
+
+    // sessionStorage.setItem("company-contact", CompanyContact);
+    // sessionStorage.setItem("company-email", CompanyEmail);
+    // sessionStorage.setItem("company-address", CompanyAddress);
+    // sessionStorage.setItem("company-name", CompanyName);
+    // sessionStorage.setItem("nov-sector", JSON.stringify(Sector));
+
+    // window.open('/nov', '_blank');
+
+  }
+
   function Linking(id, emb_id) {
 
     var novid = $("#report-id-modal").val();
@@ -1584,4 +2191,94 @@
     });
 
   }
+
+  function Commitment(name, emb_id) {
+
+    $("#company-name-commitment").val(name);
+    $("#emb-id-commitment").val(emb_id);
+
+    $.ajax({
+      url: "{{route('/nov-list-select')}}",
+      type: 'POST',
+      data: {
+        emb_id: emb_id,
+        _token: '{{csrf_token()}}',
+      },
+      beforeSend: function () {
+
+      },
+      success: function (response) {
+        var data = `<option value=""></option>`;
+        $.each(response, function (index, value) {
+          data += `<option value="`+value['case_number']+`">Case No: `+value['case_number']+` </option>`;
+        });
+        $("#nov-list-select").html(data);
+      }
+    });
+
+    $("#input-by-commitment").val(`{{auth()->user()->name}}`);
+
+    $("#modal-commitment").modal();
+  }
+
+  function Compliance(name, emb_id) {
+
+    $("#company-name-compliance").val(name);
+    $("#emb-id-compliance").val(emb_id);
+
+    $.ajax({
+      url: "{{route('/nov-list-select')}}",
+      type: 'POST',
+      data: {
+        emb_id: emb_id,
+        _token: '{{csrf_token()}}',
+      },
+      beforeSend: function () {
+
+      },
+      success: function (response) {
+        var data = `<option value=""></option>`;
+        $.each(response, function (index, value) {
+          data += `<option value="`+value['case_number']+`">Case No: `+value['case_number']+` </option>`;
+        });
+        $("#nov-list-select-compliance").html(data);
+      }
+    });
+
+    $("#input-by-compliance").val(`{{auth()->user()->name}}`);
+
+    $("#modal-generate-compliance").modal();
+  }
+
+
+  function Decision(name, emb_id) {
+
+    $("#company-name-decision").val(name);
+    $("#emb-id-decision").val(emb_id);
+
+    $.ajax({
+      url: "{{route('/nov-list-select')}}",
+      type: 'POST',
+      data: {
+        emb_id: emb_id,
+        _token: '{{csrf_token()}}',
+      },
+      beforeSend: function () {
+
+      },
+      success: function (response) {
+        var data = `<option value=""></option>`;
+        $.each(response, function (index, value) {
+          data += `<option value="`+value['case_number']+`">Case No: `+value['case_number']+` </option>`;
+        });
+        $("#nov-list-select-decision").html(data);
+      }
+    });
+
+    $("#input-by-decision").val(`{{auth()->user()->name}}`);
+
+    $("#modal-generate-decision").modal();
+  }
+
+  
 </script>

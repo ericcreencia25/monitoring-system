@@ -4,6 +4,37 @@
 <link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
 <link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 <link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/bs-stepper/css/bs-stepper.min.css">
+<!-- Select2 -->
+<link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/select2/css/select2.min.css">
+<link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+<style>
+  .loading-overlay {
+    display: none;
+    background: rgba(26, 26, 26, 0.7);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    top: 0;
+  }
+
+  .loading-overlay-image-container {
+    display: none;
+    position: fixed;
+    z-index: 7;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .loading-overlay-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+  }
+
+</style>
 
 @section('header')
 <!-- Content Header (Page header) -->
@@ -27,7 +58,22 @@
 @section('content')
 <div class="container-fluid">
   <div class="row">
-  <div class="col-md-2"></div>
+    <div class="col-md-2">
+      <!-- <div class="form-group">
+        <label>SECTOR</label>
+        <div class="select2-purple">
+          <select class="select2 sector-multiple" multiple="multiple" data-placeholder="Select a State"
+            data-dropdown-css-class="select2-purple" style="width: 100%;" id="sector-multiple" name="sector-multiple">
+            <option value="AIR">AIR</option>
+            <option value="WATER">WATER</option>
+            <option value="EIA">EIA</option>
+            <option value="HAZWASTE">HAZWASTE</option>
+            <option value="CHEMICALS">CHEMICALS</option>
+            <option value="SOLID WASTE">SOLID WASTE</option>
+          </select>
+        </div>
+      </div> -->
+    </div>
     <div class="col-md-8">
       <div class="card card-secondary">
         <div class="card-header">
@@ -78,9 +124,11 @@
                 <div class="col-md-12">
                   <div class="card card-default" style="box-shadow: none;">
                     <div class="card-header" style="height: 50px;">
-                    
-                      <em><b><p class="text-center text-lg">BASIC INFORMATION</p></b></em>
-                      
+
+                      <em><b>
+                          <p class="text-center text-lg">BASIC INFORMATION</p>
+                        </b></em>
+
                     </div>
                     <div class="card-body">
 
@@ -102,7 +150,9 @@
                   <div class="card card-default" style="box-shadow: none;">
                     <div class="card-header" style="height: 50px;">
 
-                      <em><b><p class="text-center text-lg">ACT/S CONSTITUTING THE VIOLATION</p></b></em>
+                      <em><b>
+                          <p class="text-center text-lg">ACT/S CONSTITUTING THE VIOLATION</p>
+                        </b></em>
 
                     </div>
                     <div class="card-body">
@@ -118,9 +168,11 @@
                 <div class="col-md-12">
                   <div class="card card-default" style="box-shadow: none;">
                     <div class="card-header" style="height: 50px;">
-                    
-                      <em><b><p class="text-center text-lg">PROPOSED TECHNICAL CONFERENCE SCHEDULE</p></b></em>
-                      
+
+                      <em><b>
+                          <p class="text-center text-lg">PROPOSED TECHNICAL CONFERENCE SCHEDULE</p>
+                        </b></em>
+
                     </div>
                     <div class="card-body">
                       @include('user.nov.proposed-technical-schedule')
@@ -135,9 +187,11 @@
                 <div class="col-md-12">
                   <div class="card card-default" style="box-shadow: none;">
                     <div class="card-header" style="height: 50px;">
-                    
-                      <em><b><p class="text-center text-lg">REVIEW DETAILS</p></b></em>
-                      
+
+                      <em><b>
+                          <p class="text-center text-lg">REVIEW DETAILS</p>
+                        </b></em>
+
                     </div>
                     <div class="card-body">
                       @include('user.nov.review-nov-details')
@@ -161,32 +215,43 @@
     </div>
   </div>
 </div>
+
+<div class="loading-overlay"></div>
+<div class="loading-overlay-image-container">
+  <div class="loader"></div>
+  Loading...
+</div>
+
 @stop
 
 <script src="../../AdminLTE-3.2.0/plugins/jquery/jquery.min.js"></script>
 <script src="../../AdminLTE-3.2.0/plugins/bs-stepper/js/bs-stepper.min.js"></script>
 <script src="../../AdminLTE-3.2.0/plugins/jquery-validation/jquery.validate.min.js"></script>
+<!-- Select2 -->
+<script src="../../AdminLTE-3.2.0/plugins/select2/js/select2.full.min.js"></script>
 
 <script>
+
   // BS-Stepper Init
   document.addEventListener('DOMContentLoaded', function () {
     window.stepper = new Stepper(document.querySelector('.bs-stepper'))
   });
-
-  
 
   var emb_id = sessionStorage.getItem("emb-id");
   var report_id = sessionStorage.getItem("report-id");
   const Sector = JSON.parse(sessionStorage.getItem("nov-sector"));
 
   $(function () {
-    stepper.to(1);
+
+    // stepper.to(1);
     var ID = sessionStorage.getItem("nov-id");
-    
+
+    $("#sector-multiple").val(["AIR", "WATER", "HAZWASTE", "CHEMICALS"]);
+    $("#sector-multiple").trigger('change');
 
     $("#nov-id").val(ID);
 
-    if (ID != 0 ) {
+    if (ID != 0) {
       $.ajax({
         url: "{{route('getNOVview')}}",
         type: 'POST',
@@ -209,13 +274,12 @@
           $("#contact-no").val(response[0]['contact_no']);
           $("#address").val(response[0]['address']);
 
-
           $.each(response[1], function (index, value) {
             var tr = `<tr>
                     <td>
                         <div class="btn-group">
-                            <button class="btn btn-info btn-flat acts-consituting-violation-edit-btn" id="acts-consituting-violation-edit-btn" >Edit</button>
-                            <button class="btn btn-danger btn-flat acts-consituting-violation-delete-btn" id="acts-consituting-violation-delete-btn" >Delete</button>
+                            <button class="btn btn-info btn-flat acts-consituting-violation-edit-btn" title="edit" id="acts-consituting-violation-edit-btn" ><i class="fa-solid fa-file-pen"></i></button>
+                            <button class="btn btn-danger btn-flat acts-consituting-violation-delete-btn" title="delete" id="acts-consituting-violation-delete-btn" ><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </td>
                     <td>`+ value['findings'] + `</td>
@@ -228,14 +292,11 @@
           });
 
           sessionStorage.setItem("nov-sector", JSON.stringify(response[0]['sector']));
-
-
-
+          $("#sector-list").val(JSON.parse(response[0]['sector']));
         }
 
       });
     } else {
-
 
       var CompanyName = sessionStorage.getItem("company-name");
       var CompanyContact = sessionStorage.getItem("company-contact");
@@ -247,22 +308,16 @@
       $("#email").val(CompanyEmail);
       $("#contact-no").val(CompanyContact);
       $("#address").val(CompanyAddress);
+      $("#sector-list").val(Sector);
 
     }
-
-
-
-    // stepper.to(1);
 
   });
 
   function NextStep(current, nextstep) {
     stepper.to(nextstep);
 
-
     if (current == 3 && nextstep == 4) {
-
-      
 
       var CaseNumber = $("#case-number").val();
       var Name = $("#name").val();
@@ -304,7 +359,6 @@
                           </td>
                         </tr>`;
         });
-
 
       });
 
@@ -364,8 +418,6 @@
 
       });
 
-      
-      
       $.ajax({
         url: "{{route('submitNOV')}}",
         type: 'POST',
@@ -381,15 +433,39 @@
           TimeSchedule: Time,
           WebConferencing: TCLink,
           arrayFindings: arrayFindings,
-          EmbID : emb_id,
-          report_id : report_id,
-          Sector : Sector,
+          EmbID: emb_id,
+          report_id: report_id,
+          Sector: Sector,
           _token: '{{csrf_token()}}',
         },
+        beforeSend: function () {
+
+          $('.loading-overlay').show();
+          $('.loading-overlay-image-container').show();
+        },
+        complete: function () {
+
+          $('.loading-overlay').hide();
+          $('.loading-overlay-image-container').hide();
+
+        },
         success: function (response) {
-          alert('success!')
-          // window.open("/dashboard");
-          location.href = '/nov-list';
+
+          Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Your work has been successfully submitted",
+              showConfirmButton: false,
+              timer: 1500,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+              },
+              didClose: (toast) => {
+                location.href = '/nov-list';
+              }
+          });
         }
 
       });
@@ -397,16 +473,9 @@
 
   }
 
-  function PrevStep(current, prevstep) {
+  function PrevStep(current, prevstep) 
+  {
 
   }
-
-  $(function () {
-
-    // stepper.to(1);
-
-  });
-
-
 
 </script>

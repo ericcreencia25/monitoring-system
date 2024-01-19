@@ -138,8 +138,6 @@ class NovController extends Controller
 
         return "Success";
 
-
-
     }
 
     public function eccConditionalitites(Request $request)
@@ -193,13 +191,19 @@ class NovController extends Controller
                 $details = $nov->company_name;
                 return $details;
             })
+            ->addColumn('violation_for', function ($nov) {
+                $str = isset($nov->sector) ? json_decode($nov->sector) : '';
+                $details = '<p class="text-sm">' .implode(", ", $str) . '</p>';
+                return $details;
+            })
+            
             ->addColumn('action', function ($nov) {
                 $button = '<div class="btn-group">';
-                $button .= '<button class="btn btn-default btn-flat" onclick="viewNOV(' . $nov->id . ')">View</button><button class="btn btn-default btn-flat" onclick="deleteNOV(' . $nov->id . ')">Delete</button><button class="btn btn-default btn-flat" onclick="viewPDF(' . $nov->id . ')">PDF</button>';
+                $button .= '<button class="btn btn-default btn-flat" title="view" onclick="viewNOV(' . $nov->id . ')"><i class="fa-solid fa-eye"></i></button><button class="btn btn-default btn-flat" title="delete" onclick="deleteNOV(' . $nov->id . ')"><i class="fa-solid fa-trash"></i></button><button class="btn btn-default btn-flat" title="PDF" onclick="viewPDF(' . $nov->id . ')"><i class="fa-solid fa-file fa-beat-fade"></i></button>';
                 $button .= '</div>';
                 return $button;
             })
-            ->rawColumns(['case_number', 'name', 'company_name', 'action'])
+            ->rawColumns(['case_number', 'name', 'company_name', 'action', 'violation_for'])
             ->make(true);
 
     }
@@ -246,7 +250,6 @@ class NovController extends Controller
         // $data = array_push($array, $nov[0]);
         $array[] = $nov;
         $array[] = $findings;
-
 
         return $array;
     }
@@ -317,6 +320,25 @@ class NovController extends Controller
 
             return false;
             
+        }
+    }
+
+    public function deleteNOV(Request $req) 
+    {
+        $id = $req->id;
+
+        try {
+
+            $data = DB::table('nov')->where('id', $id)->delete();
+
+            return "success";
+
+        } catch (\Throwable $e) {
+
+            report($e);
+
+            return false;
+
         }
     }
 

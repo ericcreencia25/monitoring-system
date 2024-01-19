@@ -40,27 +40,46 @@ class DashboardController extends Controller
 
     public function establishmentAll(Request $request)
     {
-        $url = 'https://iis.emb.gov.ph/embis/api/Pbs/emeis_company_api?search=&limit=1000&offset=' . $request->start;
+        // dd($request);
+        // $url = 'https://iis.emb.gov.ph/embis/api/Pbs/emeis_company_api?search=&limit=1000&offset=' . $request->start;
+        $url = 'https://iis.emb.gov.ph/embis/api/Pbs/emeis_company_api?search='.$request->search["value"].'&limit='.$request->length.'&start='.$request->start.'&draw='.$request->draw;
+        // $url = 'https://iis.emb.gov.ph/embis/api/Pbs/emeis_company_api?search='.$request->search["value"].'&limit=10&start=10&draw=2';
         $client = new Client(['verify' => false]);
         $res = $client->get($url);
 
         $result = json_decode($res->getBody(), true);
+
+        return $result;
         
-        return DataTables::of($result)
-            ->addColumn('Action', function ($result) {
-                if ($result['establishment_name'] != '' || $result['establishment_name'] != null) {
-                    $name = $result['establishment_name'];
-                } else {
-                    $name = $result['company_name'];
-                }
-                $details = '<a href="#" class="flex justify-between items-center" style="height: 60px;" onclick="getEstablishmentDetails(' . $result['cnt'] . ')">
-                <h3 class="text-sm font-semibold text-gray-500">' . $name . '</h3>
-                <p class="text-md text-gray-400"></p>
-            </a>';
-                return $details;
-            })
-            ->rawColumns(['Action'])
-            ->make(true);
+        // return DataTables::of($result['data'])
+        //     ->addColumn('Action', function ($result) {
+        //         if ($result['establishment_name'] != '' || $result['establishment_name'] != null) {
+        //             $name = $result['establishment_name'];
+        //         } else {
+        //             $name = $result['company_name'];
+        //         }
+        //         $details = '<a href="#" class="flex justify-between items-center" style="height: 60px;" onclick="getEstablishmentDetails(' . $result['cnt'] . ')">
+        //         <h3 class="text-sm font-semibold text-gray-500">' . $name . '</h3>
+        //         <p class="text-md text-gray-400"></p>
+        //     </a>';
+        //         return $details;
+        //     })
+        //     ->rawColumns(['Action'])
+        //     ->setTotalRecords($result['recordsTotal'])
+        //     ->setFilteredRecords($result['recordsFiltered'])
+        //     ->make(true);
+    }
+
+
+    public function findSMR(Request $request)
+    {
+        $url = 'https://iis.emb.gov.ph/embis/api/emeis/establishment_details?company_id=' . $request->company_id;
+        $client = new Client(['verify' => false]);
+        $res = $client->get($url);
+
+        $result = json_decode($res->getBody(), true);
+
+        return $result;
     }
 
     public function establishmentDetails(Request $request)

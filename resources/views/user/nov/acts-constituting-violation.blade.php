@@ -149,6 +149,8 @@
     $(function () {
 
 
+
+
         $.ajax({
             url: "{{route('getProhibitedActs')}}",
             type: 'POST',
@@ -208,13 +210,13 @@
             var tr = `<tr>
                     <td>
                         <div class="btn-group">
-                            <button class="btn btn-info btn-flat acts-consituting-violation-edit-btn" id="acts-consituting-violation-edit-btn" >Edit</button>
-                            <button class="btn btn-danger btn-flat acts-consituting-violation-delete-btn" id="acts-consituting-violation-delete-btn" >Delete</button>
+                            <button class="btn btn-info btn-flat acts-consituting-violation-edit-btn" title="edit" id="acts-consituting-violation-edit-btn" ><i class="fa-solid fa-file-pen"></i></button>
+                            <button class="btn btn-danger btn-flat acts-consituting-violation-delete-btn" title="delete" id="acts-consituting-violation-delete-btn" ><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </td>
                     <td>`+ Findings + `</td>
                     <td style='white-space:pre'>`+ ComposeTextareaFindings + `</td>
-                    <td>`+ ProhibitedAct + `</td>
+                    <td  class="td">`+ ProhibitedAct + `</td>
                     <td>`+ FineViolation + `</td>
                 </tr>`;
 
@@ -265,6 +267,34 @@
 
             currentRow.remove();
         });
+
+
+        //assumption: the column that you wish to rowspan is sorted.
+
+        //this is where you put in your settings
+        var indexOfColumnToRowSpan = 3;
+        var $table = $('#acts-consituting-violation-table');
+
+
+        //this is the code to do spanning, should work for any table
+        var rowSpanMap = {};
+        $table.find('tr').each(function () {
+            var valueOfTheSpannableCell = $($(this).children('td')[indexOfColumnToRowSpan]).text();
+            $($(this).children('td')[indexOfColumnToRowSpan]).attr('data-original-value', valueOfTheSpannableCell);
+            rowSpanMap[valueOfTheSpannableCell] = true;
+        });
+
+        for (var rowGroup in rowSpanMap) {
+            var $cellsToSpan = $('td[data-original-value="' + rowGroup + '"]');
+            var numberOfRowsToSpan = $cellsToSpan.length;
+            $cellsToSpan.each(function (index) {
+                if (index == 3) {
+                    $(this).attr('rowspan', numberOfRowsToSpan);
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
     });
 
 </script>

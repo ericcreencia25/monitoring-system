@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Client;
 use PDF;
+use File;
 
 class ReportController extends Controller
 {
@@ -28,9 +29,18 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $req)
     {
-        return view('user.report');
+        $type = $req->type;
+
+        if( $type == 'inspection' ) {
+            return view('user.report.inspection.report');
+        } elseif ( $type == 'investigation' ) {
+            return view('user.report.investigation.report');
+        } elseif ( $type == 'monitoring' ) {
+            return view('user.report.monitoring.report');
+        }
+        
     }
 
     public function reportList()
@@ -40,80 +50,138 @@ class ReportController extends Controller
 
     public function getReportList(Request $request)
     {
-        
+
+        // dd(DB::connection('remote_mysql')->table('smr')->limit(100)->get());
+
         if (empty($request->emb_id)) {
 
-            $inspection_report = DB::table('inspection_report')
+            $reports_list = DB::table('reports_list')
                 ->orderByRaw('id DESC')
                 ->get();
 
         } else {
 
-            $inspection_report = DB::table('inspection_report')
+            $reports_list = DB::table('reports_list')
                 ->where('emb_id', $request->emb_id)
                 ->orderByRaw('id DESC')
                 ->get();
 
         }
-        
-        return DataTables::of($inspection_report)
-            ->addColumn('report_type', function ($inspection_report) {
-                $details = 'Inspection Report';
-                return $details;
-            })
-            ->addColumn('emb_id', function ($inspection_report) {
-                $details = $inspection_report->emb_id;
-                return $details;
-            })
-            ->addColumn('company_name', function ($inspection_report) {
-                $details = $inspection_report->establishment_name;
-                return $details;
-            })
-            ->addColumn('nature_of_business', function ($inspection_report) {
-                $details = $inspection_report->nature_of_business;
-                return $details;
-            })
-            ->addColumn('report_for', function ($inspection_report) {
-                $details = json_decode($inspection_report->report_for);
-                return $details;
-            })
-            ->addColumn('created_date', function ($inspection_report) {
 
-                $details = date('m/d/Y', strtotime($inspection_report->created_date));
-                ;
+        return DataTables::of($reports_list)
+            ->addColumn('report_type', function ($reports_list) {
+                $details = '<p class="text-sm">' . $reports_list->report_type . '</p>';
                 return $details;
             })
-            ->addColumn('action', function ($inspection_report) {
-                $button = '<div class="btn-group">';
-                $button .= '<button type="button" class="btn btn-default btn-flat" title="view" onclick="viewReport(' . $inspection_report->id . ', \'' . $inspection_report->emb_id . '\')"><i class="fa-solid fa-eye"></i></button>';
-                $button .= '<button type="button" class="btn btn-default btn-flat" title="delete" onclick="deleteReport(' . $inspection_report->id . ')"><i class="fa-solid fa-trash"></i></button>';
+            ->addColumn('emb_id', function ($reports_list) {
+                $details = '<p class="text-sm">' . $reports_list->emb_id . '</p>';
+                return $details;
+            })
+            ->addColumn('company_name', function ($reports_list) {
+                $details = '<p class="text-sm">' . $reports_list->establishment_name . '</p>';
+                return $details;
+            })
+            ->addColumn('nature_of_business', function ($reports_list) {
 
-                if ($inspection_report->recommending_approval != '') {
-                    $button .= '<button type="button" class="btn btn-default btn-flat" title="pdf" onclick="viewPDF(' . $inspection_report->id . ')"><i class="fa-solid fa-file-pdf"></i></button>';
+                if ( $reports_list->report_type == 'inspection' ) {
+                    $report = DB::table('inspection_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+                } else {
+                    $report = DB::table('investigation_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
                 }
                 
+
+                $details = isset($report->nature_of_business) ? $report->nature_of_business : '';
+                return $details;
+            })
+            ->addColumn('report_for', function ($reports_list) {
+                if ( $reports_list->report_type == 'inspection' ) {
+                    $report = DB::table('inspection_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+                } else {
+                    $report = DB::table('investigation_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+                }
+
+                $str = isset($report->report_for) ? json_decode($report->report_for) : '';
+                $details = '<p class="text-sm">' .implode(", ", $str) . '</p>';
+                return $details;
+            })
+            ->addColumn('created_date', function ($reports_list) {
+                $details = '<p class="text-sm">' . date('M d, Y', strtotime($reports_list->created_date)) . '</p>';
+
+                return $details;
+            })
+            ->addColumn('action', function ($reports_list) {
+
+                $button = '<div class="btn-group">';
+
+                if ( $reports_list->report_type == 'inspection' ) {
+                    $report = DB::table('inspection_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+
+                    $button .= '<button type="button" class="btn btn-default btn-flat" title="view" onclick="viewReport(' . $reports_list->report_id . ', \'' . $reports_list->emb_id . '\')"><i class="fa-solid fa-eye"></i></button>';
+                } else {
+                    $report = DB::table('investigation_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+
+                    $button .= '<button type="button" class="btn btn-default btn-flat" title="view" onclick="viewInvestigationReport(' . $reports_list->report_id . ', \'' . $reports_list->emb_id . '\')"><i class="fa-solid fa-eye"></i></button>';
+                }
+                $button .= '<button type="button" class="btn btn-default btn-flat" title="delete" onclick="deleteReport(' . $reports_list->report_id . ')"><i class="fa-solid fa-trash"></i></button>';
+
+                if ( $reports_list == 'inspection' ) {
+                    if ($report->recommending_approval != '') {
+                        $button .= '<button type="button" class="btn btn-default btn-flat" title="pdf" onclick="viewPDF(' . $reports_list->report_id . ')"><i class="fa-solid fa-file fa-beat-fade"></i></button>';
+                    }
+                }
+                
+
                 $button .= '</div>';
 
                 return $button;
             })
-            ->addColumn('with_NOV', function ($inspection_report) {
+            ->addColumn('with_NOV', function ($reports_list) {
+
+                if ( $reports_list->report_type == 'inspection' ) {
+                    $report = DB::table('inspection_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+                } else {
+                    $report = DB::table('investigation_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+                }
 
                 $button = '';
 
-                if ($inspection_report->with_NOV == 'yes') {
+                if ($report->with_NOV == 'yes') {
 
                     $data = DB::table('nov')
-                        ->where('report_id', $inspection_report->id)
+                        ->where('report_id', $report->id)
                         ->first();
 
-                    
                     if (empty($data)) {
                         $id = 0;
                     } else {
                         $id = $data->id;
                     }
 
-                    $button .= '<button type="button" class="btn btn-default btn-flat" onclick="linkToNOV(' . $id . ', ' . $inspection_report->id . ')"><ion-icon name="checkmark-outline"></ion-icon></button>';
+                    $button .= '<button type="button" class="btn btn-default btn-flat" onclick="linkToNOV(' . $id . ', ' . $report->id . ')"><ion-icon name="checkmark-outline"></ion-icon></button>';
 
                 }
 
@@ -129,7 +197,7 @@ class ReportController extends Controller
         $data = [];
 
         $checkifexist = DB::table('inspection_report')->where('id', $req->id)->select('id')->first();
-
+        
         if ($checkifexist) {
 
             if (in_array(1, $req->page)) {
@@ -143,7 +211,7 @@ class ReportController extends Controller
             if (in_array(2, $req->page)) {
                 $purpose_of_inspection = DB::table('purpose_of_inspection')->where('report_id', $checkifexist->id)->first();
                 $data['purpose_of_inspection'] = $purpose_of_inspection;
-                
+
                 if ($purpose_of_inspection) {
                     $establishment_permits = DB::table('establishment_permits')->where('poi_id', $purpose_of_inspection->id)->first();
                     $data['establishment_permits'] = $establishment_permits;
@@ -194,15 +262,13 @@ class ReportController extends Controller
             }
 
         }
-        
+
 
         return $data;
     }
 
     public function saveRaw(Request $req)
-    {  
-
-        dd($req);
+    {
         $now = new \DateTime();
         $checkifexist = DB::table('inspection_report')->where('id', $req['id'])->select('id')->first();
 
@@ -228,12 +294,9 @@ class ReportController extends Controller
                 }
 
             }
-
             // saving into purpose_of_inspection table
 
             $purpose_of_inspection = $this->insertUpdatePurposeOfInspection($inspection_report, $req['secondPageData']);
-
-
 
             if ($purpose_of_inspection) {
                 /// on saved purpose_of_inspection
@@ -314,9 +377,6 @@ class ReportController extends Controller
             return $checkifexist->id;
         }
 
-        // return "success";
-        // dd("success");
-        // dd($checkifexist);
 
     }
 
@@ -329,7 +389,7 @@ class ReportController extends Controller
         $emb_id = $req->emb_id;
         $id = $req->id;
 
-        $fourthPageData = $this->insertUpdateRecommendation($id, $req['fourthPageData']);
+        // $fourthPageData = $this->insertUpdateRecommendation($id, $req['fourthPageData']);
 
         $inspection_date = $dateofinspection;
         $inspection_date = str_replace('/', '-', $inspection_date);
@@ -344,7 +404,7 @@ class ReportController extends Controller
                     'recommending_approval' => $recommendingapproval
                 ]);
 
-        return "Success";
+        return $id;
 
     }
 
@@ -353,7 +413,7 @@ class ReportController extends Controller
         $now = new \DateTime();
 
         $checkData = DB::table('purpose_of_inspection')->where('report_id', $id)->first();
-        // dd($data);
+
         if ($checkData) {
 
             //update
@@ -396,7 +456,7 @@ class ReportController extends Controller
     public function insertUpdateRecommendation($id, $data)
     {
         $now = new \DateTime();
-        // dd($id);
+
         foreach ($data as $key => $value) {
             $check = DB::table('recommendation')
                 ->where([
@@ -581,7 +641,6 @@ class ReportController extends Controller
                     }
                 }
             }
-
         }
 
 
@@ -780,7 +839,7 @@ class ReportController extends Controller
     {
         $now = new \DateTime();
         $error = [];
-        // dd($req);
+
         // Validate the value...
 
         foreach ($req as $key => $value) {
@@ -855,7 +914,6 @@ class ReportController extends Controller
 
         $now = new \DateTime();
         $error = [];
-        // dd($req);
         // Validate the value...
 
         foreach ($req as $key => $value) {
@@ -928,7 +986,6 @@ class ReportController extends Controller
 
         $now = new \DateTime();
         $error = [];
-        // dd($req);
         // Validate the value...
 
         foreach ($req as $key => $value) {
@@ -1001,7 +1058,6 @@ class ReportController extends Controller
 
         $now = new \DateTime();
         $error = [];
-        // dd($req);
         // Validate the value...
 
         foreach ($req as $key => $value) {
@@ -1074,7 +1130,6 @@ class ReportController extends Controller
 
         $now = new \DateTime();
         $error = [];
-        // dd($req);
 
         foreach ($req as $key => $value) {
 
@@ -1146,7 +1201,6 @@ class ReportController extends Controller
 
         $now = new \DateTime();
         $error = [];
-        // dd($req);
 
         foreach ($req as $key => $value) {
 
@@ -1217,6 +1271,7 @@ class ReportController extends Controller
     {
         $now = new \DateTime();
         $array = [];
+
         if ($type == 'new') {
 
             if (!empty($req['permits-licenses-clearance'])) {
@@ -1257,17 +1312,12 @@ class ReportController extends Controller
                         // report($e);
                         array_push($array, $e);
 
-
                         return $array;
                     }
 
                     return 'success';
-
-
                 }
-
             }
-
 
 
         } else {
@@ -1318,8 +1368,6 @@ class ReportController extends Controller
 
             }
 
-
-
             return 'success';
         }
 
@@ -1328,7 +1376,6 @@ class ReportController extends Controller
 
     public function insertUpdateEstablishmentPermit($type, $id, $req)
     {
-        // dd($req['secondPageDataEstablishmentPermits']);
         $now = new \DateTime();
         if ($type == 'new') {
             DB::table('establishment_permits')->insert([
@@ -1360,7 +1407,7 @@ class ReportController extends Controller
     public function insertUpdateInspectionReport($type, $req)
     {
         $now = new \DateTime();
-        // dd($req);
+
         if ($type == 'new') {
 
             $effectivity_date = $req['firstPageData']['date-of-effectivity'];
@@ -1558,12 +1605,12 @@ class ReportController extends Controller
             $data['inspection'] = $inspection;
         }
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('user.report.pdf-preview', compact('data'));
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('user.report.inspection.pdf-preview', compact('data'));
         // $pdf->output();
         return $pdf->stream();
 
 
-        // return view('user.report.preview', compact('data'));
+        // return view('user.report.inspection.preview', compact('data'));
     }
 
     public function previewNOVpdf(Request $req, $id)
@@ -1603,7 +1650,7 @@ class ReportController extends Controller
                 $button .= '<button type="button" class="btn btn-default btn-flat" title="view" onclick="viewReport(' . $inspection_report->id . ', \'' . $inspection_report->emb_id . '\')"><i class="fa-solid fa-eye"></i></button>';
 
                 if ($inspection_report->recommending_approval != '') {
-                    $button .= '<button type="button" class="btn btn-default btn-flat" title="pdf" onclick="viewPDF(' . $inspection_report->id . ')"><i class="fa-solid fa-file-pdf"></i></button>';
+                    $button .= '<button type="button" class="btn btn-default btn-flat" title="pdf" onclick="viewPDF(' . $inspection_report->id . ')"><i class="fa-solid fa-file fa-beat-fade"></i></button>';
                 }
                 $button .= '<button type="button" class="btn btn-success btn-flat" title="connect" onclick="Linking(' . $inspection_report->id . ', \'' . $inspection_report->emb_id . '\')"><i class="fa-solid fa-link"></i></button>';
 
@@ -1625,6 +1672,612 @@ class ReportController extends Controller
             ->make(true);
     }
 
-    
+
+
+    public function SavePerPage(Request $req)
+    {
+        $CurrentPage = $req->CurrentPage;
+
+        if($CurrentPage == 1) {
+            $data = $this->saveInspectionReportFirstPage($req);
+
+            return $data;
+        } elseif( $CurrentPage == 2 ) {
+            try {
+
+                $purpose_of_inspection = $this->insertUpdatePurposeOfInspection($req->id, $req['secondPageData']);
+
+                if ($purpose_of_inspection) {
+            
+                    $establishment_permits = isset($req['secondPageDataEstablishmentPermits']) ? $req['secondPageDataEstablishmentPermits'] : '';
+
+                    if (empty($establishment_permits)) {
+
+                        DB::table('establishment_permits')->where('poi_id', $purpose_of_inspection)->delete();
+
+                    } else {
+                        $check = DB::table('establishment_permits')->where('poi_id', $purpose_of_inspection)->select('id')->first();
+
+                        if ($check) {
+                            $this->insertUpdateEstablishmentPermit('update', $purpose_of_inspection, $req);
+                        } else {
+                            $this->insertUpdateEstablishmentPermit('new', $purpose_of_inspection, $req);
+                        }
+
+                    }
+
+                }
+
+                return 'success';
+
+
+            } catch (\Throwable $e) {
+                report($e);
+
+
+                return false;
+
+            }
+
+
+        } elseif( $CurrentPage == 3 ) {
+
+            try {
+
+                $insertUpdateDENRPermits = $this->insertUpdateDENRPermits('update', $req->id, $req);
+                $insertUpdateECCConditionalities = $this->insertUpdateECCConditionalities('new', $req->id, $req['law-and-citation']['ecc']);
+                $insertUpdateRA6969 = $this->insertUpdateRA6969('new', $req->id, $req['law-and-citation']['ra-6969']);
+                $insertUpdateRA8749 = $this->insertUpdateRA8749('new', $req->id, $req['law-and-citation']['ra-8749']);
+                $insertUpdateRA9003 = $this->insertUpdateRA9003('new', $req->id, $req['law-and-citation']['ra-9003']);
+                $insertUpdateRA9275 = $this->insertUpdateRA9275('new', $req->id, $req['law-and-citation']['ra-9275']);
+                $insertUpdatePCOA = $this->insertUpdatePCOA('new', $req->id, $req['law-and-citation']['pcoa']);
+                $insertUpdateSMR = $this->insertUpdateSMR('new', $req->id, $req['law-and-citation']['smr']);
+                $insertUpdateSummaryAndFindings = $this->insertUpdateSummaryAndFindings($req->id, $req['summary-findings-and-observations']);
+                $insertUpdateDieselFueledGenerator = $this->insertUpdateDieselFueledGenerator($req->id, $req['diesel-fueled-generator']);
+
+                return $req->id;
+
+            } catch (\Throwable $e) {
+                report($e);
+
+
+                return false;
+
+            }
+            
+        } elseif( $CurrentPage == 4 ) {
+
+            $fourthPageData = $this->insertUpdateRecommendation($req->id, $req['fourthPageData']);
+            
+        } elseif( $CurrentPage == 5 ) {
+            
+        }
+    }
+
+    public function saveInspectionReportFirstPage($req)
+    {
+        $now = new \DateTime();
+
+        $checkifexist = DB::table('inspection_report')->where('id', $req['id'])->select('id')->first();
+        
+        if (empty($checkifexist)) {
+
+            $effectivity_date = $req['firstPageData']['date-of-effectivity'];
+            $effectivity_date = str_replace('/', '-', $effectivity_date);
+
+
+            $expiry_date = $req['firstPageData']['date-of-expiry'];
+            $expiry_date = str_replace('/', '-', $expiry_date);
+
+            $InspectionReport = DB::table('inspection_report')->insertGetId([
+                'emb_id' => $req['emb_id'],
+                'address' => $req['firstPageData']['address'],
+                'effectivity_date' => date("Y-m-d", strtotime($effectivity_date)),
+                'expiry_date' => date("Y-m-d", strtotime($expiry_date)),
+                'email' => $req['firstPageData']['email'],
+                'establishment_name' => $req['firstPageData']['establishment-name'],
+                'geo_coordinates' => $req['firstPageData']['geograpical-coordinates'],
+                'managing_head' => $req['firstPageData']['managing-head'],
+                'pco_name' => $req['firstPageData']['name-of-pco'],
+                'nature_of_business' => $req['firstPageData']['nature-of-business'],
+                'operating_hours_per_day' => $req['firstPageData']['operating-hours-day'],
+                'operating_hours_per_week' => $req['firstPageData']['operating-hours-week'],
+                'operating_hours_per_year' => $req['firstPageData']['operating-hours-year'],
+                'pco_accreditation' => $req['firstPageData']['pco-accreditation-number'],
+                'phone_fax_number' => $req['firstPageData']['phone-fax'],
+                'product' => $req['firstPageData']['product'],
+                'psic_code' => $req['firstPageData']['psic-code'],
+                'year_established' => $req['firstPageData']['year-established'],
+                'report_for' => json_encode($req['report-for']),
+                'created_date' => $now->format('Y-m-d H:i:s'),
+                'created_by' => auth()->user()->name,
+                'with_NOV' => $req['with-nov']
+            ]);
+
+            $id = $InspectionReport;
+
+                if (!empty($req['firstPageData']['product-lines-table'])) {
+                    foreach ($req['firstPageData']['product-lines-table'] as $key => $value) {
+                        DB::table('product_lines')->insert([
+                            'report_id' => $id,
+                            'product_lines' => $value[0],
+                            'declared_rate_per_day' => $value[1],
+                            'actual_rate_per_day' => $value[2],
+                            'created_date' => $now->format('Y-m-d H:i:s'),
+                            'created_by' => auth()->user()->name,
+                        ]);
+                    }
+                }
+
+            DB::table('reports_list')->insert([
+                'emb_id' => $req['emb_id'],
+                'report_type' => 'inspection',
+                'report_id' => $id,
+                'created_date' => $now->format('Y-m-d H:i:s'),
+                'establishment_name' => $req['firstPageData']['establishment-name'],
+                'created_by' => auth()->user()->name,
+            ]);
+
+            return $InspectionReport;
+
+        } else {
+            $id = $req['id'];
+            $effectivity_date = $req['firstPageData']['date-of-effectivity'];
+            $effectivity_date = str_replace('/', '-', $effectivity_date);
+
+            $expiry_date = $req['firstPageData']['date-of-expiry'];
+            $expiry_date = str_replace('/', '-', $expiry_date);
+
+            $InspectionReport = DB::table('inspection_report')->where('id', $req['id'])->update([
+                'address' => $req['firstPageData']['address'],
+                'effectivity_date' => date("Y-m-d", strtotime($effectivity_date)),
+                'expiry_date' => date("Y-m-d", strtotime($expiry_date)),
+                'email' => $req['firstPageData']['email'],
+                'establishment_name' => $req['firstPageData']['establishment-name'],
+                'geo_coordinates' => $req['firstPageData']['geograpical-coordinates'],
+                'managing_head' => $req['firstPageData']['managing-head'],
+                'pco_name' => $req['firstPageData']['name-of-pco'],
+                'nature_of_business' => $req['firstPageData']['nature-of-business'],
+                'operating_hours_per_day' => $req['firstPageData']['operating-hours-day'],
+                'operating_hours_per_week' => $req['firstPageData']['operating-hours-week'],
+                'operating_hours_per_year' => $req['firstPageData']['operating-hours-year'],
+                'pco_accreditation' => $req['firstPageData']['pco-accreditation-number'],
+                'phone_fax_number' => $req['firstPageData']['phone-fax'],
+                'product' => $req['firstPageData']['product'],
+                'psic_code' => $req['firstPageData']['psic-code'],
+                'year_established' => $req['firstPageData']['year-established'],
+                // 'created_date' => $now->format('Y-m-d H:i:s'),
+                'created_by' => auth()->user()->name,
+                'updated_date' => $now->format('Y-m-d H:i:s'),
+            ]);
+
+            DB::table('product_lines')->where('report_id', $checkifexist->id)->delete();
+
+                if (!empty($req['firstPageData']['product-lines-table'])) {
+
+                    foreach ($req['firstPageData']['product-lines-table'] as $key => $value) {
+                        DB::table('product_lines')->insert([
+                            'report_id' => $checkifexist->id,
+                            'product_lines' => $value[0],
+                            'declared_rate_per_day' => $value[1],
+                            'actual_rate_per_day' => $value[2],
+                            'created_date' => $now->format('Y-m-d H:i:s'),
+                            'created_by' => auth()->user()->name,
+                        ]);
+                    }
+                }
+
+            return $req['id'];
+
+        }
+    }
+
+    public function deleteReport(Request $req)
+    {
+        $id = $req->id;
+
+        try {
+
+            $data = DB::table('inspection_report')->where('id', $id)->delete();
+
+            return "success";
+
+        } catch (\Throwable $e) {
+
+            report($e);
+
+            return false;
+
+        }
+
+    }
+
+    public function uploadfile(Request $request)
+    {
+        $now = new \DateTime();
+        $emb_id = $request->emb_id;
+        $id = $request->id;
+        $remarks = $request->remarks;
+        $getMAC = exec('getmac');
+        $MAC = explode(" ", $getMAC);
+
+        $validator = Validator::make($request->all(), [
+            // 'file' => 'required|mimes:pdf,jpeg,png,jpg,gif,geojson'
+            // |max:2048
+        ]);
+        // $file = $request->file('file');
+
+        if ($validator->fails()) {
+            $rtrn['success'] = 0;
+            $rtrn['message'] = $validator->errors()->first('file'); // Error response
+
+        } else {
+            if ($request->file('file')) {
+                $file = $request->file('file');
+                $filename = $file->getClientOriginalName();
+
+                // $filename = $NewGUID;
+
+                // filesize
+                $size = $file->getSize();
+                $filesize = $size * 0.001;
+                // File extension
+                $extension = $file->getClientOriginalExtension();
+
+                $path = public_path('Files/Compliance/'. $emb_id . '/' . $id . '/');
+                // $savedFiles = $pdf->saveAs($urlSavePDF);
+
+                if (!File::exists($path)) {
+                    File::makeDirectory($path, $mode = 0755, true, true);
+
+                    // File upload location
+                    $location = 'Files/Compliance/'. $emb_id . '/' . $id . '/';
+
+                    // // Upload file
+                    $file->move($location, $filename . '.' . $extension);
+
+                } else {
+                    $location = 'Files/Compliance/'. $emb_id . '/' . $id . '/';
+
+                    $file->move($location, $filename . '.' . $extension);
+                }
+
+                // File path
+                // $filepath = public_path('files/'.$NewGUID.'.'.$extension);
+                $filepath = 'Files/Compliance/'. $emb_id . '/' . $id . '/' . $filename . '.' . $extension;
+
+                // Response
+                $rtrn['success'] = 1;
+                $rtrn['message'] = 'Uploaded Successfully!';
+
+                $data['emb_id'] = $emb_id;
+                $data['report_id'] = $id;
+                $data['remarks'] = $remarks;
+                $data['directory'] = public_path();
+                $data['file_name'] = $filename;
+                $data['file_path'] = $filepath;
+                $data['file_extension'] = $extension;
+                // $data['extension'] = $extension;
+                $data['file_size_in_kb'] = $filesize;
+                $data['created_date'] = $now->format('Y-m-d H:i:s');
+
+                $save = DB::table('compliance_pictures')->insert($data);
+
+                if ($save) {
+                    $rtrn['success'] = 1;
+                    $rtrn['message'] = 'File uploaded.';
+                }
+            } else {
+                // Response
+                $rtrn['success'] = 2;
+                $rtrn['message'] = 'File not uploaded.';
+            }
+        }
+
+        return $rtrn;
+    }
+
+
+    public function uploadFileInvestigation(Request $request)
+    {
+        $now = new \DateTime();
+        $emb_id = $request->emb_id;
+        $id = $request->id;
+        $getMAC = exec('getmac');
+        $MAC = explode(" ", $getMAC);
+
+        $validator = Validator::make($request->all(), [
+            // 'file' => 'required|mimes:pdf,jpeg,png,jpg,gif,geojson'
+            // |max:2048
+        ]);
+        // $file = $request->file('file');
+
+        if ($validator->fails()) {
+            $rtrn['success'] = 0;
+            $rtrn['message'] = $validator->errors()->first('file'); // Error response
+
+        } else {
+            if ($request->file('file')) {
+                $file = $request->file('file');
+                $filename = $file->getClientOriginalName();
+
+                // $filename = $NewGUID;
+
+                // filesize
+                $size = $file->getSize();
+                $filesize = $size * 0.001;
+                // File extension
+                $extension = $file->getClientOriginalExtension();
+
+                $path = public_path('Files/Investigation/'. $emb_id . '/' . $id . '/');
+                // $savedFiles = $pdf->saveAs($urlSavePDF);
+
+                if (!File::exists($path)) {
+                    File::makeDirectory($path, $mode = 0755, true, true);
+
+                    // File upload location
+                    $location = 'Files/Investigation/'. $emb_id . '/' . $id . '/';
+
+                    // // Upload file
+                    $file->move($location, $filename . '.' . $extension);
+
+                } else {
+                    $location = 'Files/Investigation/'. $emb_id . '/' . $id . '/';
+
+                    $file->move($location, $filename . '.' . $extension);
+                }
+
+                // File path
+                // $filepath = public_path('files/'.$NewGUID.'.'.$extension);
+                $filepath = 'Files/Investigation/'. $emb_id . '/' . $id . '/' . $filename . '.' . $extension;
+
+                // Response
+                $rtrn['success'] = 1;
+                $rtrn['message'] = 'Uploaded Successfully!';
+
+                $data['emb_id'] = $emb_id;
+                $data['report_id'] = $id;
+                $data['directory'] = public_path();
+                $data['file_name'] = $filename;
+                $data['file_path'] = $filepath;
+                $data['file_extension'] = $extension;
+                // $data['extension'] = $extension;
+                $data['file_size_in_kb'] = $filesize;
+                $data['created_date'] = $now->format('Y-m-d H:i:s');
+
+                $save = DB::table('investigation_pictures')->insert($data);
+
+                if ($save) {
+                    $rtrn['success'] = 1;
+                    $rtrn['message'] = 'File uploaded.';
+                }
+            } else {
+                // Response
+                $rtrn['success'] = 2;
+                $rtrn['message'] = 'File not uploaded.';
+            }
+        }
+
+        return $rtrn;
+    }
+
+
+
+    public function getfile(Request $request)
+    {
+        $emb_id = $request->emb_id;
+        $id = $request->id;
+
+        $data = DB::table('compliance_pictures')->where([
+            'emb_id' => $emb_id,
+            'report_id' => $id
+        ])->get();
+
+        return $data;
+    }
+
+    public function getFileInvestigation(Request $request)
+    {
+        $emb_id = $request->emb_id;
+        $id = $request->id;
+
+        $data = DB::table('investigation_pictures')->where([
+            'emb_id' => $emb_id,
+            'report_id' => $id
+        ])->get();
+
+        return $data;
+    }
+
+    public function deleteInvestigationPicture(Request $request)
+    {
+        $data = DB::table('investigation_pictures')->where([
+            'id' => $request->id
+        ])->delete();
+
+        return 'success';
+    }
+
+    public function saveInvestigation(Request $request)
+    {
+        $existingid = $request->id;
+        $emb_id = $request->emb_id;
+        $lawsapplicable = $request->lawsapplicable;
+        $nameofrespondent = $request->nameofrespondent;
+        $addressofrespondent = $request->addressofrespondent;
+        $natureofcomplaint = $request->natureofcomplaint;
+        $complainant = $request->complainant;
+        $addressofcomplainant = $request->addressofcomplainant;
+        $dateofinspection = $request->dateofinspection;
+        $purposeofinspection = $request->purposeofinspection;
+        $dateofsubmission = $request->dateofsubmission;
+        $background = $request->background;
+        $proceedings = $request->proceedings;
+        $remarks = $request->remarks;
+        $withnov = $request->withnov;
+        $reportfor = $request->reportfor;
+
+        $now = new \DateTime();
+
+        if ( $existingid == 0 ) {
+
+            $id = DB::table('investigation_report')->insertGetId([
+                'emb_id' => $emb_id,
+                'laws_applicable' => $lawsapplicable,
+                'name_of_respondent' => $nameofrespondent,
+                'address_of_respondent' => $addressofrespondent,
+                'nature_of_complaint' => $natureofcomplaint,
+                'complainant' => $complainant,
+                'address_of_complaint' => $addressofcomplainant,
+                'date_of_inspection' => date('Y-m-d', strtotime($dateofinspection)),
+                'purpose_of_inspection' => $purposeofinspection,
+                'date_of_submission' => date('Y-m-d', strtotime($dateofsubmission)),
+                'background' => $background,
+                'report_for' => json_encode($reportfor),
+                'with_NOV' => $withnov,
+                'remarks' => $remarks,
+                // 'prepared_by' => $lawsapplicable,
+                // 'concurred_by' => $lawsapplicable,
+                // 'noted_by' => $lawsapplicable,
+            ]);
+
+            $paf = $this->saveInvestigationPAF($request);
+            $reco = $this->saveInvestigationReco($request);
+
+            $data = DB::table('reports_list')->insert([
+                'emb_id' => $emb_id,
+                'report_type' => 'investigation',
+                'report_id' => $id,
+                'created_date' => $now->format('Y-m-d H:i:s'),
+                'establishment_name' => $nameofrespondent,
+                'created_by' => auth()->user()->name,
+            ]);
+
+            return $id;
+
+        } else {
+
+            DB::table('investigation_report')->where([
+                'id' => $existingid,
+                'emb_id' => $emb_id,
+            ])->update([
+                'laws_applicable' => $lawsapplicable,
+                'name_of_respondent' => $nameofrespondent,
+                'address_of_respondent' => $addressofrespondent,
+                'nature_of_complaint' => $natureofcomplaint,
+                'complainant' => $complainant,
+                'address_of_complaint' => $addressofcomplainant,
+                'date_of_inspection' => date('Y-m-d', strtotime($dateofinspection)),
+                'purpose_of_inspection' => $purposeofinspection,
+                'date_of_submission' => date('Y-m-d', strtotime($dateofsubmission)),
+                'background' => $background,
+                'remarks' => $remarks,
+            ]);
+
+            $paf = $this->saveInvestigationPAF($request);
+            $reco = $this->saveInvestigationReco($request);
+
+            return $existingid;
+
+        }
+        
+    }
+
+    public function saveInvestigationPAF($request)
+    {
+        $now = new \DateTime();
+
+        $check = DB::table('investigation_paf')->where([
+            'report_id' => $request->id,
+            'emb_id' => $request->emb_id,
+        ])->first();
+
+        if(!empty($check)) {
+            DB::table('investigation_paf')->where([
+                'report_id' => $request->id,
+                'emb_id' => $request->emb_id,
+            ])->delete();
+        }
+
+        if(!empty($request->paf)){
+
+            foreach($request->paf as $paf){
+                $data = DB::table('investigation_paf')->insert([
+                    'report_id' => $request->id,
+                    'emb_id' => $request->emb_id,
+                    'created_date' => $now->format('Y-m-d H:i:s'),
+                    'proceedings_and_findings' => $paf
+                ]);
+            }
+
+        }
+
+
+        return 'success';
+    }
+
+    public function saveInvestigationReco($request)
+    {
+        $now = new \DateTime();
+
+        $check = DB::table('investigation_recommendations')->where([
+            'report_id' => $request->id,
+            'emb_id' => $request->emb_id,
+        ])->first();
+
+        if(!empty($check)) {
+            DB::table('investigation_recommendations')->where([
+                'report_id' => $request->id,
+                'emb_id' => $request->emb_id,
+            ])->delete();
+        }
+
+        if(!empty($request->reco)){
+
+            foreach($request->reco as $reco){
+                $data = DB::table('investigation_recommendations')->insert([
+                    'report_id' => $request->id,
+                    'emb_id' => $request->emb_id,
+                    'created_date' => $now->format('Y-m-d H:i:s'),
+                    'recommendations' => $reco
+                ]);
+            }
+
+        }
+
+        
+
+        return 'success';
+    }
+
+    public function getInvestigation(Request $request)
+    {
+        $data = [];
+        $data['report'] = DB::table('investigation_report')->where([
+            'emb_id' => $request->emb_id,
+            'id' => $request->report_id,
+        ])->first();
+
+        $data['paf'] = DB::table('investigation_paf')->where([
+            'emb_id' => $request->emb_id,
+            'report_id' => $request->report_id,
+        ])->get();
+
+
+        $data['reco'] = DB::table('investigation_recommendations')->where([
+            'emb_id' => $request->emb_id,
+            'report_id' => $request->report_id,
+        ])->get();
+
+
+        return $data;
+    }
+
+    public function novListSelect(Request $request)
+    {
+        $data = DB::table('nov')->get();
+
+        return $data;
+    }
 
 }

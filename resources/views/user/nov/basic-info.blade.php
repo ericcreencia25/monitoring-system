@@ -3,6 +3,10 @@
     <input type="text" id="nov-id" class="form-control rounded-0">
 </div>
 <div class="form-group">
+    <label for="inputName" style="margin-bottom: 0px;">Environmental Law/s possibly have been violated</label>
+    <input type="text" id="sector-list" class="form-control rounded-0" readonly>
+</div>
+<div class="form-group">
     <label for="inputName" style="margin-bottom: 0px;">Case Number</label>
     <input type="text" id="case-number" class="form-control rounded-0">
 </div>

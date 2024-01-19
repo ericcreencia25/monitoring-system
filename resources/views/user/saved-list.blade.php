@@ -8,6 +8,57 @@
   .dataTables_filter {
     display: none;
   }
+
+  .blink {
+    animation: blink 1s steps(1, end) infinite;
+  }
+
+  @keyframes blink {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .spinner {
+     position: absolute;
+     left: 65%;
+     top: 50%;
+     height:60px;
+     width:60px;
+     margin:0px auto;
+     -webkit-animation: rotation .6s infinite linear;
+     -moz-animation: rotation .6s infinite linear;
+     -o-animation: rotation .6s infinite linear;
+     animation: rotation .6s infinite linear;
+     border-left:6px solid rgba(0,174,239,.15);
+     border-right:6px solid rgba(0,174,239,.15);
+     border-bottom:6px solid rgba(0,174,239,.15);
+     border-top:6px solid rgba(0,174,239,.8);
+     border-radius:100%;
+  }
+
+  @-webkit-keyframes rotation {
+     from {-webkit-transform: rotate(0deg);}
+     to {-webkit-transform: rotate(359deg);}
+  }
+  @-moz-keyframes rotation {
+     from {-moz-transform: rotate(0deg);}
+     to {-moz-transform: rotate(359deg);}
+  }
+  @-o-keyframes rotation {
+     from {-o-transform: rotate(0deg);}
+     to {-o-transform: rotate(359deg);}
+  }
+  @keyframes rotation {
+     from {transform: rotate(0deg);}
+     to {transform: rotate(359deg);}
+  }
 </style>
 @vite('resources/css/app.css')
 @section('header')
@@ -37,7 +88,7 @@
     </div>
   </section>
   <section class="w-8/12 px-4 flex flex-col bg-white rounded-r-3xl" style="overflow: scroll;" id="DashboardBody">
-
+    
   </section>
 </main>
 <!-- </div> -->
@@ -485,6 +536,9 @@
       },
       beforeSend: function (xhr, opts) {
         // $("#iee-checklist-table-land #"+BtnID+"").html(`<i class="fa fa-spinner fa-spin"></i>Loading`);
+
+        $("#DashboardBody").html(`<div class="spinner"></div>`);
+
       },
       success: function (result) {
         var response = '';
@@ -574,8 +628,8 @@
 
                   <div class="flex flex-col">
 
-                      <h3 class="text-primary">`+ EstablishmentName(response['establishment_name'], response['company_name']) + `
-                      </h3>
+                      <h4 class="text-primary">`+ EstablishmentName(response['establishment_name'], response['company_name']) + `
+                      </h4>
                       <p class="text-black text-gray-400 text-sm" id="company_email">`+ response['email'] + `</p>
                   </div>
               </div>
@@ -606,7 +660,7 @@
               <div class="row">
                   <div class="col-md-3">
                       <button type="button" class="btn btn-default" data-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-file-export"></i> Generate Report
+                        <i class="fa-solid fa-file-export"></i> Generate
                       </button>
                       <ul class="dropdown-menu">
                           <li class="dropdown-item" data-toggle="modal" data-target="#modal-generate-report" href="#"><a
@@ -1331,12 +1385,12 @@
   function EstablishmentStatus(status) {
 
     if (status == '0') {
-      return `<div class="rounded-full w-3 h-3 bg-green-700"></div>
+      return `<div class="rounded-full w-3 h-3 bg-green-700 blink"></div>
                 </div>
                 <div>
                 <p class="text-large text-gray-500 h-3 font-large">Active</p>`;
     } else {
-      return `<div class="rounded-full w-3 h-3 bg-red-700"></div>
+      return `<div class="rounded-full w-3 h-3 bg-red-700 blink"></div>
                 </div>
                 <div>
                 <p class="text-large text-gray-500 h-3 font-large">Inactive</p>`;

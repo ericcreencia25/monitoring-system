@@ -4,7 +4,34 @@
 <link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
 <link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 <link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/bs-stepper/css/bs-stepper.min.css">
+<style>
 
+  .loading-overlay {
+    display: none;
+    background: rgba(26, 26, 26, 0.7);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    top: 0;
+  }
+
+  .loading-overlay-image-container {
+    display: none;
+    position: fixed;
+    z-index: 7;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .loading-overlay-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+  }
+
+</style>
 @section('header')
 <!-- Content Header (Page header) -->
 <div class="content-header">
@@ -49,6 +76,12 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="loading-overlay"></div>
+<div class="loading-overlay-image-container">
+  <div class="loader"></div>
+  Loading...
 </div>
 @stop
 
@@ -131,6 +164,12 @@
 
 
   });
+
+  function viewInvestigationReport(id, emb_id) {
+    sessionStorage.setItem("emb-id", emb_id);
+
+    location.href = "/report?id=" + id + '&type=investigation';
+  }
 
 
 
@@ -236,7 +275,7 @@
     });
     // }
 
-    location.href = "/report?id=" + id;
+    location.href = "/report?id=" + id + '&type=inspection';
   }
 
   function viewPDF(ID) {
@@ -244,7 +283,7 @@
   }
 
   function viewNOV(id, report_id) {
-
+    alert(id);
     if (id == 0) {
 
       $.ajax({
@@ -272,13 +311,98 @@
       sessionStorage.setItem("nov-id", id);
       window.open("/nov");
     }
+    
+  }
 
+  function linkToNOV(id, report_id) {
 
+    sessionStorage.clear();
+    sessionStorage.setItem("nov-id", id);
+    // var ReportType = $("input[type='radio'][name='report-type']:checked").val();
+    // var ReportFor = $("input[type='checkbox'][name='report-for']:checked").val();
+
+    var Sector = $('input[type=checkbox][name="report-sector"]:checked').map(function (_, el) {
+      return $(el).val();
+    }).get();
+
+    var CompanyName = $("#company-name").val();
+    var CompanyAddress = $("#company-address").val();
+    var CompanyEmail = $("#company-email").val();
+    var CompanyContact = $("#company-contact").val();
+    var emb_id = $("#emb_id").val();
+
+    sessionStorage.setItem("emb-id", emb_id);
+    sessionStorage.setItem("report-id", report_id);
+
+    sessionStorage.setItem("company-contact", CompanyContact);
+    sessionStorage.setItem("company-email", CompanyEmail);
+    sessionStorage.setItem("company-address", CompanyAddress);
+    sessionStorage.setItem("company-name", CompanyName);
+    sessionStorage.setItem("nov-sector", JSON.stringify(Sector));
+
+    window.open('/nov', '_blank');
 
   }
 
-  // function deleteNOV(ID) {
-  //   alert(ID);
-  // }
+  function deleteReport(ID) {
+
+    Swal.fire({
+      title: "Do you want to delete this report?",
+      showDenyButton: false,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        $.ajax({
+        url: "{{route('/delete-report')}}",
+        type: 'POST',
+        data: {
+          id: ID,
+          _token: '{{csrf_token()}}',
+        },
+        beforeSend: function () {
+
+          $('.loading-overlay').show();
+          $('.loading-overlay-image-container').show();
+        },
+        complete: function () {
+
+          $('.loading-overlay').hide();
+          $('.loading-overlay-image-container').hide();
+
+        },
+        success: function (response) {
+
+          if(response == 'success') {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Your request has been successfully deleted",
+              showConfirmButton: false,
+              timer: 1500,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+              },
+              didClose: (toast) => {
+                location.href = '/report-list';
+
+                // alert('The page will go to reports list');
+              }
+          });
+          }
+        }
+
+      });
+      } else if (result.isDenied) {
+        Swal.fire("cancel", "", "info");
+      }
+    });
+
+    
+  }
 
 </script>

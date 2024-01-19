@@ -5,6 +5,34 @@
 <link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 <link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/bs-stepper/css/bs-stepper.min.css">
 
+<style>
+  .loading-overlay {
+    display: none;
+    background: rgba(26, 26, 26, 0.7);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    top: 0;
+  }
+
+  .loading-overlay-image-container {
+    display: none;
+    position: fixed;
+    z-index: 7;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .loading-overlay-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+  }
+
+</style>
+
 @section('header')
 <!-- Content Header (Page header) -->
 <div class="content-header">
@@ -42,6 +70,7 @@
               <th>Case Number</th>
               <th>Name</th>
               <th>Company Name</th>
+              <th>Violation_For</th>
               <th>Action</th>
             </thead>
           </table>
@@ -50,6 +79,12 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="loading-overlay"></div>
+<div class="loading-overlay-image-container">
+  <div class="loader"></div>
+  Loading...
 </div>
 @stop
 
@@ -112,15 +147,17 @@
           name: 'company_name',
         },
         {
+          data: 'violation_for',
+          name: 'violation_for',
+        },
+        {
           data: 'action',
           name: 'action',
         },
       ],
     });
 
-
   });
-
 
 
   function viewNOV(ID) {
@@ -130,7 +167,61 @@
   }
 
   function deleteNOV(ID) {
-    alert(ID);
+    Swal.fire({
+      title: "Do you want to delete this notice of violation?",
+      showDenyButton: false,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        $.ajax({
+        url: "{{route('/delete-nov')}}",
+        type: 'POST',
+        data: {
+          id: ID,
+          _token: '{{csrf_token()}}',
+        },
+        beforeSend: function () {
+
+          $('.loading-overlay').show();
+          $('.loading-overlay-image-container').show();
+        },
+        complete: function () {
+
+          $('.loading-overlay').hide();
+          $('.loading-overlay-image-container').hide();
+
+        },
+        success: function (response) {
+
+          if(response == 'success') {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Your request has been successfully deleted",
+              showConfirmButton: false,
+              timer: 1500,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+              },
+              didClose: (toast) => {
+                location.href = '/nov-list';
+
+                // alert('The page will go to reports list');
+              }
+          });
+          }
+        }
+
+      });
+      } else if (result.isDenied) {
+        Swal.fire("cancel", "", "info");
+      }
+    });
   }
 
   function viewPDF(ID) {

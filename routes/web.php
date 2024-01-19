@@ -34,6 +34,8 @@ Route::post('/establishment/details', [DashboardController::class, 'establishmen
 Route::get('dashboard', [DashboardController::class, 'index'])->middleware('auth');
 Route::post('/favorite/saved', [DashboardController::class, 'favoriteAdd'])->name('favoriteAdd');
 Route::post('/favorite/saved', [DashboardController::class, 'favoriteAdd'])->name('favoriteAdd');
+Route::post('/find-smr', [DashboardController::class, 'findSMR'])->name('/find-smr');
+
 
 // Report
 Route::get('report', [ReportController::class, 'index'])->middleware('auth'); 
@@ -47,6 +49,21 @@ Route::post('/save-final-step', [ReportController::class, 'saveFinalStep'])->nam
 Route::get('/preview-inspection-report/{id}', [ReportController::class, 'previewInspectionReport'])->name('previewInspectionReport');
 Route::post('/get-report/id', [ReportController::class, 'getReportbyID'])->name('/get-report/id');
 Route::post('linkToReport', [ReportController::class, 'linkToReport'])->name('linkToReport');
+Route::post('/save-per-page', [ReportController::class, 'SavePerPage'])->name('/save-per-page');
+Route::post('/delete-report', [ReportController::class, 'deleteReport'])->name('/delete-report');
+Route::post('/upload/file', [ReportController::class, 'uploadfile'])->name('/upload/file');
+Route::post('/upload/file/investigation', [ReportController::class, 'uploadFileInvestigation'])->name('/upload/file/investigation');
+
+Route::post('/get/file', [ReportController::class, 'getfile'])->name('/get/file');
+Route::post('/get/file/investigation', [ReportController::class, 'getFileInvestigation'])->name('/get/file/investigation');
+
+Route::post('/save-investigation-report', [ReportController::class, 'saveInvestigation'])->name('/save-investigation-report');
+Route::post('/get-investigation-report', [ReportController::class, 'getInvestigation'])->name('/get-investigation-report');
+
+Route::post('/delete-investigation-picture', [ReportController::class, 'deleteInvestigationPicture'])->name('/delete-investigation-picture');
+
+Route::post('/nov-list-select', [ReportController::class, 'novListSelect'])->name('/nov-list-select');
+
 
 // NOV
 Route::get('/preview-nov-pdf/{id}', [ReportController::class, 'previewNOVpdf'])->name('previewNOVpdf');
@@ -61,6 +78,7 @@ Route::post('addProhibitedActs', [NovController::class, 'addProhibitedActs'])->n
 Route::post('getProhibitedActs', [NovController::class, 'getProhibitedActs'])->name('getProhibitedActs');
 Route::post('/get-nov/id', [NovController::class, 'getNOVbyID'])->name('/get-nov/id');
 Route::post('link-nov-reports', [NovController::class, 'saveLinkFromNOVToReports'])->name('link-nov-reports');
+Route::post('/delete-nov', [NovController::class, 'deleteNOV'])->name('/delete-nov');
 
 // Shapefiles
 Route::get('shapefiles/{ID}', [ShapefilesController::class, 'index'])->middleware('auth');
