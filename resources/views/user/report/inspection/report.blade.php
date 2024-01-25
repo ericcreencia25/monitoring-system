@@ -78,8 +78,7 @@
 @section('content')
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-8">
+    <div class="col-md-12">
       <div class="card card-secondary">
         <div class="card-header">
           <p class="text-center" id="type-of-report-header" style="font-size: 24px; margin-bottom: 0px">Type of Report

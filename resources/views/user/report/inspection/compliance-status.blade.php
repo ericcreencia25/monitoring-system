@@ -847,37 +847,37 @@
         const SOLIDWASTE = array1.find(element => element == 'SOLID WASTE');
 
 
-        if (!AIR) {
-            $("#RA-8749-table-tr").attr('hidden', 'hidden');
-            $("#AQM-input").attr('hidden', 'hidden');
-            $("#AIR-StackA-input").attr('hidden', 'hidden');
-            $("#AIR-StackB-input").attr('hidden', 'hidden');
-        }
+        // if (!AIR) {
+        //     $("#RA-8749-table-tr").attr('hidden', 'hidden');
+        //     $("#AQM-input").attr('hidden', 'hidden');
+        //     $("#AIR-StackA-input").attr('hidden', 'hidden');
+        //     $("#AIR-StackB-input").attr('hidden', 'hidden');
+        // }
 
-        if (!SOLIDWASTE) {
-            $("#RA-9003-table-tr").attr('hidden', 'hidden');
-            $("#SWM-input").attr('hidden', 'hidden');
-        }
+        // if (!SOLIDWASTE) {
+        //     $("#RA-9003-table-tr").attr('hidden', 'hidden');
+        //     $("#SWM-input").attr('hidden', 'hidden');
+        // }
 
-        if (!HAZWASTE) {
-            $("#RA-6969-table-tr").attr('hidden', 'hidden');
-            $("#HWM-input").attr('hidden', 'hidden');
-        }
+        // if (!HAZWASTE) {
+        //     $("#RA-6969-table-tr").attr('hidden', 'hidden');
+        //     $("#HWM-input").attr('hidden', 'hidden');
+        // }
 
-        if (!WATER) {
-            $("#RA-9275-table-tr").attr('hidden', 'hidden');
-            $("#WQM-input").attr('hidden', 'hidden');
-        }
+        // if (!WATER) {
+        //     $("#RA-9275-table-tr").attr('hidden', 'hidden');
+        //     $("#WQM-input").attr('hidden', 'hidden');
+        // }
 
-        if (!CHEMICALS) {
-            // $("#RA-6969-table-tr").attr('hidden', 'hidden');
-            $("#CM-input").attr('hidden', 'hidden');
-        }
+        // if (!CHEMICALS) {
+        //     // $("#RA-6969-table-tr").attr('hidden', 'hidden');
+        //     $("#CM-input").attr('hidden', 'hidden');
+        // }
 
-        if (!EIA) {
-            $("#ECC-Conditionalities-tr").attr('hidden', 'hidden');
-            $("#EISS-input").attr('hidden', 'hidden');
-        }
+        // if (!EIA) {
+        //     $("#ECC-Conditionalities-tr").attr('hidden', 'hidden');
+        //     $("#EISS-input").attr('hidden', 'hidden');
+        // }
 
 
         $('#setdateofissue').datetimepicker({

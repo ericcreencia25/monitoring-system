@@ -123,7 +123,7 @@
                 </div>
                 <div class="col-md-4">
                   <div class="icheck-primary d-inline">
-                    <input type="radio" id="monitoring-report-type" name="report-type" value="Monitoring">
+                    <input type="radio" id="monitoring-report-type" name="report-type" value="Monitoring" disabled>
                     <label for="monitoring-report-type"></label>
                     Monitoring
                   </div>
@@ -141,12 +141,12 @@
             <div class="form-group">
               <center><label>SELECT REPORT FOR</label></center>
               <select class="select2" multiple="multiple" name="report-for" id="report-for" data-placeholder="Select a State" style="width: 100%;">
-                <option value="AIR">AIR</option>
+                <!-- <option value="AIR">AIR</option>
                 <option value="WATER">WATER</option>
                 <option value="EIA">EIA</option>
                 <option value="HAZWASTE">HAZWASTE</option>
                 <option value="CHEMICALS">CHEMICALS</option>
-                <option value="INTEGRATED">INTEGRATED</option>
+                <option value="INTEGRATED">INTEGRATED</option> -->
               </select>
               <!-- <div class="row">
                 <div class="col-md-4">
@@ -825,6 +825,8 @@
 
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+<script src="../../AdminLTE-3.2.0/plugins/moment/moment.min.js"></script>
+<script src="https://momentjs.com/downloads/moment.js"></script>
 
 <script>
 
@@ -899,6 +901,23 @@
       }
 
     });
+
+    $("input[type='radio'][name='report-type']").on('change', function() {
+      var value = $(this).val();
+
+      if(value == 'Inspection') {
+        $("#report-for").html(`<option value="INTEGRATED">INTEGRATED</option>`);
+      } else {
+        $("#report-for").html(
+          `<option value="AIR">AIR</option>
+          <option value="WATER">WATER</option>
+          <option value="EIA">EIA</option>
+          <option value="HAZWASTE">HAZWASTE</option>
+          <option value="CHEMICALS">CHEMICALS</option>
+        `);
+      }
+      
+    })
 
     
 
@@ -1692,6 +1711,7 @@
                                         <thead>
                                           <th >YEAR</th>
                                           <th >QUARTER</th>
+                                          <th >DATE</th>
                                           <th >REMARKS</th>
                                           <th >STATUS</th>
                                         </thead>
@@ -1965,12 +1985,12 @@
           var details = `<tr>`;
           details += `<td>`+value['date_year']+`</td>`;
           details += `<td>`+quarter+`</td>`;
+          details += `<td>`+moment(value['input_date']).format("Do of MMMM  YY")  +`</td>`;
           details += `<td>`+value['smr_notes']+`</td>`;
           details += `<td>`+status+`</td>`;
           details += `</tr>`;
           $("#smr-body").append(details);       
         });
-
          
       }
     });
