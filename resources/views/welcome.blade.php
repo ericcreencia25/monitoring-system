@@ -68,11 +68,12 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0">Home  </h1>
+        <h4 class="m-0">Company Registry
+        </h4>
       </div><!-- /.col -->
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <!-- <li class="breadcrumb-item"><a href="#">Company Registry</a></li> -->
           <!-- <li class="breadcrumb-item active">Dashboard v1</li> -->
         </ol>
       </div><!-- /.col -->
@@ -246,7 +247,16 @@
 
             <div class="form-group" id="with-nov-input" hidden="hidden">
               <label for="inputName">Linked/Relate Transaction To:</label>
-              <input type="text" id="" class="form-control">
+              <!-- <input type="text" id="" class="form-control"> -->
+               <select class="form-control select2bs4" style="width: 100%;" id="nov-input-dropdown">
+                    <option disabled>Please select</option>
+                    <!-- <option>Alaska</option>
+                    <option>California</option>
+                    <option>Delaware</option>
+                    <option>Tennessee</option>
+                    <option>Texas</option>
+                    <option>Washington</option> -->
+                  </select>
             </div>
 
           </div>
@@ -886,7 +896,7 @@
 
         $("#nov-additional").removeAttr('hidden');
       } else {
-
+        $("#with-nov-input").attr('hidden','hidden');
         $("#nov-additional").attr('hidden','hidden');
       }
 
@@ -898,6 +908,26 @@
         $("#with-nov-input").attr('hidden','hidden');
       } else {
         $("#with-nov-input").removeAttr('hidden');
+
+
+        $.ajax({
+          url: "{{route('/nov-list-dropdown')}}",
+          type: 'POST',
+          data: {
+            _token: '{{csrf_token()}}',
+          },
+          beforeSend: function (xhr, opts) {
+            
+            // $("#iee-checklist-table-land #"+BtnID+"").html(`<i class="fa fa-spinner fa-spin"></i>Loading`);
+          },
+          success: function (response) {
+            $("#nov-input-dropdown").html(`<option selected="" disabled="" value="">Please select</option>`);
+            $.each(response, function (index, value) {
+              $("#nov-input-dropdown").append(`<option value="`+value['id']+`">`+value['case_number']+`</option>`);
+            });
+
+          }
+        });
       }
 
     });
@@ -926,6 +956,9 @@
 
 
       var ReportType = $("input[type='radio'][name='report-type']:checked").val();
+      var relatednovid = $("#nov-input-dropdown").val();
+      var relatednovtext = $("#nov-input-dropdown :selected").text();
+      var withNotice = $("input[type='radio'][name='nov-additional']:checked").val();
       // var ReportFor = $("input[type='checkbox'][name='report-for']:checked").val();
 
       // var ReportFor = $('input[type=checkbox][name="report-for"]:checked').map(function (_, el) {
@@ -946,6 +979,9 @@
       var Latitude = $("#latitude").val();
       var emb_id = $("#emb_id").val();
 
+      sessionStorage.setItem("with-nov-text", withNotice);
+      sessionStorage.setItem("related-nov-id", relatednovid);
+      sessionStorage.setItem("related-nov-text", relatednovtext);
       sessionStorage.setItem("emb-id", emb_id);
       sessionStorage.setItem("company-contact", CompanyContact);
       sessionStorage.setItem("company-email", CompanyEmail);
@@ -1233,11 +1269,7 @@
                       <ul class="dropdown-menu">
                           <li class="dropdown-item" data-toggle="modal" data-target="#modal-generate-report" href="#"><a href="#">Report</a></li>
                           <li class="dropdown-item" data-toggle="modal" data-target="#modal-generate-nov" href="#"><a href="#">Notice of Violation</a></li>
-                          <li class="dropdown-item" data-toggle="modal" onclick="Commitment('`+response['company_name']+`', '`+response['emb_id']+`')"><a href="#">Commitment</a></li>
-                          <li class="dropdown-item" data-toggle="modal" onclick="Compliance('`+response['company_name']+`', '`+response['emb_id']+`')"><a href="#">Compliance</a></li>
-                          <li class="dropdown-item" data-toggle="modal" onclick="Decision('`+response['company_name']+`', '`+response['emb_id']+`')"><a href="#">Decision</a></li>
-                          <li class="dropdown-item" data-toggle="modal" disabled><a href="#">Evaluate Compliance</a></li>
-                          <li class="dropdown-item" data-toggle="modal" disabled><a href="#">Generate PAB Proceedings</a></li>
+                          
                       </ul>
                   </div>
               </div>
@@ -1709,13 +1741,47 @@
 
                                       <table class="table table-bordered" id="smr-list" style="width: 100%" hidden>
                                         <thead>
-                                          <th >YEAR</th>
-                                          <th >QUARTER</th>
-                                          <th >DATE</th>
-                                          <th >REMARKS</th>
-                                          <th >STATUS</th>
+                                          <th >reference no</th>
+                                          <th >year</th>
+                                          <th >quarter</th>
+                                          <th >date submitted</th>
+                                          <th >remarks</th>
+                                          <th >status</th>
                                         </thead>
                                         <tbody id="smr-body">
+                                        </tbody>
+                                      </table>
+                                    </div>
+
+                                  </div>
+                              </div>
+
+                          </div>
+
+                          <div class="tab-pane fade" id="vert-tabs-right-hazwaste" role="tabpanel"
+                              aria-labelledby="vert-tabs-right-hazwaste-tab">
+
+                              <div class="card card-secondary" style="box-shadow: none;">
+                                  <div class="card-header">
+                                      <h3 class="card-title">HAZWASTE</h3>
+                                  </div>
+
+                                  <div class="card-body">
+                                    <div class="form-group">
+                                      <button class="btn btn-info btn-block" id="smr-find" onclick="findHAZWASTE(`+response['company_id']+`)">Find  <i class="fas fa-search fa-fw"></i> </button>
+                                    </div>
+                                    <div class="form-group">
+
+                                      <table class="table table-bordered" id="smr-list" style="width: 100%" hidden>
+                                        <thead>
+                                          <th >reference no</th>
+                                          <th >year</th>
+                                          <th >quarter</th>
+                                          <th >date submitted</th>
+                                          <th >remarks</th>
+                                          <th >status</th>
+                                        </thead>
+                                        <tbody id="hazwaste-body">
                                         </tbody>
                                       </table>
                                     </div>
@@ -1737,11 +1803,11 @@
 
                                         <table class="table table-bordered" id="report-list" style="width: 100%">
                                             <thead>
-                                              <th>DATE</th>
-                                              <th>REPORT TYPE</th>
-                                              <th>REPORT FOR</th>
-                                              <th>ACTION</th>
-                                              <th>WITH NOV</th>
+                                              <th>date</th>
+                                              <th>type</th>
+                                              <th>report for</th>
+                                              <th>action</th>
+                                              <th>with nov</th>
                                             </thead>
                                           </table>
                                       </div>
@@ -1762,12 +1828,14 @@
                           <a class="nav-link" id="vert-tabs-right-shapefiles-tab" data-toggle="pill"
                               href="#vert-tabs-right-shapefiles" role="tab" aria-controls="vert-tabs-right-shapefiles"
                               aria-selected="false">GeoCoordinates</a>
-                          <a class="nav-link" id="vert-tabs-right-smr-tab" data-toggle="pill" href="#vert-tabs-right-smr"
-                              role="tab" aria-controls="vert-tabs-right-smr" aria-selected="false">SMR</a>
                           <a class="nav-link" id="vert-tabs-right-report-tab" data-toggle="pill" href="#vert-tabs-right-report"
                               role="tab" aria-controls="vert-tabs-right-report" aria-selected="false">Reports</a>
                           <a class="nav-link" id="vert-tabs-right-nov-tab" data-toggle="pill" href="#vert-tabs-right-nov"
                               role="tab" aria-controls="vert-tabs-right-nov" aria-selected="false">Notice of Violation</a>
+                          <a class="nav-link" id="vert-tabs-right-smr-tab" data-toggle="pill" href="#vert-tabs-right-smr"
+                              role="tab" aria-controls="vert-tabs-right-smr" aria-selected="false">SMR</a>
+                          <a class="nav-link" id="vert-tabs-right-hazwaste-tab" data-toggle="pill" href="#vert-tabs-right-hazwaste"
+                              role="tab" aria-controls="vert-tabs-right-hazwaste" aria-selected="false">HAZWASTE</a>
                           
                       </div>
                   </div>
@@ -1983,9 +2051,10 @@
 
 
           var details = `<tr>`;
+          details += `<td>`+value['ref_no']+`</td>`;
           details += `<td>`+value['date_year']+`</td>`;
           details += `<td>`+quarter+`</td>`;
-          details += `<td>`+moment(value['input_date']).format("Do of MMMM  YY")  +`</td>`;
+          details += `<td>`+moment(value['date_submitted']).format("Do of MMMM  YY")  +`</td>`;
           details += `<td>`+value['smr_notes']+`</td>`;
           details += `<td>`+status+`</td>`;
           details += `</tr>`;
@@ -1996,6 +2065,10 @@
     });
     
     
+  }
+
+  function findHAZWASTE(company_id) {
+    alert(company_id);
   }
 
 
@@ -2059,7 +2132,7 @@
 
       },
       success: function (response) {
-
+        console.log(response)
         sessionStorage.setItem("report-for", response['inspection_report']['report_for']);
         ///first page
 
@@ -2090,9 +2163,16 @@
           'product-lines-table': arrayproduct_lines,
         }
 
+
+        sessionStorage.setItem("with-nov", response['inspection_report']['with_NOV']);
+
+        sessionStorage.setItem("with-nov-text", response['report_to_nov'][0]['with_nov_text']);
+        sessionStorage.setItem("related-nov-id", response['report_to_nov'][0]['nov_id']);
+        sessionStorage.setItem("related-nov-text", response['report_to_nov'][0]['case_number']);
+
         localStorage.setItem('firstPageData', JSON.stringify(firstPageData));
 
-        window.open("/report?id=" + id + "&type=");
+        window.open("/report?id=" + id + "&type=inspection");
       }
 
     });

@@ -37,6 +37,10 @@
                     <td style="width: 20%;"><label>Address</label></td>
                     <td style="width: 80%;" id="review-address"></td>
                 </tr>
+                <tr>
+                    <td style="width: 20%;"><label>Status</label></td>
+                    <td style="width: 80%;" id="status"></td>
+                </tr>
             </thead>
         </table>
     </div>
@@ -55,6 +59,16 @@
                 <tbody id="review-findings-table-body">
                     
                 </tbody>
+            </table>
+            <table class="table" id="fine-violation-table">
+                <tr>
+                    <td style="width: 20%;"><label>Minimum Fine</label></td>
+                    <td style="width: 80%;" id="minimum-fine"></td>
+                </tr>
+                <tr>
+                    <td style="width: 20%;"><label>Maximum Fine</label></td>
+                    <td style="width: 80%;" id="maximum-fine"></td>
+                </tr>
             </table>
         </div>
     </div>

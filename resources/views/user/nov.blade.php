@@ -274,19 +274,23 @@
           $("#contact-no").val(response[0]['contact_no']);
           $("#address").val(response[0]['address']);
 
+          $("#minimum-fine-violation").val(response[0]['minimum_fine']);
+          $("#maximum-fine-violation").val(response[0]['maximum_fine']);
+
+          $("#nov-status").val(response[0]['status']);
+
           $.each(response[1], function (index, value) {
             var tr = `<tr>
-                    <td>
-                        <div class="btn-group">
-                            <button class="btn btn-info btn-flat acts-consituting-violation-edit-btn" title="edit" id="acts-consituting-violation-edit-btn" ><i class="fa-solid fa-file-pen"></i></button>
-                            <button class="btn btn-danger btn-flat acts-consituting-violation-delete-btn" title="delete" id="acts-consituting-violation-delete-btn" ><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </td>
-                    <td>`+ value['findings'] + `</td>
-                    <td style='white-space:pre'>`+ value['findings_description'] + `</td>
-                    <td>`+ value['prohibited_act'] + `</td>
-                    <td>`+ value['fine'] + `</td>
-                </tr>`;
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-info btn-flat acts-consituting-violation-edit-btn" title="edit" id="acts-consituting-violation-edit-btn" ><i class="fa-solid fa-file-pen"></i></button>
+                                <button class="btn btn-danger btn-flat acts-consituting-violation-delete-btn" title="delete" id="acts-consituting-violation-delete-btn" ><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </td>
+                        <td>`+ value['findings'] + `</td>
+                        <td style='white-space:pre'>`+ value['findings_description'] + `</td>
+                        <td>`+ value['prohibited_act'] + `</td>
+                    </tr>`;
 
             $("#acts-consituting-violation-table-body").append(tr);
           });
@@ -329,6 +333,13 @@
       var Date = $("#date").val();
       var Time = $("#time").val();
       var TCLink = $("#technical-conference-link").val();
+
+      var MinumFine = $("#minimum-fine-violation").val();
+      var MaximumFine = $("#maximum-fine-violation").val();
+
+      var Status = $("#nov-status").val();
+      
+
 
       var tableData = '';
       $("#acts-consituting-violation-table").find("tr").each(function () {
@@ -375,6 +386,10 @@
       $("#review-time").text(Time);
       $("#review-technical-conference-link").text(TCLink);
 
+      $("#minimum-fine").text('Php. ' + MinumFine);
+      $("#maximum-fine").text('Php. ' + MaximumFine);
+
+      $("#status").text(Status);
     }
 
     if (current == 4 && nextstep == 5) {
@@ -390,6 +405,12 @@
       var Date = $("#date").val();
       var Time = $("#time").val();
       var TCLink = $("#technical-conference-link").val();
+
+      var MinumFine = $("#minimum-fine-violation").val();
+      var MaximumFine = $("#maximum-fine-violation").val();
+
+      var Status = $("#nov-status").val();
+
 
       var arrayFindings = [];
 
@@ -436,6 +457,9 @@
           EmbID: emb_id,
           report_id: report_id,
           Sector: Sector,
+          MinumFine : MinumFine,
+          MaximumFine : MaximumFine,
+          Status : Status,
           _token: '{{csrf_token()}}',
         },
         beforeSend: function () {

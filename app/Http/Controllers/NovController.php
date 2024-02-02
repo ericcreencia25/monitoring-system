@@ -50,6 +50,10 @@ class NovController extends Controller
         $DateSchedule = date("m/d/Y", strtotime($request->DateSchedule));
         $TimeSchedule = date("H:i:s", strtotime($request->TimeSchedule));
         $WebConferencing = $request->WebConferencing;
+        $MinumFine = $request->MinumFine;
+        $MaximumFine = $request->MaximumFine;
+
+        $Status = $request->Status;
 
         $arrayFindings = $request->arrayFindings;
 
@@ -71,10 +75,13 @@ class NovController extends Controller
                     'date_schedule' => $DateSchedule,
                     'time_schedule' => $TimeSchedule,
                     'web_conferencing' => $WebConferencing,
+                    'minimum_fine' => $MinumFine,
+                    'maximum_fine' => $MaximumFine,
+                    'status' => $Status,
                 ]);
 
 
-            if ($arrayFindings) {
+            if (!empty($arrayFindings)) {
                 DB::table('nov-findings')->where('nov_id', $ID)->delete();
 
                 foreach ($arrayFindings as $key => $value) {
@@ -85,7 +92,6 @@ class NovController extends Controller
                         'prohibited_act' => $value[2],
                         'findings' => $value[0],
                         'findings_description' => $value[1],
-                        'fine' => $value[3],
                         'created_by' => auth()->user()->name,
                         'created_date' => $now->format('Y-m-d H:i:s')
                     ]);
@@ -115,7 +121,10 @@ class NovController extends Controller
                 'web_conferencing' => $WebConferencing,
                 'created_by' => auth()->user()->name,
                 'created_date' => $now->format('Y-m-d H:i:s'),
-                'sector' => $Sector
+                'sector' => $Sector,
+                'minimum_fine' => $MinumFine,
+                'maximum_fine' => $MaximumFine,
+                'status' => $Status,
             ]);
 
             if ($arrayFindings) {
@@ -125,10 +134,11 @@ class NovController extends Controller
 
                     $nov = DB::table('nov-findings')->insert([
                         'nov_id' => $novID,
-                        'prohibited_act' => $value[1],
+                        'prohibited_act' => $value[2],
                         'findings' => $value[0],
+                        'findings_description' => $value[1],
                         'created_by' => auth()->user()->name,
-                        'created_date' => $now->format('Y-m-d H:i:s'),
+                        'created_date' => $now->format('Y-m-d H:i:s')
                     ]);
                 }
 
@@ -340,6 +350,13 @@ class NovController extends Controller
             return false;
 
         }
+    }
+
+    public function novListDropdown(Request $req)
+    {
+        $data = DB::table('nov')->get();
+
+        return $data;
     }
 
 

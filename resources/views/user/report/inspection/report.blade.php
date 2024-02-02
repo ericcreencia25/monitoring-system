@@ -77,8 +77,28 @@
 
 @section('content')
 <div class="container-fluid">
+  Related Notice of Violation
   <div class="row">
-    <div class="col-md-12">
+    
+    <div class="col-md-3 col-sm-6 col-12" id="div-report-nov">
+      <div class="info-box shadow">
+        <span class="info-box-icon bg-success" id="view-nov-span" onclick="viewNOV()" style="cursor: pointer;"><i class="far fa-copy"></i></span>
+        <div class="info-box-content">
+          <span class="info-box-text" id="related-nov-case-number">Case #:</span>
+          <small><span class="info-box-number" id="related-nov">Regular</span></small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6 col-12" id="div-info-box-new" hidden>
+      <div class="info-box shadow" >
+        <span class="info-box-icon bg-warning" id="view-nov-span-new" onclick="viewNOVnew()" style="cursor: pointer;"><i class="far fa-copy"></i></span>
+        <div class="info-box-content">
+          <span class="info-box-text">Case #: N/A</span>
+          <small><span class="info-box-number">NEW</span></small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12" id="div-report">
       <div class="card card-secondary">
         <div class="card-header">
           <p class="text-center" id="type-of-report-header" style="font-size: 24px; margin-bottom: 0px">Type of Report
@@ -165,7 +185,7 @@
 
                   <button class="btn btn-primary btn-flat" onclick="Next(1,2)">Next</button>
 
-                  <button class="btn btn-success float-right btn-flat" onclick="Save(1,2)">Save</button>
+                  <button class="btn btn-success float-right btn-flat" onclick="Save(1,2)" id="save-first">Save</button>
                 </div>
               </div>
               <div id="second-part" class="content" role="tabpanel" aria-labelledby="second-part-trigger">
@@ -192,7 +212,7 @@
                 <button class="btn btn-primary btn-flat" onclick="Previous(2,1)">Previous</button>
                 <button class="btn btn-primary btn-flat" onclick="Next(2,3)">Next</button>
 
-                <button class="btn btn-success float-right btn-flat" onclick="Save(2,3)">Save</button>
+                <button class="btn btn-success float-right btn-flat" onclick="Save(2,3)" id="save-second">Save</button>
               </div>
 
               <div id="third-part" class="content" role="tabpanel" aria-labelledby="third-part-trigger">
@@ -219,7 +239,7 @@
                 <button class="btn btn-primary btn-flat" onclick="Previous(3,2)">Previous</button>
                 <button class="btn btn-primary btn-flat" onclick="Next(3,4)">Next</button>
 
-                <button class="btn btn-success float-right btn-flat" onclick="Save(3,4)">Save</button>
+                <button class="btn btn-success float-right btn-flat" onclick="Save(3,4)" id="save-third">Save</button>
               </div>
 
               <div id="fourth-part" class="content" role="tabpanel" aria-labelledby="fourth-part-trigger">
@@ -246,7 +266,7 @@
                 <button class="btn btn-primary btn-flat" onclick="Previous(4,3)">Previous</button>
                 <button class="btn btn-primary btn-flat" onclick="Next(4,5)">Next</button>
 
-                <button class="btn btn-success float-right btn-flat" onclick="Save(4,5)">Save</button>
+                <button class="btn btn-success float-right btn-flat" onclick="Save(4,5)" id="save-fourth">Save</button>
               </div>
 
               <div id="fifth-part" class="content" role="tabpanel" aria-labelledby="fifth-part-trigger">
@@ -271,7 +291,7 @@
                 <button class="btn btn-primary btn-flat" onclick="Previous(5,4)">Previous</button>
                 <!-- <button type="submit" class="btn btn-primary btn-flat" onclick="Next(5,6)">Submit</button> -->
 
-                <button class="btn btn-success float-right btn-flat" onclick="Save(5,6)">Submit</button>
+                <button class="btn btn-success float-right btn-flat" onclick="Save(5,6)" id="save-fifth">Submit</button>
               </div>
             </div>
           </div>
@@ -280,6 +300,8 @@
       </div>
       <!-- /.card -->
     </div>
+
+    
   </div>
 </div>
 
@@ -295,9 +317,7 @@
         </div>
       </div>
     </div>
-    <!-- /.modal-content -->
   </div>
-  <!-- /.modal-dialog -->
 </div>
 
 
@@ -331,6 +351,10 @@
     var CompanyAddress = sessionStorage.getItem("company-address");
     var Longitude = sessionStorage.getItem("longitude");
     var Latitude = sessionStorage.getItem("latitude");
+    var relatedNOVtext = sessionStorage.getItem("related-nov-text");
+    var relatedNOVid = sessionStorage.getItem("related-nov-id");
+    var withNOV = sessionStorage.getItem("with-nov");
+    var withNOVtext = sessionStorage.getItem("with-nov-text");
 
     $("#establishment-name").val(CompanyName);
     $("#email").val(CompanyEmail);
@@ -338,12 +362,39 @@
     $("#address").val(CompanyAddress);
     $("#geograpical-coordinates").val(Longitude + ', ' + Latitude);
 
+
+
+    if(withNOV == 'yes') {
+
+      if(withNOVtext == 'without existing NOV but with recommendation to issue NOV') {
+        $("#related-nov-case-number").html('Case #: N/A');
+        $("#related-nov").html('recommendation to issue NOV');
+        $("#div-info-box-new").attr('hidden', 'hidden');
+      }else if(withNOVtext == 'with existing NOV and with recommendation to issue another') {
+        $("#related-nov-case-number").html('Case #: ' + relatedNOVtext );
+        $("#related-nov").html('with recommendation to issue another NOV');
+        $("#div-info-box-new").removeAttr('hidden');
+      } else {
+        $("#related-nov-case-number").html('Case #: ' + relatedNOVtext );
+        $("#related-nov").html('with existing NOV prior to the monitoring conducted');
+        $("#div-info-box-new").attr('hidden', 'hidden');
+      }
+
+      $("#div-report-nov").removeAttr('hidden');
+      
+    } else {
+
+      $("#div-report").removeClass();
+      $("#div-report").addClass('col-md-12');
+
+      $("#div-report-nov").attr('hidden', 'hidden');
+
+    }
+
     var tor = sessionStorage.getItem("type-of-report");
     var text = 'Inspection Report';
 
     $("#type-of-report-header").text(text.toUpperCase());
-
-
 
     var step = localStorage.getItem('currentPage');
     stepper.to(step);
@@ -360,13 +411,23 @@
     if (firstPageData) {
       $("#address").val(firstPageData['address']);
       $("#establishment-name").val(firstPageData['establishment-name']);
-
-
     }
 
 
     var idParameter = getUrlParameters("id", "", true);
     var emb_id = sessionStorage.getItem("emb-id");
+
+    if(idParameter == 0) {
+      $("#save-second").attr('disabled', 'disabled');
+      $("#save-third").attr('disabled', 'disabled');
+      $("#save-fourth").attr('disabled', 'disabled');
+      $("#save-fifth").attr('disabled', 'disabled');
+    } else {
+      $("#save-second").removeAttr('disabled');
+      $("#save-third").removeAttr('disabled');
+      $("#save-fourth").removeAttr('disabled');
+      $("#save-fifth").removeAttr('disabled');
+    }
 
     $.ajax({
       url: "{{route('getReportData')}}",
@@ -958,6 +1019,9 @@
           firstPageData: firstPageData,
           'with-nov': sessionStorage.getItem("with-nov"),
           'report-for': reportFor,
+          'related-nov-id' : sessionStorage.getItem("related-nov-id"),
+          'with-nov-text' : sessionStorage.getItem("with-nov-text"),
+          'related-nov-text' : sessionStorage.getItem("related-nov-text"),
           _token: '{{csrf_token()}}',
         },
         beforeSend: function () {
@@ -1000,6 +1064,11 @@
           });
 
           sessionStorage.setItem("page-one-save", 1);
+
+          $("#save-second").removeAttr('disabled');
+          $("#save-third").removeAttr('disabled');
+          $("#save-fourth").removeAttr('disabled');
+          $("#save-fifth").removeAttr('disabled');
 
         }
 
@@ -1920,4 +1989,33 @@
     if (!returnBool) return false;
   }
 
+  function viewNOV()
+  {
+    var relatedNOVid = sessionStorage.getItem("related-nov-id");
+    sessionStorage.clear();
+    sessionStorage.setItem("nov-id", relatedNOVid);
+    window.open("/nov");
+  }
+
+  function viewNOVnew()
+  {
+    var CompanyName = sessionStorage.getItem("company-name");
+    var CompanyContact = sessionStorage.getItem("company-contact");
+    var CompanyEmail = sessionStorage.getItem("company-email");
+    var CompanyAddress = sessionStorage.getItem("company-address");
+    var Sector = JSON.parse(sessionStorage.getItem("report-for"));
+    var emb_id = sessionStorage.getItem("emb-id");
+
+    sessionStorage.setItem("nov-id", 0);
+
+    sessionStorage.setItem("emb-id", emb_id);
+
+    sessionStorage.setItem("company-contact", CompanyContact);
+    sessionStorage.setItem("company-email", CompanyEmail);
+    sessionStorage.setItem("company-address", CompanyAddress);
+    sessionStorage.setItem("company-name", CompanyName);
+    sessionStorage.setItem("nov-sector", JSON.stringify(Sector));
+
+    window.open("/nov");
+  }
 </script>

@@ -110,10 +110,10 @@
                 data-accordion="false">
 
                 <li class="nav-item">
-                  <a href="{{ url('dashboard') }}" class="nav-link">
+                  <a href="{{ url('company-registry') }}" class="nav-link">
                     <i class="nav-icon fas fa-tachometer-alt"></i>
                     <p>
-                      Dashboard
+                      Home
                       <span class="right badge badge-danger">New</span>
                     </p>
                   </a>

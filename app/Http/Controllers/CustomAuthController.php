@@ -30,7 +30,7 @@ class CustomAuthController extends Controller
         if(!Auth::check()){
             return view('auth.login');
         } else {
-            return redirect("dashboard")->withSuccess('You have signed-in');
+            return redirect("company-registry")->withSuccess('You have signed-in');
         }
         
     }  
@@ -44,7 +44,7 @@ class CustomAuthController extends Controller
    
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
-            return redirect()->intended('dashboard')
+            return redirect('company-registry')
                         ->withSuccess('Signed in');
         }
   
@@ -67,7 +67,7 @@ class CustomAuthController extends Controller
         $data = $request->all();
         $check = $this->create($data);
          
-        return redirect("dashboard")->withSuccess('You have signed-in');
+        return redirect("company-registry")->withSuccess('You have signed-in');
     }
 
     public function create(array $data)

@@ -1,7 +1,17 @@
 <div class="form-group">
+    <label>Status</label>
+    <select id="nov-status" name="online-system"  class="form-control custom-select" required>
+        <option selected="" disabled="" value="">Select one</option>
+        <option value="complied">COMPLIED</option>
+        <option value="not complied">NOT COMPLIED</option>
+    </select>
+
+</div>
+
+<div class="form-group">
     <div class="row">
         <div class="col-md-6">
-            <label style="margin-bottom: 0px;">Date:</label>
+            <label style="margin-bottom: 0px;">Date</label>
             <div class="input-group date" id="setdate" data-target-input="nearest">
                 <input type="text" class="form-control rounded-0 datetimepicker-input" data-target="#setdate" id="date"
                     placeholder="Enter Date" />
@@ -11,7 +21,7 @@
             </div>
         </div>
         <div class="col-md-6">
-            <label style="margin-bottom: 0px;">Time:</label>
+            <label style="margin-bottom: 0px;">Time</label>
             <div class="input-group date" id="settime" data-target-input="nearest">
                 <input type="text" class="form-control rounded-0 datetimepicker-input" data-target="#settime" id="time"
                     placeholder="Enter Time" />
@@ -21,9 +31,8 @@
             </div>
         </div>
     </div>
-
-
 </div>
+
 <div class="form-group">
     <label for="inputName" style="margin-bottom: 0px;">Web Conferencing:</label>
     <input type="text" id="technical-conference-link" class="form-control rounded-0" placeholder="Technical Conference Link">

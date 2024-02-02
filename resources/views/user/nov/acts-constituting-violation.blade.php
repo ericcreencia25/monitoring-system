@@ -43,20 +43,7 @@
                         </span>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label for="inputName" class="col-sm-2 col-form-label" style="font-size:large">Fine:</label>
-                    <div class="col-sm-10">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                    <!-- <i class="fas fa-dollar-sign"></i> -->
-                                    PhP
-                                </span>
-                            </div>
-                            <input type="text" class="form-control rounded-0" id="fine-violation">
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
         <div class="form-group">
@@ -64,7 +51,37 @@
         </div>
     </div>
 
-    <div class="col-8"></div>
+    <div class="col-6">
+
+        <div class="form-group">
+            <label for="inputName" class="col-form-label" style="font-size:small">Minimum Fine:</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        PhP
+                    </span>
+                </div>
+                <input type="text" class="form-control rounded-0" id="minimum-fine-violation">
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="col-6">
+
+        <div class="form-group">
+            <label for="inputName" class="col-form-label" style="font-size:small">Maximum Fine:</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        PhP
+                    </span>
+                </div>
+                <input type="text" class="form-control rounded-0" id="maximum-fine-violation">
+            </div>
+        </div>
+        
+    </div>
     <!-- <div class="col-4">
         <div class="form-group">
             <button class="btn btn-primary btn-flat btn-block" id="add-act">Save</button>
@@ -81,7 +98,6 @@
             <th style="width: 20%;">Finding/s</th>
             <th style="width: 30%;">Finding/s Details</th>
             <th style="width: 20%;">Prohibited Act/s</th>
-            <th style="width: 10%;">Fine</th>
         </thead>
         <tbody id="acts-consituting-violation-table-body">
 
@@ -199,7 +215,7 @@
         $("#add-act").on('click', function () {
             var ProhibitedAct = $("#prohibited-act-add").val();
             var Findings = $("#findings-add").val();
-            var FineViolation = $("#fine-violation").val();
+            var FineViolation = $("#minimum-fine-violation").val();
 
             var ComposeTextareaFindings = document.getElementById('compose-textarea-findings').value;
 
@@ -208,17 +224,16 @@
             }
 
             var tr = `<tr>
-                    <td>
-                        <div class="btn-group">
-                            <button class="btn btn-info btn-flat acts-consituting-violation-edit-btn" title="edit" id="acts-consituting-violation-edit-btn" ><i class="fa-solid fa-file-pen"></i></button>
-                            <button class="btn btn-danger btn-flat acts-consituting-violation-delete-btn" title="delete" id="acts-consituting-violation-delete-btn" ><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </td>
-                    <td>`+ Findings + `</td>
-                    <td style='white-space:pre'>`+ ComposeTextareaFindings + `</td>
-                    <td  class="td">`+ ProhibitedAct + `</td>
-                    <td>`+ FineViolation + `</td>
-                </tr>`;
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-info btn-flat acts-consituting-violation-edit-btn" title="edit" id="acts-consituting-violation-edit-btn" ><i class="fa-solid fa-file-pen"></i></button>
+                                <button class="btn btn-danger btn-flat acts-consituting-violation-delete-btn" title="delete" id="acts-consituting-violation-delete-btn" ><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </td>
+                        <td>`+ Findings + `</td>
+                        <td style='white-space:pre'>`+ ComposeTextareaFindings + `</td>
+                        <td class="td">`+ ProhibitedAct + `</td>
+                    </tr>`;
 
             $("#acts-consituting-violation-table-body").append(tr);
             $("#prohibited-act-add").val('');

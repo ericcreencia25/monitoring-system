@@ -261,6 +261,13 @@ class ReportController extends Controller
                 $data['inspection'] = $inspection;
             }
 
+
+            $inspection = DB::table('report_to_nov')->where('report_id', $req->id)->get();
+
+            $data['report_to_nov'] = $inspection;
+
+
+
         }
 
 
@@ -1791,7 +1798,8 @@ class ReportController extends Controller
                 'report_for' => json_encode($req['report-for']),
                 'created_date' => $now->format('Y-m-d H:i:s'),
                 'created_by' => auth()->user()->name,
-                'with_NOV' => $req['with-nov']
+                'with_NOV' => $req['with-nov'],
+                'status' => 'draft'
             ]);
 
             $id = $InspectionReport;
@@ -1815,6 +1823,16 @@ class ReportController extends Controller
                 'report_id' => $id,
                 'created_date' => $now->format('Y-m-d H:i:s'),
                 'establishment_name' => $req['firstPageData']['establishment-name'],
+                'created_by' => auth()->user()->name,
+            ]);
+
+            DB::table('report_to_nov')->insert([
+                'report_type' => 'inspection',
+                'report_id' => $id,
+                'nov_id' => $req['related-nov-id'],
+                'case_number' => $req['related-nov-text'],
+                'with_nov_text' => $req['with-nov-text'],
+                'created_date' => $now->format('Y-m-d H:i:s'),
                 'created_by' => auth()->user()->name,
             ]);
 
@@ -1849,6 +1867,7 @@ class ReportController extends Controller
                 // 'created_date' => $now->format('Y-m-d H:i:s'),
                 'created_by' => auth()->user()->name,
                 'updated_date' => $now->format('Y-m-d H:i:s'),
+                'status' => 'draft'
             ]);
 
             DB::table('product_lines')->where('report_id', $checkifexist->id)->delete();

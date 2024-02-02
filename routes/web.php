@@ -18,6 +18,10 @@ use App\Http\Controllers\ShapefilesController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/', function () {
+    return redirect('/login');
+});
+
 
 Auth::routes();
 
@@ -31,7 +35,7 @@ Route::get('signout', [CustomAuthController::class, 'signOut'])->name('signout')
 // Dashboard
 Route::post('/establishment/all', [DashboardController::class, 'establishmentAll'])->name('establishmentAll');
 Route::post('/establishment/details', [DashboardController::class, 'establishmentDetails'])->name('establishmentDetails');
-Route::get('dashboard', [DashboardController::class, 'index'])->middleware('auth');
+Route::get('company-registry', [DashboardController::class, 'index'])->middleware('auth');
 Route::post('/favorite/saved', [DashboardController::class, 'favoriteAdd'])->name('favoriteAdd');
 Route::post('/favorite/saved', [DashboardController::class, 'favoriteAdd'])->name('favoriteAdd');
 Route::post('/find-smr', [DashboardController::class, 'findSMR'])->name('/find-smr');
@@ -79,6 +83,7 @@ Route::post('getProhibitedActs', [NovController::class, 'getProhibitedActs'])->n
 Route::post('/get-nov/id', [NovController::class, 'getNOVbyID'])->name('/get-nov/id');
 Route::post('link-nov-reports', [NovController::class, 'saveLinkFromNOVToReports'])->name('link-nov-reports');
 Route::post('/delete-nov', [NovController::class, 'deleteNOV'])->name('/delete-nov');
+Route::post('/nov-list-dropdown', [NovController::class, 'novListDropdown'])->name('/nov-list-dropdown');
 
 // Shapefiles
 Route::get('shapefiles/{ID}', [ShapefilesController::class, 'index'])->middleware('auth');
