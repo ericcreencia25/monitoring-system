@@ -144,6 +144,22 @@ class NovController extends Controller
 
             }
 
+            $data = DB::table('inspection_report')->where('id', $report_id)
+            ->update([
+                'status' => 'submitted including nov'
+            ]);
+
+            if($data) {
+                DB::table('report_to_nov')->insert([
+                    'report_type' => 'inspection',
+                    'report_id' => $report_id,
+                    'nov_id' => $novID,
+                    'created_date' => $now->format('Y-m-d H:i:s'),
+                    'created_by' => auth()->user()->name,
+                    'with_nov_text' => 'new',
+                    'case_number' => $CaseNumber,
+                ]);
+            }
         }
 
         return "Success";
@@ -359,6 +375,29 @@ class NovController extends Controller
         return $data;
     }
 
+    public function getNovByReportID(Request $req)
+    {
+        $report_id = $req->report_id;
+
+        $data = DB::table('report_to_nov')
+        ->where('report_id', $report_id)
+        ->get();
+
+        $newArr = [];
+        foreach ($data as $key => $value) {
+            $newData = [];
+
+            $nov = DB::table('nov')->where('id', $value->nov_id)->first();
+
+            $newData['nov'] = $nov;
+
+            // $newData['data'] = $data1;
+
+            $newArr[] = $newData;
+        }
+
+        return $newArr;
+    }
 
 
 

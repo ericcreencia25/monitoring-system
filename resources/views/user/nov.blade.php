@@ -58,23 +58,9 @@
 @section('content')
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-2">
-      <!-- <div class="form-group">
-        <label>SECTOR</label>
-        <div class="select2-purple">
-          <select class="select2 sector-multiple" multiple="multiple" data-placeholder="Select a State"
-            data-dropdown-css-class="select2-purple" style="width: 100%;" id="sector-multiple" name="sector-multiple">
-            <option value="AIR">AIR</option>
-            <option value="WATER">WATER</option>
-            <option value="EIA">EIA</option>
-            <option value="HAZWASTE">HAZWASTE</option>
-            <option value="CHEMICALS">CHEMICALS</option>
-            <option value="SOLID WASTE">SOLID WASTE</option>
-          </select>
-        </div>
-      </div> -->
-    </div>
-    <div class="col-md-8">
+    <!-- <div class="col-md-2">
+    </div> -->
+    <div class="col-md-12">
       <div class="card card-secondary">
         <div class="card-header">
           <!-- <h3 class="card-title"> -->
@@ -139,7 +125,6 @@
                     </div>
                     <!-- /.card-body -->
                   </div>
-
 
                   <button class="btn btn-primary btn-flat" onclick="NextStep(1,2)">Next</button>
 

@@ -77,10 +77,11 @@
 
 @section('content')
 <div class="container-fluid">
-  Related Notice of Violation
+  
   <div class="row">
     
     <div class="col-md-3 col-sm-6 col-12" id="div-report-nov">
+      Related Notice of Violation:
       <div class="info-box shadow">
         <span class="info-box-icon bg-success" id="view-nov-span" onclick="viewNOV()" style="cursor: pointer;"><i class="far fa-copy"></i></span>
         <div class="info-box-content">
@@ -89,7 +90,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-3 col-sm-6 col-12" id="div-info-box-new" hidden>
+    <!-- <div class="col-md-3 col-sm-6 col-12" id="div-info-box-new" hidden>
       <div class="info-box shadow" >
         <span class="info-box-icon bg-warning" id="view-nov-span-new" onclick="viewNOVnew()" style="cursor: pointer;"><i class="far fa-copy"></i></span>
         <div class="info-box-content">
@@ -97,7 +98,7 @@
           <small><span class="info-box-number">NEW</span></small>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="col-md-12" id="div-report">
       <div class="card card-secondary">
         <div class="card-header">
@@ -148,6 +149,16 @@
                 <button type="button" class="step-trigger" role="tab" aria-controls="fifth-part"
                   id="fifth-part-trigger">
                   <span class="bs-stepper-circle">5</span>
+                  <span class="bs-stepper-label"></span>
+                </button>
+              </div>
+
+              <!-- if there's nov -->
+              <div class="line" id="nov-line" hidden></div>
+              <div class="step" data-target="#sixth-part" id="nov-part" hidden>
+                <button type="button" class="step-trigger" role="tab" aria-controls="sixth-part"
+                  id="sixth-part-trigger">
+                  <span class="bs-stepper-circle">6</span>
                   <span class="bs-stepper-label"></span>
                 </button>
               </div>
@@ -289,19 +300,40 @@
                   </div>
                 </div>
                 <button class="btn btn-primary btn-flat" onclick="Previous(5,4)">Previous</button>
+                <button class="btn btn-primary btn-flat" onclick="Next(5,6)" id="nov-part-next">Next</button>
                 <!-- <button type="submit" class="btn btn-primary btn-flat" onclick="Next(5,6)">Submit</button> -->
-
                 <button class="btn btn-success float-right btn-flat" onclick="Save(5,6)" id="save-fifth">Submit</button>
+              </div>
+
+              <div id="sixth-part" class="content" role="tabpanel" aria-labelledby="sixth-part-trigger">
+                <div class="col-md-12">
+                  <div class="card card-default" style="box-shadow: none;">
+                    <div class="card-header" style="height: 50px;">
+                      <p class="text-center"></p>
+                    </div>
+                    <div class="card-body">
+                      <div class="row justify-content-center">
+                        <div class="col-md-8 col-sm-6 col-12" id="div-info-box-new">
+                          <div class="info-box shadow" >
+                            <span class="info-box-icon bg-warning" id="view-nov-span-new" onclick="viewNOVnew()" style="cursor: pointer;"><i class="far fa-copy"></i></span>
+                            <div class="info-box-content">
+                              <small><span class="info-box-text">Create Notice of Violation</span></small>
+                              <small><span class="info-box-number">NEW</span></small>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn btn-primary btn-flat" onclick="Previous(6,5)">Previous</button>
               </div>
             </div>
           </div>
         </div>
-        
       </div>
       <!-- /.card -->
     </div>
-
-    
   </div>
 </div>
 
@@ -370,19 +402,40 @@
         $("#related-nov-case-number").html('Case #: N/A');
         $("#related-nov").html('recommendation to issue NOV');
         $("#div-info-box-new").attr('hidden', 'hidden');
+
+        $("#nov-line").removeAttr('hidden');
+        $("#nov-part").removeAttr('hidden');
+        $("#nov-part-next").removeAttr('hidden');
+
+        $("#div-report").removeClass();
+        $("#div-report").addClass('col-md-12');
+
+        $("#div-report-nov").attr('hidden', 'hidden');
+
       }else if(withNOVtext == 'with existing NOV and with recommendation to issue another') {
         $("#related-nov-case-number").html('Case #: ' + relatedNOVtext );
         $("#related-nov").html('with recommendation to issue another NOV');
         $("#div-info-box-new").removeAttr('hidden');
-      } else {
+
+        $("#nov-line").removeAttr('hidden');
+        $("#nov-part").removeAttr('hidden');
+        $("#nov-part-next").removeAttr('hidden');
+
+        $("#div-report-nov").removeAttr('hidden');
+
+      } else if(withNOVtext == 'with existing NOV prior to the monitoring conducted') {
         $("#related-nov-case-number").html('Case #: ' + relatedNOVtext );
         $("#related-nov").html('with existing NOV prior to the monitoring conducted');
-        $("#div-info-box-new").attr('hidden', 'hidden');
+        $("#div-info-box-new").removeAttr('hidden');
+
+        $("#div-report-nov").removeAttr('hidden');
       }
 
-      $("#div-report-nov").removeAttr('hidden');
       
     } else {
+      $("#nov-line").attr('hidden', 'hidden');
+      $("#nov-part").attr('hidden', 'hidden');
+      $("#nov-part-next").attr('hidden', 'hidden');
 
       $("#div-report").removeClass();
       $("#div-report").addClass('col-md-12');
@@ -442,7 +495,64 @@
 
       },
       success: function (response) {
+        console.log(response['relatednov']);
+        stepper.to(response['inspection_report']['step']);
+
+        if(response['inspection_report']['with_NOV'] == 'yes') {
+          $("#nov-line").removeAttr('hidden');
+          $("#nov-part").removeAttr('hidden');
+          $("#nov-part-next").removeAttr('hidden');
+        } else {
+          $("#nov-line").attr('hidden', 'hidden');
+          $("#nov-part").attr('hidden', 'hidden');
+          $("#nov-part-next").attr('hidden', 'hidden');
+        }
+
         sessionStorage.setItem("report-for", response['inspection_report']['report_for']);
+        sessionStorage.setItem("with-nov", response['inspection_report']['with_NOV']);
+        sessionStorage.setItem("company-name", response['inspection_report']['establishment_name']);
+        sessionStorage.setItem("company-contact", response['inspection_report']['phone_fax_number']);
+        sessionStorage.setItem("company-email", response['inspection_report']['email']);
+        sessionStorage.setItem("emb-id", response['inspection_report']['emb_id']);
+        sessionStorage.setItem("company-address", response['inspection_report']['address']);
+
+        
+        $.each(response['relatednov'], function (index, value) {
+
+          if(response['inspection_report']['with_NOV'] == 'yes') {
+
+            $("#nov-line").removeAttr('hidden');
+            $("#nov-part").removeAttr('hidden');
+            $("#nov-part-next").removeAttr('hidden');
+
+            if(value['with_nov_text'] == 'without existing NOV but with recommendation to issue NOV') {
+              $("#related-nov-case-number").html('Case #: N/A');
+              $("#related-nov").html('recommendation to issue NOV');
+              $("#div-info-box-new").attr('hidden', 'hidden');
+            }else if(value['with_nov_text'] == 'with existing NOV and with recommendation to issue another') {
+              $("#related-nov-case-number").html('Case #: ' + value['case_number'] );
+              $("#related-nov").html('with recommendation to issue another NOV');
+              $("#div-info-box-new").removeAttr('hidden');
+            } else {
+              $("#related-nov-case-number").html('Case #: ' + value['case_number'] );
+              $("#related-nov").html('with existing NOV prior to the monitoring conducted');
+              $("#div-info-box-new").removeAttr('hidden');
+            }
+
+            $("#div-report-nov").removeAttr('hidden');
+            
+          } else {
+            $("#nov-line").attr('hidden', 'hidden');
+            $("#nov-part").attr('hidden', 'hidden');
+            $("#nov-part-next").attr('hidden', 'hidden');
+
+            $("#div-report").removeClass();
+            $("#div-report").addClass('col-md-12');
+
+            $("#div-report-nov").attr('hidden', 'hidden');
+
+          }
+        });
 
         ///first page
         $("#address").val(response['inspection_report']['address']);
@@ -716,7 +826,6 @@
         }
 
         /// last
-        console.log(response);
         if ($.isEmptyObject(response['inspection']) != true) {
 
           if(response['inspection']['inspection_team'] != null) {
@@ -742,6 +851,10 @@
           } else {
             $("#date-of-inspection").val(new Date(response['inspection']['inspection_date']).toLocaleDateString('en-GB'));
           }
+
+
+
+
 
           
 
@@ -785,6 +898,11 @@
     } else if( previous == 4 ) {
 
       sessionStorage.setItem('page-four-save', 0);
+      stepper.to(previous);
+      localStorage.setItem('currentPage', previous);
+
+    } else if( previous == 5 ) {
+
       stepper.to(previous);
       localStorage.setItem('currentPage', previous);
 
@@ -893,6 +1011,7 @@
     }
 
     if (current == 5 && next == 6) {
+      stepper.to(next);
       // var fourthPageData = localStorage.getItem('fourthPageData');
 
       // var teammember = [];
@@ -968,6 +1087,10 @@
       // });
 
 
+    }
+
+    if (current == 6 && next == 7) {
+      stepper.to(next);
     }
 
   }
@@ -1318,7 +1441,7 @@
           teammember.push($(this).val());
         }
       });
-
+      var nov = sessionStorage.getItem("with-nov");
 
 
       var recommendingapproval = $("#recommending-approval").val();
@@ -1335,6 +1458,7 @@
           dateofinspection: dateofinspection,
           emb_id: emb_id,
           id: idParameter,
+          nov : nov,
           _token: '{{csrf_token()}}',
         },
         beforeSend: function () {
@@ -1348,24 +1472,50 @@
         },
         success: function (response) {
           $("#modal-while-saving").modal('hide');
+          
 
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Your work has been successfully submitted",
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.addEventListener('mouseenter', Swal.stopTimer)
-              toast.addEventListener('mouseleave', Swal.resumeTimer)
-            },
-            didClose: (toast) => {
-              location.href = '/report-list';
+          if(nov == 'yes') {
 
-              alert('The page will go to reports list');
-            }
-          });
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Your work has been successfully submitted but you have pending nov creation.",
+              showConfirmButton: false,
+              timer: 1500,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+              },
+              didClose: (toast) => {
+                stepper.to(6);
+              }
+            });
+
+            
+          } else {
+
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Your work has been successfully submitted",
+              showConfirmButton: false,
+              timer: 1500,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+              },
+              didClose: (toast) => {
+                location.href = '/report-list';
+
+                alert('The page will go to reports list');
+              }
+            });
+
+          }
+
+          
 
         }
       });
@@ -2005,10 +2155,12 @@
     var CompanyAddress = sessionStorage.getItem("company-address");
     var Sector = JSON.parse(sessionStorage.getItem("report-for"));
     var emb_id = sessionStorage.getItem("emb-id");
+    var report_id = sessionStorage.getItem("id");
 
     sessionStorage.setItem("nov-id", 0);
 
     sessionStorage.setItem("emb-id", emb_id);
+    sessionStorage.setItem("report-id", report_id);
 
     sessionStorage.setItem("company-contact", CompanyContact);
     sessionStorage.setItem("company-email", CompanyEmail);

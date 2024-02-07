@@ -25,6 +25,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::get('/nov-creation', function () {
+    return view('nov-creation');
+});
+
 // Login
 Route::get('login', [CustomAuthController::class, 'index'])->name('login');
 Route::post('custom-login', [CustomAuthController::class, 'customLogin'])->name('login.custom'); 
@@ -84,6 +88,8 @@ Route::post('/get-nov/id', [NovController::class, 'getNOVbyID'])->name('/get-nov
 Route::post('link-nov-reports', [NovController::class, 'saveLinkFromNOVToReports'])->name('link-nov-reports');
 Route::post('/delete-nov', [NovController::class, 'deleteNOV'])->name('/delete-nov');
 Route::post('/nov-list-dropdown', [NovController::class, 'novListDropdown'])->name('/nov-list-dropdown');
+
+Route::post('/get-nov-by-report-id', [NovController::class, 'getNovByReportID'])->name('/get-nov-by-report-id');
 
 // Shapefiles
 Route::get('shapefiles/{ID}', [ShapefilesController::class, 'index'])->middleware('auth');

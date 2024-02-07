@@ -49,7 +49,9 @@
     </div>
     <!-- /.row -->
   </div><!-- /.container-fluid -->
-</div> @stop @section('content') <div class="container-fluid">
+</div> @stop 
+@section('content') 
+<div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
       <div class="card card-secondary">
@@ -60,13 +62,14 @@
         </div>
         <div class="card-body">
           <!-- <div class="form-group"> -->
-          <table class="table table" id="report-list">
+          <table class="table table-bordered" id="report-list">
             <thead>
               <th>EMB ID</th>
               <th>Company Name</th>
               <th>Date</th>
               <th>Report Type</th>
               <th>Report For</th>
+              <th>Status</th>
               <th>Action</th>
               <th>With NOV</th>
             </thead>
@@ -83,10 +86,36 @@
   <div class="loader"></div>
   Loading...
 </div>
+
+<div class="modal modal-right fade" id="right_modal_lg" tabindex="-1" role="dialog" aria-labelledby="right_modal_lg">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i>
+                    <h5 class="modal-title" id="ticket-number">
+                    </h5>
+                    <span id="badge-status-ticket"></span>
+                </i>
+                <span class="time"><i class="fas fa-clock"></i> <small id="date-submitted"></small></span>
+            </div>
+            <div class="modal-body">
+              
+              <table class="table table-bordered" id="nov-list">
+                <thead>
+                  <th>Case Number</th>
+                  <th>Status</th>
+                </thead>
+                <tbody id="nov-list-body">
+                </tbody>
+              </table>
+
+            </div>
+        </div>
+    </div>
+</div>
 @stop
 
 <script src="../../AdminLTE-3.2.0/plugins/jquery/jquery.min.js"></script>
-
 <script src="../../AdminLTE-3.2.0/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="../../AdminLTE-3.2.0/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="../../AdminLTE-3.2.0/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
@@ -143,11 +172,13 @@
           data: 'report_type',
           name: 'report_type',
         },
-        
-        
         {
           data: 'report_for',
           name: 'report_for',
+        },
+        {
+          data: 'status',
+          name: 'status',
         },
         {
           data: 'action',
@@ -159,10 +190,7 @@
         },
       ],
     });
-
     
-
-
   });
 
   function viewInvestigationReport(id, emb_id) {
@@ -179,7 +207,7 @@
 
     sessionStorage.setItem("id", id);
     sessionStorage.setItem("emb-id", emb_id);
-    sessionStorage.setItem("new-or1-old", 'old');
+    sessionStorage.setItem("new-or-old", 'old');
 
     // if (type == 'old') {
     //// ajax call for all the data
@@ -283,7 +311,7 @@
   }
 
   function viewNOV(id, report_id) {
-    alert(id);
+
     if (id == 0) {
 
       $.ajax({
@@ -314,33 +342,56 @@
     
   }
 
-  function linkToNOV(id, report_id) {
+  function linkToNOV(report_id) {
 
-    sessionStorage.clear();
-    sessionStorage.setItem("nov-id", id);
-    // var ReportType = $("input[type='radio'][name='report-type']:checked").val();
-    // var ReportFor = $("input[type='checkbox'][name='report-for']:checked").val();
+    $.ajax({
+      url: "{{route('/get-nov-by-report-id')}}",
+      type: 'POST',
+      data: {
+        report_id: report_id,
+        _token: '{{csrf_token()}}',
+      },
+      success: function (response) {
 
-    var Sector = $('input[type=checkbox][name="report-sector"]:checked').map(function (_, el) {
-      return $(el).val();
-    }).get();
+        $("#nov-list-body").html('');
+        $.each(response, function (index, value) {
+          $("#nov-list-body").append(
+            `<tr>
+                <td>`+value['nov']['case_number']+`</td>
+                <td>`+value['nov']['status']+`</td>
+              </tr>`
+            );
+        });
 
-    var CompanyName = $("#company-name").val();
-    var CompanyAddress = $("#company-address").val();
-    var CompanyEmail = $("#company-email").val();
-    var CompanyContact = $("#company-contact").val();
-    var emb_id = $("#emb_id").val();
+        $("#right_modal_lg").modal();
+      }
+    });
 
-    sessionStorage.setItem("emb-id", emb_id);
-    sessionStorage.setItem("report-id", report_id);
+    // sessionStorage.clear();
+    // sessionStorage.setItem("nov-id", id);
+    // // var ReportType = $("input[type='radio'][name='report-type']:checked").val();
+    // // var ReportFor = $("input[type='checkbox'][name='report-for']:checked").val();
 
-    sessionStorage.setItem("company-contact", CompanyContact);
-    sessionStorage.setItem("company-email", CompanyEmail);
-    sessionStorage.setItem("company-address", CompanyAddress);
-    sessionStorage.setItem("company-name", CompanyName);
-    sessionStorage.setItem("nov-sector", JSON.stringify(Sector));
+    // var Sector = $('input[type=checkbox][name="report-sector"]:checked').map(function (_, el) {
+    //   return $(el).val();
+    // }).get();
 
-    window.open('/nov', '_blank');
+    // var CompanyName = $("#company-name").val();
+    // var CompanyAddress = $("#company-address").val();
+    // var CompanyEmail = $("#company-email").val();
+    // var CompanyContact = $("#company-contact").val();
+    // var emb_id = $("#emb_id").val();
+
+    // sessionStorage.setItem("emb-id", emb_id);
+    // sessionStorage.setItem("report-id", report_id);
+
+    // sessionStorage.setItem("company-contact", CompanyContact);
+    // sessionStorage.setItem("company-email", CompanyEmail);
+    // sessionStorage.setItem("company-address", CompanyAddress);
+    // sessionStorage.setItem("company-name", CompanyName);
+    // sessionStorage.setItem("nov-sector", JSON.stringify(Sector));
+
+    // window.open('/nov', '_blank');
 
   }
 

@@ -121,6 +121,30 @@ class ReportController extends Controller
 
                 return $details;
             })
+            ->addColumn('status', function ($reports_list) {
+
+                if ( $reports_list->report_type == 'inspection' ) {
+                    $report = DB::table('inspection_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+                } else {
+                    $report = DB::table('investigation_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+                }
+
+                $status = isset($report->status) ? $report->status : '';
+
+                if($status == 'draft') {
+                    $details = '<i><a href="#">' . $status . ':</a></i> Step ' . $report->step ;
+                } else {
+                    $details = '<i>' . $status . '</i>';
+                }
+
+                return $details;
+            })
             ->addColumn('action', function ($reports_list) {
 
                 $button = '<div class="btn-group">';
@@ -155,39 +179,11 @@ class ReportController extends Controller
             })
             ->addColumn('with_NOV', function ($reports_list) {
 
-                if ( $reports_list->report_type == 'inspection' ) {
-                    $report = DB::table('inspection_report')->where([
-                        'id' => $reports_list->report_id,
-                        'emb_id' => $reports_list->emb_id
-                    ])->first();
-                } else {
-                    $report = DB::table('investigation_report')->where([
-                        'id' => $reports_list->report_id,
-                        'emb_id' => $reports_list->emb_id
-                    ])->first();
-                }
-
-                $button = '';
-
-                if ($report->with_NOV == 'yes') {
-
-                    $data = DB::table('nov')
-                        ->where('report_id', $report->id)
-                        ->first();
-
-                    if (empty($data)) {
-                        $id = 0;
-                    } else {
-                        $id = $data->id;
-                    }
-
-                    $button .= '<button type="button" class="btn btn-default btn-flat" onclick="linkToNOV(' . $id . ', ' . $report->id . ')"><ion-icon name="checkmark-outline"></ion-icon></button>';
-
-                }
+                $button = '<button type="button" class="btn btn-default btn-flat" onclick="linkToNOV(' . $reports_list->report_id . ')"><ion-icon name="checkmark-outline"></ion-icon></button>';
 
                 return $button;
             })
-            ->rawColumns(['report_type', 'report_for', 'emb_id', 'company_name', 'nature_of_business', 'created_date', 'action', 'with_NOV'])
+            ->rawColumns(['status','report_type', 'report_for', 'emb_id', 'company_name', 'nature_of_business', 'created_date', 'action', 'with_NOV'])
             ->make(true);
     }
 
@@ -197,6 +193,14 @@ class ReportController extends Controller
         $data = [];
 
         $checkifexist = DB::table('inspection_report')->where('id', $req->id)->select('id')->first();
+        $relatednov = DB::table('report_to_nov')
+        ->where([
+            ['report_id', $req->id],
+            ['report_type', 'inspection']
+        ])
+        ->get();
+
+        $data['relatednov'] = $relatednov;
         
         if ($checkifexist) {
 
@@ -395,21 +399,30 @@ class ReportController extends Controller
         $dateofinspection = $req->dateofinspection;
         $emb_id = $req->emb_id;
         $id = $req->id;
+        $nov = $req->nov;
 
         // $fourthPageData = $this->insertUpdateRecommendation($id, $req['fourthPageData']);
 
         $inspection_date = $dateofinspection;
         $inspection_date = str_replace('/', '-', $inspection_date);
 
+        if($nov == 'yes') {
+            $novtext = 'pending nov creation';
+        } else {
+            $novtext = 'submitted';
+        }
+
         $data = DB::table('inspection_report')->where([
             ['emb_id', $emb_id],
             ['id', $id]
         ])->update([
-                    'inspection_date' => date("Y-m-d", strtotime($inspection_date)),
-                    'inspection_team' => $teammember,
-                    'regional_director' => $regionaldirector,
-                    'recommending_approval' => $recommendingapproval
-                ]);
+            'step' => 6,
+            'status' => $novtext,
+            'inspection_date' => date("Y-m-d", strtotime($inspection_date)),
+            'inspection_team' => $teammember,
+            'regional_director' => $regionaldirector,
+            'recommending_approval' => $recommendingapproval
+        ]);
 
         return $id;
 
@@ -1692,6 +1705,8 @@ class ReportController extends Controller
         } elseif( $CurrentPage == 2 ) {
             try {
 
+
+
                 $purpose_of_inspection = $this->insertUpdatePurposeOfInspection($req->id, $req['secondPageData']);
 
                 if ($purpose_of_inspection) {
@@ -1715,6 +1730,10 @@ class ReportController extends Controller
 
                 }
 
+                DB::table('inspection_report')->where('id', $req->id)->update([
+                    'step' => 2
+                ]);
+
                 return 'success';
 
 
@@ -1729,6 +1748,8 @@ class ReportController extends Controller
 
         } elseif( $CurrentPage == 3 ) {
 
+            
+
             try {
 
                 $insertUpdateDENRPermits = $this->insertUpdateDENRPermits('update', $req->id, $req);
@@ -1742,6 +1763,10 @@ class ReportController extends Controller
                 $insertUpdateSummaryAndFindings = $this->insertUpdateSummaryAndFindings($req->id, $req['summary-findings-and-observations']);
                 $insertUpdateDieselFueledGenerator = $this->insertUpdateDieselFueledGenerator($req->id, $req['diesel-fueled-generator']);
 
+                DB::table('inspection_report')->where('id', $req->id)->update([
+                    'step' => 3
+                ]);
+
                 return $req->id;
 
             } catch (\Throwable $e) {
@@ -1754,8 +1779,13 @@ class ReportController extends Controller
             
         } elseif( $CurrentPage == 4 ) {
 
+            
+
             $fourthPageData = $this->insertUpdateRecommendation($req->id, $req['fourthPageData']);
             
+            DB::table('inspection_report')->where('id', $req->id)->update([
+                'step' => 4
+            ]);
         } elseif( $CurrentPage == 5 ) {
             
         }
@@ -1799,7 +1829,8 @@ class ReportController extends Controller
                 'created_date' => $now->format('Y-m-d H:i:s'),
                 'created_by' => auth()->user()->name,
                 'with_NOV' => $req['with-nov'],
-                'status' => 'draft'
+                'status' => 'draft',
+                'step' => 1
             ]);
 
             $id = $InspectionReport;
@@ -1867,7 +1898,8 @@ class ReportController extends Controller
                 // 'created_date' => $now->format('Y-m-d H:i:s'),
                 'created_by' => auth()->user()->name,
                 'updated_date' => $now->format('Y-m-d H:i:s'),
-                'status' => 'draft'
+                'status' => 'draft',
+                'step' => 1
             ]);
 
             DB::table('product_lines')->where('report_id', $checkifexist->id)->delete();
