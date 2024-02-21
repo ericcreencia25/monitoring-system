@@ -39,13 +39,166 @@ class ReportController extends Controller
             return view('user.report.investigation.report');
         } elseif ( $type == 'monitoring' ) {
             return view('user.report.monitoring.report');
-        }
-        
+        }   
     }
 
     public function reportList()
     {
         return view('user.report-list');
+    }
+
+    public function getReportListManager(Request $request)
+    {
+
+        // dd(DB::connection('remote_mysql')->table('smr')->limit(100)->get());
+
+        $reports_list = DB::table('routing_history')
+                ->where('routed_to', auth()->user()->name)
+                ->orderByRaw('id DESC')
+                ->get();
+
+        return DataTables::of($reports_list)
+            ->addColumn('report_type', function ($reports_list) {
+                $details = '<p class="text-sm">' . $reports_list->report_type . '</p>';
+                return $details;
+            })
+            ->addColumn('emb_id', function ($reports_list) {
+                $details = '<p class="text-sm">' . $reports_list->emb_id . '</p>';
+                return $details;
+            })
+            ->addColumn('company_name', function ($reports_list) {
+
+                if ( $reports_list->report_type == 'inspection' ) {
+                    $report = DB::table('inspection_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+                } else {
+                    $report = DB::table('investigation_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+                }
+                
+                $details = '<p class="text-sm">' . $report->establishment_name . '</p>';
+                return $details;
+            })
+            ->addColumn('nature_of_business', function ($reports_list) {
+
+                if ( $reports_list->report_type == 'inspection' ) {
+                    $report = DB::table('inspection_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+                } else {
+                    $report = DB::table('investigation_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+                }
+                
+
+                $details = isset($report->nature_of_business) ? $report->nature_of_business : '';
+                return $details;
+            })
+            ->addColumn('report_for', function ($reports_list) {
+                if ( $reports_list->report_type == 'inspection' ) {
+                    $report = DB::table('inspection_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+                } else {
+                    $report = DB::table('investigation_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+                }
+
+                $str = isset($report->report_for) ? json_decode($report->report_for) : '';
+                $details = '<p class="text-sm">' .implode(", ", $str) . '</p>';
+                return $details;
+            })
+            ->addColumn('created_date', function ($reports_list) {
+                $details = '<p class="text-sm">' . date('M d, Y', strtotime($reports_list->created_date)) . '</p>';
+
+                return $details;
+            })
+            ->addColumn('status', function ($reports_list) {
+
+                if ( $reports_list->report_type == 'inspection' ) {
+                    $report = DB::table('inspection_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+                } else {
+                    $report = DB::table('investigation_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+                }
+
+                $status = isset($report->status) ? $report->status : '';
+
+                if($status == 'draft') {
+                    $details = '<i><a href="#">' . $status . ':</a></i> Step ' . $report->step ;
+                } else {
+                    $details = '<i>' . $status . '</i>';
+                }
+
+                return $details;
+            })
+            ->addColumn('action', function ($reports_list) {
+
+                $button = '<div class="btn-group">';
+
+                if ( $reports_list->report_type == 'inspection' ) {
+                    $report = DB::table('inspection_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+
+
+                } else {
+                    $report = DB::table('investigation_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+
+                    
+                }
+                $button .= '<button type="button" class="btn btn-default btn-flat" title="delete" onclick="deleteReport(' . $reports_list->report_id . ')"><i class="fa-solid fa-trash"></i></button>';
+
+                if ( $reports_list->report_type == 'inspection' ) {
+                    if ($report->status == 'submitted including nov' || $reports_list->status == 'submitted') {
+                        $button .= '<button type="button" class="btn btn-default btn-flat" title="pdf" onclick="viewPDF(' . $reports_list->report_id . ')"><i class="fa-solid fa-file fa-beat-fade"></i></button>';
+                    }
+                }
+                
+
+                $button .= '</div>';
+
+                return $button;
+            })
+            ->addColumn('with_NOV', function ($reports_list) {
+
+                $count = DB::table('report_to_nov')->where([
+                        'report_id' => $reports_list->report_id
+                    ])->count();
+
+                
+
+                if($count > 0 ) {
+                    $span = '<span class="badge badge-danger navbar-badge">'.$count.'</span>';
+                } else {
+                    $span = '';
+                }
+
+                $button = '<button type="button" class="btn btn-default btn-flat" onclick="linkToNOV(' . $reports_list->report_id . ')"><ion-icon name="checkmark-outline"></ion-icon>'.$span.'</button>';
+
+                return $button;
+            })
+            ->rawColumns(['status','report_type', 'report_for', 'emb_id', 'company_name', 'nature_of_business', 'created_date', 'action', 'with_NOV'])
+            ->make(true);
     }
 
     public function getReportList(Request $request)
@@ -155,7 +308,13 @@ class ReportController extends Controller
                         'emb_id' => $reports_list->emb_id
                     ])->first();
 
-                    $button .= '<button type="button" class="btn btn-default btn-flat" title="view" onclick="viewReport(' . $reports_list->report_id . ', \'' . $reports_list->emb_id . '\')"><i class="fa-solid fa-eye"></i></button>';
+                    if ($report->status == 'submitted including nov' || $report->status == 'submitted') {
+                        $button .= '';
+                    } else {
+                        $button .= '<button type="button" class="btn btn-default btn-flat" title="view" onclick="viewReport(' . $reports_list->report_id . ', \'' . $reports_list->emb_id . '\')"><i class="fa-solid fa-eye"></i></button>';
+                    }
+
+                    
                 } else {
                     $report = DB::table('investigation_report')->where([
                         'id' => $reports_list->report_id,
@@ -164,14 +323,14 @@ class ReportController extends Controller
 
                     $button .= '<button type="button" class="btn btn-default btn-flat" title="view" onclick="viewInvestigationReport(' . $reports_list->report_id . ', \'' . $reports_list->emb_id . '\')"><i class="fa-solid fa-eye"></i></button>';
                 }
+
                 $button .= '<button type="button" class="btn btn-default btn-flat" title="delete" onclick="deleteReport(' . $reports_list->report_id . ')"><i class="fa-solid fa-trash"></i></button>';
 
-                if ( $reports_list == 'inspection' ) {
-                    if ($report->recommending_approval != '') {
+                if ( $reports_list->report_type == 'inspection' ) {
+                    if ($report->status == 'submitted including nov' || $report->status == 'submitted') {
                         $button .= '<button type="button" class="btn btn-default btn-flat" title="pdf" onclick="viewPDF(' . $reports_list->report_id . ')"><i class="fa-solid fa-file fa-beat-fade"></i></button>';
                     }
                 }
-                
 
                 $button .= '</div>';
 
@@ -179,7 +338,17 @@ class ReportController extends Controller
             })
             ->addColumn('with_NOV', function ($reports_list) {
 
-                $button = '<button type="button" class="btn btn-default btn-flat" onclick="linkToNOV(' . $reports_list->report_id . ')"><ion-icon name="checkmark-outline"></ion-icon></button>';
+                $count = DB::table('report_to_nov')->where([
+                    'report_id' => $reports_list->report_id
+                ])->count();
+
+                if($count > 0 ) {
+                    $span = '<span class="badge badge-danger navbar-badge">'.$count.'</span>';
+                } else {
+                    $span = '';
+                }
+
+                $button = '<button type="button" class="btn btn-default btn-flat" onclick="linkToNOV(' . $reports_list->report_id . ')"><ion-icon name="checkmark-outline"></ion-icon>'.$span.'</button>';
 
                 return $button;
             })
@@ -393,6 +562,7 @@ class ReportController extends Controller
 
     public function saveFinalStep(Request $req)
     {
+        $now = new \DateTime();
         $teammember = $req->teammember;
         $recommendingapproval = $req->recommendingapproval;
         $regionaldirector = $req->regionaldirector;
@@ -424,6 +594,18 @@ class ReportController extends Controller
             'recommending_approval' => $recommendingapproval
         ]);
 
+        if($data) {
+            DB::table('routing_history')->insert([
+                'routed_to' => 'GILBERT C. GONZALES, CESO III',
+                'routed_from' => auth()->user()->name,
+                'remarks' => '',
+                'created_date' => $now->format('Y-m-d H:i:s'),
+                'report_id' => $id,
+                'report_type' => 'inspection',
+                'emb_id' => $emb_id
+            ]);
+        }
+
         return $id;
 
     }
@@ -450,8 +632,6 @@ class ReportController extends Controller
             if ($purpose_of_inspection) {
                 return $checkData->id;
             }
-
-
 
         } else {
 
@@ -506,7 +686,7 @@ class ReportController extends Controller
         }
 
 
-        return 'sss';
+        return 'success';
     }
 
     public function insertUpdateDieselFueledGenerator($id, $req)

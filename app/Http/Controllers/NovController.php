@@ -59,6 +59,7 @@ class NovController extends Controller
 
         $report_id = $request->report_id;
         $Sector = json_encode($request['Sector']);
+        $RelevantLaw = $request->RelevantLaw;
 
         if ($ID) {
 
@@ -78,6 +79,7 @@ class NovController extends Controller
                     'minimum_fine' => $MinumFine,
                     'maximum_fine' => $MaximumFine,
                     'status' => $Status,
+                    'relevant_law' => $RelevantLaw
                 ]);
 
 
@@ -125,6 +127,7 @@ class NovController extends Controller
                 'minimum_fine' => $MinumFine,
                 'maximum_fine' => $MaximumFine,
                 'status' => $Status,
+                'relevant_law' => $RelevantLaw
             ]);
 
             if ($arrayFindings) {

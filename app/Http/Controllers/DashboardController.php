@@ -123,7 +123,7 @@ class DashboardController extends Controller
         } else {
             $data = DB::table('saved_company')->where('emb_id', $emb_id)->count();
 
-            if ($data > 1) {
+            if ($data > 0) {
                 DB::table('saved_company')->where('emb_id', $emb_id)->delete();
             }
         }

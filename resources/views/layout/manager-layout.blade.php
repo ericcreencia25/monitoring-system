@@ -34,7 +34,7 @@
     <div class="wrapper">
       <!-- Preloader -->
       <div class="preloader flex-column justify-content-center align-items-center">
-        <img class="animation__shake" src="../../AdminLTE-3.2.0/dist/img/denr-emb-logo.gif" alt="AdminLTELogo" height="60" width="60">
+        <img class="animation__shake" src="../../AdminLTE-3.2.0/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
       </div>
 
       <!-- Navbar -->
@@ -62,7 +62,7 @@
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
               <a class="dropdown-item dropdown-header" href="#">{{auth()->user()->name}}</a>
               <div class="dropdown-divider"></div>
-              <a href="profile" class="dropdown-item">
+              <a href="/manager/profile" class="dropdown-item">
                 <i class="fas fa-user"></i> Profile
               </a>
               <div class="dropdown-divider"></div>
@@ -89,9 +89,7 @@
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
               <div class="image">
                 <img src="../../AdminLTE-3.2.0/dist/img/denr-emb-logo.gif" class="img-circle elevation-2"
-                  alt="User Image" />
-                <!-- <img src="../../AdminLTE-3.2.0/dist/img/AdminLTELogo.png" alt="AdminLTE Logo"
-              class="brand-image img-circle elevation-3" style="opacity: .8" /> -->
+                  alt="User Image">
               </div>
               <div class="info">
                 <a href="#" class="d-block">{{auth()->user()->name}}</a>
@@ -116,7 +114,7 @@
                 data-accordion="false">
                 
                 <li class="nav-item">
-                  <a href="{{ url('company-registry') }}" class="nav-link">
+                  <a href="{{ url('manager/dashboard') }}" class="nav-link">
                     <i class="nav-icon fas fa-tachometer-alt"></i>
                     <p>
                       Home
@@ -125,7 +123,7 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{{ url('report-list') }}" class="nav-link">
+                  <a href="{{ url('manager/report-list') }}" class="nav-link">
                     <i class="nav-icon fas fa-edit"></i>
                     <p>
                       Report
@@ -145,7 +143,7 @@
                   </a>
                 </li>
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                   <a href="{{ url('bookmark') }}" class="nav-link">
                     <i class="nav-icon fas fa-bookmark"></i>
                     <p>
@@ -153,7 +151,7 @@
                       <span class="right badge badge-danger">New</span>
                     </p>
                   </a>
-                </li>
+                </li> -->
               </ul>
             </nav>
             <!-- /.sidebar-menu -->
@@ -220,6 +218,7 @@
       <script src="../../AdminLTE-3.2.0/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
       <!-- AdminLTE App -->
       <script src="../../AdminLTE-3.2.0/dist/js/adminlte.js"></script>
+      
       <!-- AdminLTE for demo purposes -->
       <!-- <script src="../../AdminLTE-3.2.0/dist/js/demo.js"></script> -->
       <!-- AdminLTE dashboard demo (This is only for demo purposes) -->

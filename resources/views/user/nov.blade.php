@@ -323,6 +323,8 @@
       var MaximumFine = $("#maximum-fine-violation").val();
 
       var Status = $("#nov-status").val();
+
+      var RelevantLaw = $("#relevant-law").val();
       
 
 
@@ -375,6 +377,9 @@
       $("#maximum-fine").text('Php. ' + MaximumFine);
 
       $("#status").text(Status);
+
+
+      $("#review-relevenat-law").text(RelevantLaw);
     }
 
     if (current == 4 && nextstep == 5) {
@@ -396,6 +401,7 @@
 
       var Status = $("#nov-status").val();
 
+      var RelevantLaw = $("#relevant-law").val();
 
       var arrayFindings = [];
 
@@ -445,6 +451,7 @@
           MinumFine : MinumFine,
           MaximumFine : MaximumFine,
           Status : Status,
+          RelevantLaw : RelevantLaw,
           _token: '{{csrf_token()}}',
         },
         beforeSend: function () {

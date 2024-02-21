@@ -7,6 +7,10 @@
     <input type="text" id="sector-list" class="form-control rounded-0" readonly>
 </div>
 <div class="form-group">
+    <label for="inputName" style="margin-bottom: 0px;">Relevant Law</label>
+    <input type="text" id="relevant-law" class="form-control rounded-0">
+</div>
+<div class="form-group">
     <label for="inputName" style="margin-bottom: 0px;">Case Number</label>
     <input type="text" id="case-number" class="form-control rounded-0">
 </div>

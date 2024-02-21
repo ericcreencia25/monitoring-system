@@ -1,4 +1,4 @@
-@extends('layout.layout')
+@extends('layout.manager-layout')
 
 <link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
@@ -96,7 +96,7 @@
                     </h5>
                     <span id="badge-status-ticket"></span>
                 </i>
-                <!-- <span class="time"><i class="fas fa-clock"></i> <small id="date-submitted"></small></span> -->
+                <span class="time"><i class="fas fa-clock"></i> <small id="date-submitted"></small></span>
             </div>
             <div class="modal-body">
               
@@ -150,9 +150,10 @@
       paging: true,
       serverSide: true,
       ajax: {
-        "url": "{{route('getReportList')}}",
+        "url": "{{route('/manager/get-report-list')}}",
         "type": "POST",
         "data": {
+          usertype: 'manager',
           _token: '{{csrf_token()}}',
         },
       },

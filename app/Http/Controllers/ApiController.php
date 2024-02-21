@@ -2,6 +2,12 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Hash;
+use Session;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class ApiController extends Controller
 {
@@ -25,4 +31,11 @@ class ApiController extends Controller
     {
         return view('super_admin.super_admin_dashboard');
     }
+
+    public function unknownType()
+    {
+        return view('no_user_type.home');
+    }
+
+    
 }

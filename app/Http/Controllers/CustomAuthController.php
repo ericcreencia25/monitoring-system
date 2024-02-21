@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\DB;
 
 class CustomAuthController extends Controller
 {
@@ -30,30 +31,140 @@ class CustomAuthController extends Controller
         if(!Auth::check()){
             return view('auth.login');
         } else {
+
             return redirect("company-registry")->withSuccess('You have signed-in');
         }
         
-    }  
+    } 
+
+    public function iisLogin($username, $password, $id_number, $email , $token)
+    {
+        // http://127.0.0.1:8000/api/login/iis/ebcreencia/$2y$10$TWs46asy8HUoJWUeDyhcEODCIES96vmFSYRsYQRXCB0lDyWRaLw0a/EMBCO-202104667/eric.creencia25@gmail.com/466760e6a6104f0cf
+        $check = DB::table('users')->where([
+            ['email', $email],
+            ['password', $password],
+            ['iis_token', $token],
+        ])->first();
+
+
+        if(!empty($check))
+        {
+            Session::put('username', $username);
+            Session::put('password', $password);
+            Session::put('id_number', $id_number);
+            Session::put('email', $email);
+            Session::put('token', $token);
+
+            return redirect('iis-login');
+
+            // if(auth()->user()->type == 1) {
+            //     return redirect('company-registry')
+            //     ->withSuccess('Signed in');
+            // } else if(auth()->user()->type == 2) {
+            //     return redirect('/manager/dashboard')
+            //     ->withSuccess('Signed in');
+            // }
+        } else {
+            Session::put('username', $username);
+            Session::put('password', $password);
+            Session::put('id_number', $id_number);
+            Session::put('email', $email);
+            Session::put('token', $token);
+
+            return redirect('iis-confirmation');
+            // dd('Login details are not valid.');
+            // return redirect()->route('login')->with('error','Login details are not valid.');
+        }
+    }
+
+
+    public function loginIISaccount(Request $request)
+    {
+        $username = Session::get('username');
+        $password = $request->password; 
+        $id_number = Session::get('id_number');
+        $email = Session::get('email');
+        $iis_token = Session::get('token');
+
+        if(auth()->attempt(array('email' => $email, 'password' => $password, 'iis_token' => $iis_token)))
+        {
+
+            if(auth()->user()->type == 1) {
+                return redirect('company-registry')
+                ->withSuccess('Signed in');
+            } else if(auth()->user()->type == 2) {
+                return redirect('/manager/dashboard')
+                ->withSuccess('Signed in');
+            } else {
+                return redirect('/unknown')
+                ->withSuccess('Signed in');
+            }
+        } else {
+            Session::put('username', $username);
+            Session::put('password', $password);
+            Session::put('id_number', $id_number);
+            Session::put('email', $email);
+            Session::put('token', $token);
+
+            return redirect('iis-confirmation');
+        }
+    }
       
     public function customLogin(Request $request)
     {
-        $request->validate([
-            'email' => 'required',
+        $input = $request->all();
+
+        $this->validate($request, [
+            'email' => 'required|email',
             'password' => 'required',
         ]);
    
-        $credentials = $request->only('email', 'password');
-        if (Auth::attempt($credentials)) {
-            return redirect('company-registry')
-                        ->withSuccess('Signed in');
+        // $credentials = $request->only('email', 'password');
+
+        if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
+        {
+
+            if(auth()->user()->type == 1) {
+                return redirect('company-registry')
+                ->withSuccess('Signed in');
+            } else if(auth()->user()->type == 2) {
+                return redirect('/manager/dashboard')
+                ->withSuccess('Signed in');
+            }
+        } else {
+            return redirect()->route('login')->with('error','Login details are not valid.');
         }
   
-        return redirect("login")->withSuccess('Login details are not valid');
+        
     }
 
     public function registration()
     {
         return view('auth.registration');
+    }
+
+    public function createIISaccount(Request $request)
+    {
+        $username = $request->username;
+        $password = $request->password;
+        $id_number = $request->id_number;
+        $email = $request->email;
+        $remember_token = $request->iis_token;
+        $now = new \DateTime();
+
+        $data = DB::table('users')->insert([
+            'id_number' => $id_number,
+            'username' => $username,
+            'password' => $password,
+            'iis_token' => $remember_token,
+            'email' => $email,
+            'created_at' => $now->format('Y-m-d H:i:s'),
+            'updated_at' => $now->format('Y-m-d H:i:s'),
+        ]);
+
+
+        return 'success';
+
     }
       
     public function customRegistration(Request $request)
@@ -93,5 +204,28 @@ class CustomAuthController extends Controller
         Auth::logout();
   
         return Redirect('login');
+    }
+
+    public function editProfile(Request $request)
+    {
+        
+
+        $middlename = isset($request->middlename) ? ' ' . $request->middlename . ' ' : ' ';
+        $name = $request->firstname . $middlename . $request->lastname;
+        
+        $data = DB::table('users')->where('id_number', $request->id_number)
+        ->update([
+            'username' => $request->username,
+            'first_name' => $request->firstname,
+            'middle_name' => $request->middlename,
+            'last_name' => $request->lastname,
+            'email' => $request->email,
+            'type' => $request->type,
+            'name' => $name
+        ]);
+
+        if($data){
+            return 'success';
+        }
     }
 }

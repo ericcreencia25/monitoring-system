@@ -6,6 +6,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\NovController;
 use App\Http\Controllers\ShapefilesController;
+use App\Http\Controllers\ApiController;
 
 
 /*
@@ -23,11 +24,77 @@ Route::get('/', function () {
 });
 
 
+Route::get('/api/login/iis/{username}/{password}/{id_number}/{email}/{token}', [CustomAuthController::class, 'iisLogin'])->name('iisLogin');
+Route::post('/create/iis-account', [CustomAuthController::class, 'createIISaccount'])->name('/create/iis-account');
+Route::post('/login/iis-account', [CustomAuthController::class, 'loginIISaccount'])->name('/login/iis-account');
 Auth::routes();
 
 Route::get('/nov-creation', function () {
     return view('nov-creation');
 });
+
+Route::get('/iis-confirmation', function () {
+    return view('auth.iis-confirmation');
+});
+
+Route::get('/iis-login', function () {
+    return view('auth.iis-login');
+});
+
+
+
+//admin Users Routes List
+Route::middleware(['auth', 'user-access:0'])->group(function () {
+    // admin
+    Route::get('/unknown', function () {
+        return view('no_user_type.home');
+    });
+    
+
+});
+
+
+//admin Users Routes List
+Route::middleware(['auth', 'user-access:2'])->group(function () {
+    // admin
+    Route::get('/manager/dashboard', function () {
+        return view('manager.manager_dashboard');
+    });
+    // Route::get('/admin/report-list', [ReportController::class, 'reportList'])->middleware('auth'); 
+    Route::get('/manager/report-list', function () {
+        return view('manager.report-list');
+    });
+
+
+    Route::post('/manager/get-report-list', [ReportController::class, 'getReportListManager'])->name('/manager/get-report-list');
+
+    Route::get('/manager/profile', function () {
+    return view('manager.profile');
+});
+});
+
+
+//Normal Users Routes List
+Route::middleware(['auth', 'user-access:1'])->group(function () {
+    //Normal
+    Route::get('company-registry', [DashboardController::class, 'index']);
+
+    Route::get('report', [ReportController::class, 'index'])->middleware('auth'); 
+    Route::get('generate/report', [ReportController::class, 'index'])->middleware('auth'); 
+    Route::get('report-list', [ReportController::class, 'reportList'])->middleware('auth'); 
+
+    Route::get('nov', [NovController::class, 'index'])->middleware('auth');
+    Route::get('nov-list', [NovController::class, 'novList'])->middleware('auth');
+    Route::get('shapefiles/{ID}', [ShapefilesController::class, 'index'])->middleware('auth');
+    Route::get('shapefilestest', [ShapefilesController::class, 'shapefilestest'])->middleware('auth');
+
+    Route::get('/profile', function () {
+        return view('user.profile');
+    });
+});
+
+
+Route::post('/edit/profile', [CustomAuthController::class, 'editProfile'])->name('/edit/profile');
 
 // Login
 Route::get('login', [CustomAuthController::class, 'index'])->name('login');
@@ -39,17 +106,13 @@ Route::get('signout', [CustomAuthController::class, 'signOut'])->name('signout')
 // Dashboard
 Route::post('/establishment/all', [DashboardController::class, 'establishmentAll'])->name('establishmentAll');
 Route::post('/establishment/details', [DashboardController::class, 'establishmentDetails'])->name('establishmentDetails');
-Route::get('company-registry', [DashboardController::class, 'index'])->middleware('auth');
 Route::post('/favorite/saved', [DashboardController::class, 'favoriteAdd'])->name('favoriteAdd');
 Route::post('/favorite/saved', [DashboardController::class, 'favoriteAdd'])->name('favoriteAdd');
 Route::post('/find-smr', [DashboardController::class, 'findSMR'])->name('/find-smr');
 
 
 // Report
-Route::get('report', [ReportController::class, 'index'])->middleware('auth'); 
-Route::get('generate/report', [ReportController::class, 'index'])->middleware('auth'); 
 Route::post('/ecc-conditionalities', [ReportController::class, 'eccConditionalitites'])->name('eccConditionalitites');
-Route::get('report-list', [ReportController::class, 'reportList'])->middleware('auth'); 
 Route::post('/save-raw', [ReportController::class, 'saveRaw'])->name('saveRaw');
 Route::post('getReportList', [ReportController::class, 'getReportList'])->name('getReportList');
 Route::post('getReportData', [ReportController::class, 'getReportData'])->name('getReportData');
@@ -75,12 +138,10 @@ Route::post('/nov-list-select', [ReportController::class, 'novListSelect'])->nam
 
 // NOV
 Route::get('/preview-nov-pdf/{id}', [ReportController::class, 'previewNOVpdf'])->name('previewNOVpdf');
-Route::get('nov', [NovController::class, 'index'])->middleware('auth');
 Route::post('submitNOV', [NovController::class, 'submitNOV'])->name('submitNOV');
 Route::post('getNOVList', [NovController::class, 'getNOVList'])->name('getNOVList');
 Route::post('getNOVListbyEMBID', [NovController::class, 'getNOVListbyEMBID'])->name('getNOVListbyEMBID');
 Route::post('getNOVview', [NovController::class, 'getNOVview'])->name('getNOVview');
-Route::get('nov-list', [NovController::class, 'novList'])->middleware('auth');
 Route::get('/preview-nov/{id}', [NovController::class, 'previewNOV'])->name('previewNOV');
 Route::post('addProhibitedActs', [NovController::class, 'addProhibitedActs'])->name('addProhibitedActs');
 Route::post('getProhibitedActs', [NovController::class, 'getProhibitedActs'])->name('getProhibitedActs');
@@ -92,11 +153,9 @@ Route::post('/nov-list-dropdown', [NovController::class, 'novListDropdown'])->na
 Route::post('/get-nov-by-report-id', [NovController::class, 'getNovByReportID'])->name('/get-nov-by-report-id');
 
 // Shapefiles
-Route::get('shapefiles/{ID}', [ShapefilesController::class, 'index'])->middleware('auth');
 Route::post('getimages', [ShapefilesController::class, 'getImages'])->name('getImages');
 Route::post('image/delete', [ShapefilesController::class, 'destroy'])->name('destroy');
 Route::post('image/upload', [ShapefilesController::class, 'store'])->name('store');
-Route::get('shapefilestest', [ShapefilesController::class, 'shapefilestest'])->middleware('auth');
 
 // bookmark
 Route::get('bookmark', [DashboardController::class, 'bookmark'])->middleware('auth');

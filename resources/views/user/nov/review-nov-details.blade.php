@@ -14,6 +14,10 @@
         <table class="table">
             <thead>
                 <tr>
+                    <td style="width: 20%;"><label>Relevant Law</label></td>
+                    <td style="width: 80%;" id="review-relevenat-law"></td>
+                </tr>
+                <tr>
                     <td style="width: 20%;"><label>Case Number</label></td>
                     <td style="width: 80%;" id="review-case-number"></td>
                 </tr>

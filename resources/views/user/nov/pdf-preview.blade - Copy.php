@@ -10,23 +10,22 @@
 <table style="float: left;border: none;border-collapse:collapse;margin-left:6.75pt;margin-right:6.75pt;">
     <tbody>
         <tr>
-            <td style="width:113.5pt;padding:0cm 0cm 0cm 0cm;height:14.15pt;">
+            <td style="width:113.5pt;padding:0cm 0cm 0cm 0cm;height:20.15pt;">
                 <p
-                    style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;margin-left:35.75pt;line-height:12.45pt;vertical-align:baseline;'>
+                    style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;margin-top:7.45pt;margin-right:0cm;margin-bottom:.0001pt;margin-left:35.75pt;line-height:12.45pt;vertical-align:baseline;'>
                     <span style="font-size:16px;color:black;">Date</span>
                 </p>
             </td>
-            <td style="width:20.6pt;padding:0cm 0cm 0cm 0cm;height:14.15pt;">
+            <td style="width:20.6pt;padding:0cm 0cm 0cm 0cm;height:20.15pt;">
                 <p
-                    style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;text-align:right;line-height:12.45pt;vertical-align:baseline;'>
-                    <span style="font-size:16px;color:black;">: </span>
+                    style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;margin-top:7.45pt;text-align:right;line-height:12.45pt;vertical-align:baseline;'>
+                    <span style="font-size:16px;color:black;">:</span>
                 </p>
             </td>
-            <td style="width:364.5pt;border:none;padding:0cm 0cm 0cm 0cm;height:14.15pt;">
-                <p
-                    style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;margin-left:.5pt;line-height:12.45pt;vertical-align:baseline;'>
-                    <strong><span style="font-size:16px;color:black;"> {{ date("M d, Y", strtotime($data->created_date)) }}</span></strong>
-                </p>
+            <td
+                style="width: 364.5pt;border-top: none;border-right: none;border-left: none;border-image: initial;border-bottom: 1pt solid black;padding: 0cm;height: 20.15pt;vertical-align: top;">
+                <p style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;vertical-align:baseline;'><span
+                        style='font-size:16px;font-family:"Arial",sans-serif;color:black;'>&nbsp;</span></p>
             </td>
         </tr>
         <tr>
@@ -39,7 +38,7 @@
             <td style="width:20.6pt;padding:0cm 0cm 0cm 0cm;height:14.15pt;">
                 <p
                     style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;text-align:right;line-height:12.45pt;vertical-align:baseline;'>
-                    <span style="font-size:16px;color:black;">: </span>
+                    <span style="font-size:16px;color:black;">:</span>
                 </p>
             </td>
             <td style="width:364.5pt;border:none;padding:0cm 0cm 0cm 0cm;height:14.15pt;">
@@ -59,7 +58,7 @@
             <td style="width:20.6pt;padding:0cm 0cm 0cm 0cm;height:13.95pt;">
                 <p
                     style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;text-align:right;line-height:12.95pt;vertical-align:baseline;'>
-                    <span style="font-size:16px;color:black;">: </span>
+                    <span style="font-size:16px;color:black;">:</span>
                 </p>
             </td>
             <td style="width:364.5pt;padding:0cm 0cm 0cm 0cm;height:13.95pt;">
@@ -79,7 +78,7 @@
             <td style="width:20.6pt;padding:0cm 0cm 0cm 0cm;height:13.65pt;">
                 <p
                     style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;text-align:right;line-height:12.95pt;vertical-align:baseline;'>
-                    <span style="font-size:16px;color:black;">: </span>
+                    <span style="font-size:16px;color:black;">:</span>
                 </p>
             </td>
             <td style="width:364.5pt;padding:0cm 0cm 0cm 0cm;height:13.65pt;">
@@ -99,7 +98,7 @@
             <td style="width:20.6pt;padding:0cm 0cm 0cm 0cm;height:13.95pt;">
                 <p
                     style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;text-align:right;line-height:12.7pt;vertical-align:baseline;'>
-                    <span style="font-size:16px;color:black;">: </span>
+                    <span style="font-size:16px;color:black;">:</span>
                 </p>
             </td>
             <td style="width:364.5pt;padding:0cm 0cm 0cm 0cm;height:13.95pt;">
@@ -120,7 +119,7 @@
             <td style="width:20.6pt;padding:0cm 0cm 0cm 0cm;height:13.65pt;">
                 <p
                     style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;text-align:right;line-height:12.7pt;vertical-align:baseline;'>
-                    <span style="font-size:16px;color:black;">: </span>
+                    <span style="font-size:16px;color:black;">:</span>
                 </p>
             </td>
             <td style="width:364.5pt;padding:0cm 0cm 0cm 0cm;height:13.65pt;">
@@ -140,7 +139,7 @@
             <td style="width:20.6pt;padding:0cm 0cm 0cm 0cm;height:14.0pt;">
                 <p
                     style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;text-align:right;line-height:13.2pt;vertical-align:baseline;'>
-                    <span style="font-size:16px;color:black;">: </span>
+                    <span style="font-size:16px;color:black;">:</span>
                 </p>
             </td>
             <td style="width:364.5pt;padding:0cm 0cm 0cm 0cm;height:14.0pt;">
@@ -184,12 +183,16 @@
     <strong><u><span style="font-size:24px;color:black;">NOTICE OF VIOLATION</span></u></strong>
 </p>
 <p
-    style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;margin-top:13.85pt;margin-right:0cm;margin-bottom:.0001pt;margin-left:28.8pt;text-indent: 25px;"line-height:13.65pt;vertical-align:baseline;'>
+    style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;margin-top:13.85pt;margin-right:0cm;margin-bottom:.0001pt;margin-left:64.8pt;line-height:13.65pt;vertical-align:baseline;'>
     <span style="font-size:16px;color:black;">Notice is hereby served upon you for having violated a provision of
-        <strong>{{ $data->relevant_law}}. </strong>Based on the evaluation of our
+        <strong>Presidential Decree</strong></span>
+</p>
+<p
+    style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;margin-top:0cm;margin-right:32.4pt;margin-bottom:.0001pt;margin-left:28.8pt;line-height:13.8pt;vertical-align:baseline;'>
+    <strong><span style="font-size:16px;color:black;">No. 1586 and its Implementing Rules and
+            Regulations.&nbsp;</span></strong><span style="font-size:16px;color:black;">Based on the evaluation of our
         records, the following adverse findings were identified by this Office:</span>
 </p>
-
 <p
     style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;margin-top:13.95pt;text-align:center;line-height:13.7pt;vertical-align:baseline;'>
     <strong><span style="font-size:16px;color:black;">ACT/S CONSTITUTING THE VIOLATION</span></strong>
@@ -234,10 +237,6 @@
                     style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;margin-top:7.2pt;margin-right:5.4pt;margin-bottom:.0001pt;margin-left:7.2pt;text-align:justify;line-height:13.8pt;vertical-align:baseline;'>
                     <span style="font-size:16px;color:black;">{{ $finding->prohibited_act }}</span>
                 </p>
-                <p
-                    style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;margin-top:41.55pt;margin-right:0cm;margin-bottom:  117.2pt;margin-left:7.2pt;line-height:13.35pt;vertical-align:baseline;'>
-                    <strong><em><span style="font-size:16px;color:black;">Fine: PhP {{ $data->minimum_fine }} to Php {{ $data->maximum_fine }}</span></em></strong>
-                </p>
             </td>
         </tr>
         @endforeach
@@ -254,7 +253,7 @@
 </p>
 <p
     style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;margin-top:8.0pt;text-align:justify;text-indent:36.0pt;line-height:14.85pt;vertical-align:baseline;'>
-    <span style="font-size:16px;color:black;">The Technical Conference will be held on ____________________ at this Office. Failure on your part to submit an explanation in writing shall be
+    <span style="font-size:16px;color:black;">Failure on your part to submit an explanation in writing shall be
         considered as a waiver of your right to present evidence on your behalf. The case shall be resolved according to
         the available documents on record.</span>
 </p>
