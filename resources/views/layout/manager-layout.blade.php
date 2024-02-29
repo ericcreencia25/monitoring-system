@@ -66,6 +66,13 @@
                 <i class="fas fa-user"></i> Profile
               </a>
               <div class="dropdown-divider"></div>
+              <a href="/manager/accounts" class="dropdown-item">
+                <i class="fas fa-users"></i> Accounts
+              </a>
+              <a href="/manager/signatures" class="dropdown-item">
+                <i class="fa-solid fa-signature"></i> Signatures
+              </a>
+              <div class="dropdown-divider"></div>
               <a href="{{ route('signout') }}" class="dropdown-item">
                 <i class="fas fa-sign-out-alt"></i> Logout
               </a>

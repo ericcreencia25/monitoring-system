@@ -9,9 +9,52 @@
   <label for="inputName" style="margin-bottom: 0px; color:red; font-size:11px" id="nature-of-business-error"></label>
 </div>
 <div class="form-group">
-  <label for="inputName" style="margin-bottom: 0px;">Address</label>
-  <input type="text" id="address" class="form-control rounded-0">
-  <label for="inputName" style="margin-bottom: 0px; color:red; font-size:11px" id="address-error"></label>
+  <div class="row">
+    <div class="col-7">
+      <label for="inputName" style="margin-bottom: 0px;">Address</label>
+      <input type="text" id="address" class="form-control rounded-0">
+      <label for="inputName" style="margin-bottom: 0px; color:red; font-size:11px" id="address-error"></label>
+    </div>
+    <div class="col-2">
+      <label for="inputName" style="margin-bottom: 0px;">Municipality</label>
+      <select class="form-control" id="municipality">
+        <option selected="" disabled="" value="">Select Province First</option>
+      </select>
+      <label for="inputName" style="margin-bottom: 0px; color:red; font-size:11px" id="municipality-error"></label>
+    </div>
+    <div class="col-2">
+      <label for="inputName" style="margin-bottom: 0px;">Province</label>
+      <select class="form-control" id="province">
+        <option selected="" disabled="" value="">Select Region First</option>
+      </select>
+      <label for="inputName" style="margin-bottom: 0px; color:red; font-size:11px" id="province-error"></label>
+    </div>
+    <div class="col-1">
+      <label for="inputName" style="margin-bottom: 0px;">Region</label>
+      <select class="form-control" id="region">
+        <option selected="" disabled="" value="">Select one</option>
+        <option value="NCR">NCR</option>
+        <option value="CAR">CAR</option>
+        <option value="R1">R1</option>
+        <option value="R2">R2</option>
+        <option value="R3">R3</option>
+        <option value="R4A">R4A</option>
+        <option value="R4B">R4B</option>
+        <option value="R5">R5</option>
+        <option value="R6">R6</option>
+        <option value="R7">R7</option>
+        <option value="R8">R8</option>
+        <option value="R9">R9</option>
+        <option value="R10">R10</option>
+        <option value="R11">R11</option>
+        <option value="R12">R12</option>
+        <option value="R13">R13</option>
+        <option value="R18">R18</option>
+      </select>
+      <label for="inputName" style="margin-bottom: 0px; color:red; font-size:11px" id="region-error"></label>
+    </div>
+  </div>
+  
 </div>
 <div class="form-group">
   <label for="inputName" style="margin-bottom: 0px;">Geographical Coordinates</label>
@@ -192,6 +235,50 @@
 <script src="../../AdminLTE-3.2.0/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
 
 <script>
+
+  $("#region").on('change', function() {
+    var region = $(this).val();
+
+      $.ajax({
+        url: "{{route('/get/province')}}",
+        type: 'POST',
+        data: {
+          region: region,
+          _token: '{{csrf_token()}}',
+        },
+        success: function (response) {
+          console.log(response);
+          $("#province").html('<option selected="" disabled="" value="">Select one</option>');
+          $("#municipality").html('<option selected="" disabled="" value="">Select one</option>');
+          $.each(response, function (index, value) {
+            $("#province").append('<option value="'+value['province']+'">'+value['province']+'</option>');
+          })
+          
+        }
+      });
+  });
+
+  $("#province").on('change', function() {
+    var province = $(this).val();
+
+      $.ajax({
+        url: "{{route('/get/municipality')}}",
+        type: 'POST',
+        data: {
+          province: province,
+          _token: '{{csrf_token()}}',
+        },
+        success: function (response) {
+          console.log(response);
+          $("#municipality").html('<option selected="" disabled="" value="">Select one</option>');
+          $.each(response, function (index, value) {
+            $("#municipality").append('<option value="'+value['municipality']+'">'+value['municipality']+'</option>');
+          })
+          
+        }
+      });
+  });
+
 
   $("input[data-bootstrap-switch]").each(function () {
     $(this).bootstrapSwitch('state', $(this).prop('checked'));

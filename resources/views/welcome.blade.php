@@ -20,7 +20,7 @@
     }
     50% {
       opacity: 0;
-    }
+    }F
     100% {
       opacity: 1;
     }
@@ -1294,7 +1294,7 @@
                                       <form>
                                           <div class="card-body">
                                               <div class="row">
-                                                  <div class="col-6">
+                                                  <div class="col-4">
 
                                                       <div class="text-muted">
                                                           <p class="text">EMB ID
@@ -1311,7 +1311,7 @@
                                                   </div>
 
 
-                                                  <div class="col-6">
+                                                  <div class="col-8">
 
                                                       <div class="text-muted">
                                                           <p class="text">Establishment Name
@@ -1355,7 +1355,7 @@
                                                           hidden>
 
                                                   </div>
-                                                  <div class="col-3">
+                                                  <div class="col-4">
 
                                                       <div class="text-muted">
                                                           <p class="text">Company Email
@@ -1368,7 +1368,7 @@
                                                           hidden>
 
                                                   </div>
-                                                  <div class="col-3">
+                                                  <div class="col-2">
 
                                                       <div class="text-muted">
                                                           <p class="text">Date Approved

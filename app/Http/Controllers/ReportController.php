@@ -168,11 +168,9 @@ class ReportController extends Controller
                 }
                 $button .= '<button type="button" class="btn btn-default btn-flat" title="delete" onclick="deleteReport(' . $reports_list->report_id . ')"><i class="fa-solid fa-trash"></i></button>';
 
-                if ( $reports_list->report_type == 'inspection' ) {
-                    if ($report->status == 'submitted including nov' || $reports_list->status == 'submitted') {
-                        $button .= '<button type="button" class="btn btn-default btn-flat" title="pdf" onclick="viewPDF(' . $reports_list->report_id . ')"><i class="fa-solid fa-file fa-beat-fade"></i></button>';
-                    }
-                }
+                $button .= '<button type="button" class="btn btn-default btn-flat" title="pdf" onclick="viewPDF(' . $reports_list->report_id . ')"><i class="fa-solid fa-file fa-beat-fade"></i></button>';
+
+                $button .= '<button type="button" class="btn btn-default btn-flat" title="decision" onclick="action(' . $reports_list->report_id . ')"><i class="fa-solid fa-location-arrow"></i></button>';
                 
 
                 $button .= '</div>';
@@ -309,7 +307,7 @@ class ReportController extends Controller
                     ])->first();
 
                     if ($report->status == 'submitted including nov' || $report->status == 'submitted') {
-                        $button .= '';
+                        $button .= '<button type="button" class="btn btn-default btn-flat" title="pdf" onclick="viewPDF(' . $reports_list->report_id . ')"><i class="fa-solid fa-file fa-beat-fade"></i></button>';
                     } else {
                         $button .= '<button type="button" class="btn btn-default btn-flat" title="view" onclick="viewReport(' . $reports_list->report_id . ', \'' . $reports_list->emb_id . '\')"><i class="fa-solid fa-eye"></i></button>';
                     }
@@ -326,11 +324,7 @@ class ReportController extends Controller
 
                 $button .= '<button type="button" class="btn btn-default btn-flat" title="delete" onclick="deleteReport(' . $reports_list->report_id . ')"><i class="fa-solid fa-trash"></i></button>';
 
-                if ( $reports_list->report_type == 'inspection' ) {
-                    if ($report->status == 'submitted including nov' || $report->status == 'submitted') {
-                        $button .= '<button type="button" class="btn btn-default btn-flat" title="pdf" onclick="viewPDF(' . $reports_list->report_id . ')"><i class="fa-solid fa-file fa-beat-fade"></i></button>';
-                    }
-                }
+                
 
                 $button .= '</div>';
 
@@ -348,7 +342,16 @@ class ReportController extends Controller
                     $span = '';
                 }
 
-                $button = '<button type="button" class="btn btn-default btn-flat" onclick="linkToNOV(' . $reports_list->report_id . ')"><ion-icon name="checkmark-outline"></ion-icon>'.$span.'</button>';
+                $report = DB::table('inspection_report')->where([
+                        'id' => $reports_list->report_id,
+                        'emb_id' => $reports_list->emb_id
+                    ])->first();
+
+                $button = '';
+
+                if($report->with_NOV == 'yes') {
+                    $button = '<button type="button" class="btn btn-default btn-flat" onclick="linkToNOV(' . $reports_list->report_id . ')"><ion-icon name="checkmark-outline"></ion-icon>'.$span.'</button>';
+                }
 
                 return $button;
             })
@@ -1885,8 +1888,6 @@ class ReportController extends Controller
         } elseif( $CurrentPage == 2 ) {
             try {
 
-
-
                 $purpose_of_inspection = $this->insertUpdatePurposeOfInspection($req->id, $req['secondPageData']);
 
                 if ($purpose_of_inspection) {
@@ -1992,6 +1993,9 @@ class ReportController extends Controller
                 'effectivity_date' => date("Y-m-d", strtotime($effectivity_date)),
                 'expiry_date' => date("Y-m-d", strtotime($expiry_date)),
                 'email' => $req['firstPageData']['email'],
+                'municipality' => $req['firstPageData']['municipality'],
+                'province' => $req['firstPageData']['province'],
+                'region' => $req['firstPageData']['region'],
                 'establishment_name' => $req['firstPageData']['establishment-name'],
                 'geo_coordinates' => $req['firstPageData']['geograpical-coordinates'],
                 'managing_head' => $req['firstPageData']['managing-head'],
@@ -2037,15 +2041,21 @@ class ReportController extends Controller
                 'created_by' => auth()->user()->name,
             ]);
 
-            DB::table('report_to_nov')->insert([
-                'report_type' => 'inspection',
-                'report_id' => $id,
-                'nov_id' => $req['related-nov-id'],
-                'case_number' => $req['related-nov-text'],
-                'with_nov_text' => $req['with-nov-text'],
-                'created_date' => $now->format('Y-m-d H:i:s'),
-                'created_by' => auth()->user()->name,
-            ]);
+            if($req['with-nov'] == 'yes') {
+
+                DB::table('report_to_nov')->insert([
+                    'report_type' => 'inspection',
+                    'report_id' => $id,
+                    'nov_id' => $req['related-nov-id'],
+                    'case_number' => $req['related-nov-text'],
+                    'with_nov_text' => $req['with-nov-text'],
+                    'created_date' => $now->format('Y-m-d H:i:s'),
+                    'created_by' => auth()->user()->name,
+                ]);
+
+            }
+
+            
 
             return $InspectionReport;
 
@@ -2062,6 +2072,9 @@ class ReportController extends Controller
                 'effectivity_date' => date("Y-m-d", strtotime($effectivity_date)),
                 'expiry_date' => date("Y-m-d", strtotime($expiry_date)),
                 'email' => $req['firstPageData']['email'],
+                'municipality' => $req['firstPageData']['municipality'],
+                'province' => $req['firstPageData']['province'],
+                'region' => $req['firstPageData']['region'],
                 'establishment_name' => $req['firstPageData']['establishment-name'],
                 'geo_coordinates' => $req['firstPageData']['geograpical-coordinates'],
                 'managing_head' => $req['firstPageData']['managing-head'],
@@ -2507,6 +2520,20 @@ class ReportController extends Controller
     public function novListSelect(Request $request)
     {
         $data = DB::table('nov')->get();
+
+        return $data;
+    }
+
+    public function getProvince(Request $request)
+    {
+        $data = DB::table('province')->where('region', $request->region)->get();
+
+        return $data;
+    }
+
+    public function getMunicipality(Request $request)
+    {
+        $data = DB::table('municipality')->where('province', $request->province)->get();
 
         return $data;
     }

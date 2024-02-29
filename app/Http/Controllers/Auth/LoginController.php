@@ -30,6 +30,15 @@ class LoginController extends Controller
      
         if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
         {
+            $now = new \DateTime();
+
+            $data = DB::table('users')
+            ->where('id', auth()->user()->id)
+            ->update([
+                'last_seen' => $now->format('Y-m-d H:i:s')
+            ]);
+
+            
             if (auth()->user()->type == 'super-admin') {
                 return redirect()->route('super.admin.dashboard');
             }else if (auth()->user()->type == 'manager') {

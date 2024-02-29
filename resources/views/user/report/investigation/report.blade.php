@@ -355,8 +355,7 @@
       var idParameter = getUrlParameters("id", "", true);
 
       var fd = new FormData();
-      fd.append('id', idParameter);
-      fd.append('emb_id', emb_id);
+      fd.append('id', '');
       fd.append('file', files[0]);
       fd.append('_token', '{{csrf_token()}}');
 

@@ -88,19 +88,11 @@
 </div>
 
 <div class="modal modal-right fade" id="right_modal_lg" tabindex="-1" role="dialog" aria-labelledby="right_modal_lg">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <i>
-                    <h5 class="modal-title" id="ticket-number">
-                    </h5>
-                    <span id="badge-status-ticket"></span>
-                </i>
-                <!-- <span class="time"><i class="fas fa-clock"></i> <small id="date-submitted"></small></span> -->
-            </div>
             <div class="modal-body">
               
-              <table class="table table-bordered" id="nov-list">
+              <table class="table" id="nov-list">
                 <thead>
                   <th>Case Number</th>
                   <th>Status</th>

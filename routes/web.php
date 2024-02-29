@@ -69,8 +69,16 @@ Route::middleware(['auth', 'user-access:2'])->group(function () {
     Route::post('/manager/get-report-list', [ReportController::class, 'getReportListManager'])->name('/manager/get-report-list');
 
     Route::get('/manager/profile', function () {
-    return view('manager.profile');
-});
+        return view('manager.profile');
+    });
+
+    Route::get('/manager/signatures', function () {
+        return view('manager.signature-list');
+    });
+
+    Route::get('/manager/accounts', function () {
+        return view('manager.account-list');
+    });
 });
 
 
@@ -93,8 +101,22 @@ Route::middleware(['auth', 'user-access:1'])->group(function () {
     });
 });
 
+Route::post('/edit-user', [CustomAuthController::class, 'editUser'])->name('/edit-user');
+
+Route::post('/get-acount', [CustomAuthController::class, 'getAcount'])->name('/get-acount');
+
+Route::post('/get-user-list', [CustomAuthController::class, 'getUserList'])->name('/get-user-list');
 
 Route::post('/edit/profile', [CustomAuthController::class, 'editProfile'])->name('/edit/profile');
+
+Route::post('/get/province', [ReportController::class, 'getProvince'])->name('/get/province');
+
+Route::post('/get/municipality', [ReportController::class, 'getMunicipality'])->name('/get/municipality');
+
+Route::post('/manager/get-signatures-list', [DashboardController::class, 'getSignaturesList'])->name('/manager/get-signatures-list');
+Route::post('/upload/file/signature', [DashboardController::class, 'uploadSignature'])->name('/upload/file/signature');
+Route::post('/get/file/signature', [DashboardController::class, 'getSignature'])->name('/get/file/signature');
+
 
 // Login
 Route::get('login', [CustomAuthController::class, 'index'])->name('login');

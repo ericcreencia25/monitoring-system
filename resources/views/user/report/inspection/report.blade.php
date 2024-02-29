@@ -429,6 +429,7 @@
         $("#div-info-box-new").removeAttr('hidden');
 
         $("#div-report-nov").removeAttr('hidden');
+        $("#nov-part-next").attr('hidden', 'hidden');
       }
 
       
@@ -516,6 +517,11 @@
         sessionStorage.setItem("emb-id", response['inspection_report']['emb_id']);
         sessionStorage.setItem("company-address", response['inspection_report']['address']);
 
+
+        sessionStorage.setItem("municipality", response['inspection_report']['municipality']);
+        sessionStorage.setItem("province", response['inspection_report']['province']);
+        sessionStorage.setItem("region", response['inspection_report']['region']);
+
         
         $.each(response['relatednov'], function (index, value) {
 
@@ -572,6 +578,62 @@
         $("#product").val(response['inspection_report']['product']);
         $("#psic-code").val(response['inspection_report']['psic_code']);
         $("#year-established").val(response['inspection_report']['year_established']);
+
+
+        $("#region").val(response['inspection_report']['region']);
+        
+
+        $.ajax({
+          url: "{{route('/get/province')}}",
+          type: 'POST',
+          data: {
+            region: response['inspection_report']['region'],
+            _token: '{{csrf_token()}}',
+          },
+          success: function (province) {
+            $("#province").html('<option selected="" disabled="" value="">Select one</option>');
+            $("#municipality").html('<option selected="" disabled="" value="">Select one</option>');
+            $.each(province, function (index, value) {
+              if(response['inspection_report']['province'] == value['province']) {
+                $("#province").append('<option value="'+value['province']+'" selected>'+value['province']+'</option>');
+              } else {
+                $("#province").append('<option value="'+value['province']+'">'+value['province']+'</option>');
+              }  
+            });
+
+            
+            
+          }
+        });
+
+
+        $.ajax({
+          url: "{{route('/get/municipality')}}",
+          type: 'POST',
+          data: {
+            province: response['inspection_report']['province'],
+            _token: '{{csrf_token()}}',
+          },
+          success: function (municipality) {
+            $("#municipality").html('<option selected="" disabled="" value="">Select one</option>');
+            $.each(municipality, function (index, value) {
+              if(response['inspection_report']['municipality'] == value['municipality']) {
+                $("#municipality").append('<option value="'+value['municipality']+'" selected>'+value['municipality']+'</option>');
+              } else {
+                $("#municipality").append('<option value="'+value['municipality']+'">'+value['municipality']+'</option>');
+              }
+            });
+
+            
+            
+          }
+        });
+
+
+        $("#province").val(response['inspection_report']['province']);
+        $("#municipality").val(response['inspection_report']['municipality']);
+
+        
 
         // PPA-table tbody
 
@@ -1130,6 +1192,9 @@
         'psic-code': first['psic-code'],
         'year-established': first['year-established'],
         'product-lines-table': first['product-lines-table'],
+        'municipality': first['municipality'],
+        'province': first['province'],
+        'region': first['region'],
       }
 
       $.ajax({
@@ -2081,6 +2146,11 @@
     first['managing-head'] = $("#managing-head").val();
     first['name-of-pco'] = $("#name-of-pco").val();
     first['pco-accreditation-number'] = $("#pco-accreditation-number").val();
+
+
+    first['municipality'] = $("#municipality").val();
+    first['province'] = $("#province").val();
+    first['region'] = $("#region").val();
 
     var arrayProduct = [];
     $("#PPA-table tbody").find("tr").each(function () {

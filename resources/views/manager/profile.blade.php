@@ -65,8 +65,9 @@
             <div class="form-group">
                 <label for="inputName">User Type</label>
                 <select class="form-control" id="user-type" value="{{auth()->user()->type}}">
-                    <option value="1">EMED</option>
-                    <option value="2" selected>Regional Director</option>
+                    <option value="1">User</option>
+                    <option value="2" selected>Admin</option>
+                    <option value="3">Regional</option>
                 </select>
             </div>
 
