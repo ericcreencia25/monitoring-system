@@ -44,45 +44,43 @@ Route::get('/iis-login', function () {
 
 
 
-//admin Users Routes List
+//unknown Users Routes List
 Route::middleware(['auth', 'user-access:0'])->group(function () {
     // admin
     Route::get('/unknown', function () {
         return view('no_user_type.home');
     });
     
-
 });
 
-
-//admin Users Routes List
-Route::middleware(['auth', 'user-access:2'])->group(function () {
+//chief emed users Routes List
+Route::middleware(['auth', 'user-access:4'])->group(function () {
     // admin
-    Route::get('/admin/dashboard', function () {
-        return view('admin.admin_dashboard');
+    Route::get('/cemed/dashboard', function () {
+        return view('regional_director.dashboard');
     });
     // Route::get('/admin/report-list', [ReportController::class, 'reportList'])->middleware('auth'); 
-    Route::get('/admin/report-list', function () {
-        return view('admin.report-list');
+    Route::get('/cemed/report-list', function () {
+        return view('regional_director.report-list');
     });
 
+    Route::post('/cemed/get-report-list', [ReportController::class, 'getReportListManager'])->name('/cemed/get-report-list');
 
-    Route::post('/admin/get-report-list', [ReportController::class, 'getReportListManager'])->name('/manager/get-report-list');
-
-    Route::get('/admin/profile', function () {
-        return view('admin.profile');
+    Route::get('/cemed/profile', function () {
+        return view('regional_director.profile');
     });
 
-    Route::get('/admin/signatures', function () {
-        return view('admin.signature-list');
+    Route::get('/cemed/signatures', function () {
+        return view('regional_director.signature-list');
     });
 
-    Route::get('/admin/accounts', function () {
-        return view('admin.account-list');
+    Route::get('/cemed/accounts', function () {
+        return view('regional_director.account-list');
     });
 });
 
-//admin Users Routes List
+
+//regional director users Routes List
 Route::middleware(['auth', 'user-access:3'])->group(function () {
     // admin
     Route::get('/rd/dashboard', function () {
@@ -109,8 +107,35 @@ Route::middleware(['auth', 'user-access:3'])->group(function () {
     });
 });
 
+//admin users Routes List
+Route::middleware(['auth', 'user-access:2'])->group(function () {
+    // admin
+    Route::get('/admin/dashboard', function () {
+        return view('admin.admin_dashboard');
+    });
+    // Route::get('/admin/report-list', [ReportController::class, 'reportList'])->middleware('auth'); 
+    Route::get('/admin/report-list', function () {
+        return view('admin.report-list');
+    });
 
-//Normal Users Routes List
+
+    Route::post('/admin/get-report-list', [ReportController::class, 'getReportListManager'])->name('/manager/get-report-list');
+
+    Route::get('/admin/profile', function () {
+        return view('admin.profile');
+    });
+
+    Route::get('/admin/signatures', function () {
+        return view('admin.signature-list');
+    });
+
+    Route::get('/admin/accounts', function () {
+        return view('admin.account-list');
+    });
+});
+
+
+//EMED users Routes List
 Route::middleware(['auth', 'user-access:1'])->group(function () {
     //Normal
     Route::get('company-registry', [DashboardController::class, 'index']);
@@ -136,17 +161,11 @@ Route::middleware(['auth', 'user-access:1'])->group(function () {
 });
 
 Route::post('/edit-user', [CustomAuthController::class, 'editUser'])->name('/edit-user');
-
 Route::post('/get-acount', [CustomAuthController::class, 'getAcount'])->name('/get-acount');
-
 Route::post('/get-user-list', [CustomAuthController::class, 'getUserList'])->name('/get-user-list');
-
 Route::post('/edit/profile', [CustomAuthController::class, 'editProfile'])->name('/edit/profile');
-
 Route::post('/get/province', [ReportController::class, 'getProvince'])->name('/get/province');
-
 Route::post('/get/municipality', [ReportController::class, 'getMunicipality'])->name('/get/municipality');
-
 Route::post('/manager/get-signatures-list', [DashboardController::class, 'getSignaturesList'])->name('/manager/get-signatures-list');
 Route::post('/upload/file/signature', [DashboardController::class, 'uploadSignature'])->name('/upload/file/signature');
 Route::post('/get/file/signature', [DashboardController::class, 'getSignature'])->name('/get/file/signature');

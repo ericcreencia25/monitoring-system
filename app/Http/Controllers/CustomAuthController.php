@@ -107,6 +107,9 @@ class CustomAuthController extends Controller
             } else if(auth()->user()->type == 3) {
                 return redirect('/rd/dashboard')
                 ->withSuccess('Signed in');
+            } else if(auth()->user()->type == 4) {
+                return redirect('/cemed/dashboard')
+                ->withSuccess('Signed in');
             }
         } else {
             Session::put('username', $username);
