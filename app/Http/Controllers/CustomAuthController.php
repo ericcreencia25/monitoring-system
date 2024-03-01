@@ -102,10 +102,10 @@ class CustomAuthController extends Controller
                 return redirect('company-registry')
                 ->withSuccess('Signed in');
             } else if(auth()->user()->type == 2) {
-                return redirect('/manager/dashboard')
+                return redirect('/admin/dashboard')
                 ->withSuccess('Signed in');
-            } else {
-                return redirect('/unknown')
+            } else if(auth()->user()->type == 3) {
+                return redirect('/rd/dashboard')
                 ->withSuccess('Signed in');
             }
         } else {
@@ -144,10 +144,10 @@ class CustomAuthController extends Controller
                 return redirect('company-registry')
                 ->withSuccess('Signed in');
             } else if(auth()->user()->type == 2) {
-                return redirect('/manager/dashboard')
+                return redirect('/admin/dashboard')
                 ->withSuccess('Signed in');
             } else if(auth()->user()->type == 3) {
-                return redirect('/manager/dashboard')
+                return redirect('/rd/dashboard')
                 ->withSuccess('Signed in');
             }
         } else {

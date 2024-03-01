@@ -42,7 +42,7 @@ class LoginController extends Controller
             if (auth()->user()->type == 'super-admin') {
                 return redirect()->route('super.admin.dashboard');
             }else if (auth()->user()->type == 'manager') {
-                return redirect()->route('manager.dashboard');
+                return redirect()->route('rd.dashboard');
             }else{
                 return redirect()->route('company-registry');
             }

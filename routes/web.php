@@ -43,6 +43,7 @@ Route::get('/iis-login', function () {
 
 
 
+
 //admin Users Routes List
 Route::middleware(['auth', 'user-access:0'])->group(function () {
     // admin
@@ -57,27 +58,54 @@ Route::middleware(['auth', 'user-access:0'])->group(function () {
 //admin Users Routes List
 Route::middleware(['auth', 'user-access:2'])->group(function () {
     // admin
-    Route::get('/manager/dashboard', function () {
-        return view('manager.manager_dashboard');
+    Route::get('/admin/dashboard', function () {
+        return view('admin.admin_dashboard');
     });
     // Route::get('/admin/report-list', [ReportController::class, 'reportList'])->middleware('auth'); 
-    Route::get('/manager/report-list', function () {
-        return view('manager.report-list');
+    Route::get('/admin/report-list', function () {
+        return view('admin.report-list');
     });
 
 
-    Route::post('/manager/get-report-list', [ReportController::class, 'getReportListManager'])->name('/manager/get-report-list');
+    Route::post('/admin/get-report-list', [ReportController::class, 'getReportListManager'])->name('/manager/get-report-list');
 
-    Route::get('/manager/profile', function () {
-        return view('manager.profile');
+    Route::get('/admin/profile', function () {
+        return view('admin.profile');
     });
 
-    Route::get('/manager/signatures', function () {
-        return view('manager.signature-list');
+    Route::get('/admin/signatures', function () {
+        return view('admin.signature-list');
     });
 
-    Route::get('/manager/accounts', function () {
-        return view('manager.account-list');
+    Route::get('/admin/accounts', function () {
+        return view('admin.account-list');
+    });
+});
+
+//admin Users Routes List
+Route::middleware(['auth', 'user-access:3'])->group(function () {
+    // admin
+    Route::get('/rd/dashboard', function () {
+        return view('regional_director.dashboard');
+    });
+    // Route::get('/admin/report-list', [ReportController::class, 'reportList'])->middleware('auth'); 
+    Route::get('/rd/report-list', function () {
+        return view('regional_director.report-list');
+    });
+
+
+    Route::post('/rd/get-report-list', [ReportController::class, 'getReportListManager'])->name('/rd/get-report-list');
+
+    Route::get('/rd/profile', function () {
+        return view('regional_director.profile');
+    });
+
+    Route::get('/rd/signatures', function () {
+        return view('regional_director.signature-list');
+    });
+
+    Route::get('/rd/accounts', function () {
+        return view('regional_director.account-list');
     });
 });
 
@@ -99,6 +127,12 @@ Route::middleware(['auth', 'user-access:1'])->group(function () {
     Route::get('/profile', function () {
         return view('user.profile');
     });
+
+
+    Route::get('/air/no-cems/medium', function () {
+        return view('user.report.monitoring.air.no-cems-medium');
+    });
+
 });
 
 Route::post('/edit-user', [CustomAuthController::class, 'editUser'])->name('/edit-user');

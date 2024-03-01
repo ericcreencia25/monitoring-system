@@ -1,4 +1,4 @@
-@extends('layout.manager-layout')
+@extends('layout.rd-layout')
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -6,7 +6,7 @@
             <div class="card">
                 <div class="card-header">{{ __('Dashboard') }}</div> 
                 <div class="card-body">
-                    You are login as a manager role.
+                    You are login as a regional director role.
                 </div>
             </div>
         </div>
